@@ -1,0 +1,140 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+\geometry{margin=1.5in}
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+\setlength{\parskip}{0mm}
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{enumitem}
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+%%%Bibliography
+\usepackage{cite}
+\bibliographystyle{abbrv}
+
+%%%Packages that I have added
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage[section]{placeins}
+\usepackage{setspace}
+
+%\usepackage{mcode}
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+\newcommand{\diff}[2]{\frac{d{#1}}{d{#2}}}
+\newcommand{\pd}[2]{\frac{\partial{#1}}{\partial{#2}}}
+\newcommand{\pds}[2]{\frac{\partial^{2}{#1}}{\partial^{2}{#2}}}
+\newcommand{\tendist}{\,{\buildrel d \over \longrightarrow}\,}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\prob}{\mathbb{P}}
+\newcommand{\Var}{\mathop{\rm Var}}
+\newcommand{\Cov}{\mathop{\rm Cov}}
+\newcommand{\U}{\mathbf{U}_{1}}
+\newcommand{\Ut}{\mathbf{U}^{T}}
+\newcommand{\X}{\textbf{X}}
+\newcommand{\K}{\textbf{K}}
+\newcommand{\Z}{\textbf{Z}}
+\newcommand{\W}{\textbf{W}}
+\newcommand{\La}{{\bf \Lambda}}
+
+
+\makeatletter
+\newcommand{\vast}{\bBigg@{3.5}}
+\newcommand{\Vast}{\bBigg@{5}}
+\makeatother
+
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\renewcommand{\indent}{\hspace*{15pt}\ignorespaces}
+
+
+
+\title{ECMM427 - Group Project Course work 1}
+\author{Project specification and plan}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+
+\pagestyle{empty}
+\tableofcontents
+\clearpage
+\pagestyle{fancy}
+\setcounter{page}{1}
+\maketitle
+
+\section{Problem definition}
+
+
+Problem definition ::
+\begin{enumerate}
+\item As information in a domain increases, so does the complexity of the models used to model said domains.
+\item Through the introduction other climate related components, large volumes of modes are produced and they are increasingly more complex. The task of identifying which model best represents the present and future becomes more of a challenge.
+\item Climate research is a vast field that is critical in predicting the violent hidden nature of weather systems, what environmental factors tend to increase this behaviour, and what we can expect from the natural world as we continue to inhabit and apply change to the world.
+\item The met office produce hundreds of models every year that try and include new forms of statistical data with the intention of increasing our confidence in what the future holds.
+\item These models are evaluated by a team of experts that look to see how well it predicts the known past with a hope in finding a model that shall predict the future of Earth's Climate.
+\item These models however tend to have huge variance over their final outputs which highlights the fact the system is complex and hard to replicate.
+\item Experts are looking to make use of machine learning techniques to help in the refinement of this process by replacing the cumbersome requirement for human time and discussion on what the merits of each model. The machine would help choose models by minicing experts opinions.
+\item Along with that, a easy to use web tool that facilitates the interaction between the experts and the machine such that they might get the most out of its operation.
+\end{enumerate}
+
+
+\section{Solution specification}
+
+\subsection{Web tool}
+
+\begin{enumerate}
+\item Experts would like to be able to annotate their opinion on models.
+\item Experts would like to upload models to be evaluated.
+\item Evaluation should come with the functionality to toggle on and off other expert opinions.
+\item Personal expert dashboards and examination.
+\end{enumerate}
+
+
+
+\end{document}
