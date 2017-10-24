@@ -1,3 +1,8 @@
 \contentsline {section}{\numberline {1}Problem definition}{1}
-\contentsline {section}{\numberline {2}Solution specification}{1}
-\contentsline {subsection}{\numberline {2.1}Web tool}{1}
+\contentsline {section}{\numberline {2}Solution specification}{2}
+\contentsline {subsection}{\numberline {2.1}Web tool}{2}
+\contentsline {section}{\numberline {3}Maintenance Plan}{2}
+\contentsline {section}{\numberline {4}Cost/benefit analysis}{3}
+\contentsline {subsection}{\numberline {4.1}Development costs}{3}
+\contentsline {subsection}{\numberline {4.2}Post-completion costs}{4}
+\contentsline {subsection}{\numberline {4.3}Benefits}{4}
