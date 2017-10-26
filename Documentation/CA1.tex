@@ -184,5 +184,181 @@ Problem definition ::
 \quad Using Docker for this project offers easy scalability as the software artefact can run independently of its environment. Therefore the webtool can easily be ported from the university provided servers to another dedicated server. (\path{https://success.docker.com/Architecture/Docker_Reference_Architecture%3A_Designing_Scalable%2C_Portable_Docker_Container_Networks})
 
 
+\section{Ethical Considerations}
+
+Ethical, legal and professional considerations are important for any
+software engineering project. Machine learning and data driven systems
+require an extra level of care due to legal aspects of handling data,
+as well as the ethical aspects of the decisions that are derived from
+it. This project has a very specific set of issues that should be
+dealt with as the project itself is designed to simulate the professional
+opinions of experts, something that has both the potential for abuse
+and consequently potentially damaging consequences for the professional. 
+
+\subsection{Project Specific}
+
+In this subsection, issues that relate directly to this project will
+be coupled with proposed courses of action to give a full picture
+of the issues and the decisions that the development team will make
+to overcome them. 
+
+\subsubsection{Ethical}
+
+The core ethical issues of this project fall into four categories. 
+\begin{itemize}
+\item Ethical issues relating to the misrepresentation of academic experts
+opinions and the knock on effects of this on their careers.
+\item The potential for this system to be used maliciously.
+\item The potential for inaccuracies in the system to effect scientific
+results or influence legislation. 
+\item Holding of personal information.
+\end{itemize}
+
+\paragraph{Misrepresentation of opinions.}
+
+The underlying principle of this project is to generalise a researchers
+opinions and preferences to estimate what their opinion is of unseen
+data. Whilst this can be extremely useful in time saving these so
+researchers time and not having to give their opinions on every single
+piece of data it has the potential to drastically misrepresent the
+opinions of these experts. In the worst case, having their name attached
+to opinions that are not representative of their own may be damaging
+very to their career. To mitigate against this risk it is suggested
+that the page that produces inference results will include a disclaimer
+that clearly states that whilst the results produced during the inference
+step is supposed to represent their opinions it is not their opinion
+and may sometimes not produce a faithful representation. As an additional
+safeguard at the training phase, metrics such as accuracy or correlation
+metrics calculated on a validation set will be shown to the expert
+before he/she decides whether to publish his ``opinion predictor''
+to be usable by the public. It is believed that these two safeguards
+will mitigate the risk as much as possible. 
+
+\paragraph{Inaccuracies in the system effecting scientific results or influence
+legislation. }
+
+Related to the above point is the capabilities of the system to bias
+scientific results and as a result potentially influence legislative
+decisions about climate change. The solution to this is likely the
+same as the above point, including disclaimers that the produced results
+are not necessarily 100\% representative. 
+
+\paragraph{Malicious Usage}
+
+Climate change is a very contentious topic that has been shown to
+drive people to extreme lengths to fight for their side of the argument,
+even to the extent of spending vast amounts of money or committing
+crimes to convince people of their opinion <references>. As a result
+of this it must be ensured that the system is:
+\begin{itemize}
+\item As secure against hacking as possible and keeping thorough logs of
+usage to help understand what has been compromised upon a breach.
+\item Enforcing that accounts cannot be set up in the names of others so
+that they can impersonate them. 
+\item A method of disambiguating experts with the same name, eg. Institution
+\item Some form of verification status. This may be as simple as verifying
+that account holders for the ``experts'' possess {*}.ac.{*}, {*}.gov
+or {*}.edu email addresses. 
+\end{itemize}
+Alternatively to the above ideas, it may be possible to simply restrict
+the availability of account creation to invite only. As was seen in
+the Climategate scandal, keeping the science open to the public is
+beneficial in the long run as it ensures clarity that no facts are
+being hidden. For this reason it should be possible for any interested
+party to access the inference section of the site if required, it
+would also be beneficial to describe methodology for the machine learning
+element on the website in a way that is accessible to non-machine
+learning experts.
+
+\subsubsection{Legal }
+
+The data held in as a result of this project is believed to be covered
+under the Data Protection Act 1998 and the new General Data Protection
+Regulation (GDPR) 2016 due to the ability to identify the individual
+given the information, both explicit and implied that is retained in
+the user accounts of the web tool. Eg. Name and Email which when combined
+with the knowledge of the field of research would make it very trivial
+to find out precisely who the information relates to. For the purposes
+of this section the GDPR will be specifically focused on due to its
+replacement of the Data Protection Act on the 25th May 2018. The GDPR
+states that any ways the data will be used or processed should be
+transparent and clearly presented to the user. It also states that
+the information should be viewable by the user and have the ability
+to be updated should it be found to be inaccurate or deleted upon
+request. All of these points have fairly trivial solutions such as
+clear disclaimers and a simple accounts page showing all the information
+stored relating to that user as well as a delete account button to
+cover the right to erasure. 
+
+Something that is a more interesting for this context is the right
+to explanation that states that a user has the right to explanation
+about decisions that are made using their data. This is interesting
+as in some machine learning systems it is extremely difficult, if
+not impossible, to explain the decision that have learned from the
+data to make. Luckily article 9(2) allows somebody to explicitly consent
+to forego this right. In this case this is probably very likely to
+be the solution that is taken it is very possible however that certain
+algorithms such as decision trees or KNN may offer suitably explainable
+algorithms and asking the user to waiver this right may not be necessary. 
+
+\subsubsection{Summary of Terms and Conditions Requirements.}
+
+For somebody who is going to be using the systems as a non-expert
+to label climate model run:
+\begin{itemize}
+\item Consenting their awareness that the algorithm is not to be assumed
+to give a totally faithful representation of an experts opinion for
+all cases.
+\end{itemize}
+For experts who are labelling data must consent to the above as well
+as:
+\begin{itemize}
+\item Consenting for their personal information to be held and their ``opinions''
+offered to the general public.
+\item Waiving their rights to explanation on how decisions are made based
+on their data. Note, an explanation of the algorithms used to make
+the decisions will be shown, but it may not be possible to show how
+these algorithms make the decisions they do which appears to be in
+violation.
+\end{itemize}
+
+\paragraph{Software License Agreements}
+
+Consideration must be taken throughout the development process to use
+only libraries that are free to use for academic work. //TODO
+
+\subsubsection{Professional}
+
+A large consideration that needs to be made is on the professional
+responsibilities of taking on a project such as this. This project
+is a very high risk endeavour whereby it is very possible that there
+are real limitations that are baked into underlying limits of the world
+such as information theory and therefore no amount of clever engineering
+will ever be able to solve. An example of this kind of problem is
+that it might be the case that the machine learning aspect of performing
+the desired inference on this data requires so much data that attempting
+to represent the opinions of a single expert may be completely infeasible
+due to the volumes of samples that the expert might need to label. 
+
+\subsection{Domain Specific}
+
+\subsubsection{Ethical}
+
+Technology and more prominently machine learning has the unfortunate
+potential byproduct of significantly reducing the number of skilled
+jobs in certain fields, either by making people's jobs easier and
+therefore reducing the skill required or by removing them all together.
+Cases of this have been seen in areas from robots replacing factory
+workers all the way though to uber researching autonomous vehicles
+gearing up to replace their human drivers. Fortunately this is a non-issue
+in this case due to the fact that for the people who the developed
+system will be ``imitating'', assigning rankings to climate model
+data is a tiny and likely unenjoyable slice of their job. The rest bite
+from this process will allow them to focus more on their core research
+and make more valuable contributions to the field. 
+
+\subsubsection{Legal}
+
+
 
 \end{document}
