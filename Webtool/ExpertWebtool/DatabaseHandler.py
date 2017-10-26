@@ -2,6 +2,10 @@ from os import listdir
 from os.path import abspath, isfile, join
 import sqlite3
 
+class QueryError(Exception):
+	"""Exception when attempting the use a query incorrectly"""
+	pass
+
 class DatabaseHandler:
 
 	_DatabaseLocation = abspath("./ExpertWebtool/data/site.db")
@@ -28,6 +32,20 @@ class DatabaseHandler:
 			# Read in query content
 			with open(SQLPath) as fileHandler:
 				DatabaseHandler._SQLStore[sqlFilename] = fileHandler.read()
+
+	def executeOne(queryTitle: str, queryVariables: list):
+		"""
+		Returns the first row from the execution of the query
+		"""
+		# Run the command
+		rows = DatabaseHandler.execute(queryTitle, queryVariables)
+
+		# Validate the response
+		if len(rows) == 0: raise QueryError("No rows returned")
+
+		return rows[0]
+
+
 
 	def execute(queryTitle: str, queryVariables: list):
 		"""

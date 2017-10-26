@@ -1,6 +1,15 @@
 {% extends "base.html" %}
-{% block css %}{% endblock %}
-{% block js %}{% endblock %}
+{% block css %}
+<link href="css/ion.rangeSlider.css" rel="stylesheet">
+<link href="css/ion.rangeSlider.skinHTML5.css" rel="stylesheet">
+<link href="css/switchery.min.css" rel="stylesheet">
+
+{% endblock %}
+{% block js %}
+<script src="js/ion.rangeSlider.min.js"></script>
+<script src="js/switchery.min.js"></script>
+<script src="js/training_main.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -12,31 +21,140 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Default Panel
+                Labelling machine
             </div>
             <div class="panel-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                <p>Through your persistant use of the labeller, your expert representation learns to become more and more like yourself. Shift through the model outputs on the left, see a representation of a particular output on the right.</p>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
-	<div class="col-lg-4">
+	<div class="col-lg-2">
 		<div class="panel panel-default">
-            <div class="panel-heading">Model input</div>
-            <div class="panel-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-            </div>
+            <div class="panel-heading">Parameter Sensitivity</div>
+			<div class="panel-body">
+				<div class="panel-group" id="accordion">
+				    <div class="panel panel-default">
+				        <div class="panel-heading">
+				            <h4 class="panel-title">
+				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">Grass Types</a>
+				            </h4>
+				        </div>
+				        <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+				            <div class="panel-body">
+								<div class="row">
+									<div class="col-lg-6">
+										<p>Marshland</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>Toxic Grass</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>Limewire</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+				            </div>
+				        </div>
+				    </div>
+				    <div class="panel panel-default">
+				        <div class="panel-heading">
+				            <h4 class="panel-title">
+				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed" aria-expanded="false">Paramater set sensitivity</a>
+				            </h4>
+				        </div>
+				        <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+				            <div class="panel-body">
+				                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				            </div>
+				        </div>
+				    </div>
+				    <div class="panel panel-default">
+				        <div class="panel-heading">
+				            <h4 class="panel-title">
+				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed" aria-expanded="false">Something else and so on</a>
+				            </h4>
+				        </div>
+				        <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false">
+				            <div class="panel-body">
+				                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				            </div>
+				        </div>
+				    </div>
+				</div>
+			</div>
         </div>
 	</div>
-	<div class="col-lg-8">
+
+	<div class="col-lg-10">
 		<div class="panel panel-default">
-            <div class="panel-heading">Model View</div>
-            <div class="panel-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-            </div>
+			<div class="panel-body">
+			    <!-- Nav tabs -->
+			    <ul class="nav nav-tabs">
+			        <li class="active"><a href="#home" data-toggle="tab" aria-expanded="false">Model</a>
+			        </li>
+			        <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">Output</a>
+			        </li>
+			        <li class=""><a href="#messages" data-toggle="tab" aria-expanded="false">Sections</a>
+			        </li>
+			        <li class="pull-right"><a href="#settings" data-toggle="tab" aria-expanded="true">merge</a>
+			        </li>
+			    </ul>
+
+			    <!-- Tab panes -->
+			    <div class="tab-content">
+			        <div class="tab-pane fade" id="home">
+			            <img src="imgs/co2_growth.jpeg" alt="Output heat map" width="600px" height="400px">
+			            <img src="imgs/temp_dash.png" alt="temp dashboard" width="800px" height="400px">
+			        </div>
+			        <div class="tab-pane fade" id="profile">
+			            <h4>Profile Tab</h4>
+			            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			        </div>
+			        <div class="tab-pane fade" id="messages">
+			            <h4>Messages Tab</h4>
+			            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			        </div>
+			        <div class="tab-pane fade active in" id="settings">
+			            <h4>Settings Tab</h4>
+			            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			        </div>
+			    </div>
+			</div>
         </div>
 	</div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Model Score
+            </div>
+            <div class="panel-body">
+                <p>How well do you think this model represents the state of yeti life in Canada?</p>
+                <input type="text" id="modelScore" name="score" value="" />
+                <div class="col-lg-2 col-lg-offset-10">
+                	<button type="button" class="btn btn-primary btn-sm btn-block">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

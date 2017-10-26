@@ -16,7 +16,6 @@ cursor.execute("CREATE TABLE users (id PRIMARY KEY, username TEXT, salt TEXT, pa
 
 # Developer accounts
 #	- Kieran's
-
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "admin1").encode("UTF-8")).hexdigest()
 cursor.execute("INSERT INTO users VALUES (NULL, 'kb437', ?, ?, 'Kieran', 'Bacon')", (salt, hashedPassword))
