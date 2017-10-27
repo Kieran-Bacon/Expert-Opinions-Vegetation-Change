@@ -359,6 +359,69 @@ and make more valuable contributions to the field.
 
 \subsubsection{Legal}
 
+\subsection{Development Approach}
+\quad This project will be completed using an Agile methodology. Agile has been chosen because it allows for not only changes to the time plan, but to changes in requirements/desires of the “customer”. Other module projects and the generally packed lives of the collaborators to this project will no doubt cause changes to when different components to be complete. This factor along with the evolving idea of what is wanted, and possible, correspond well with the Agile methodology.\par
+
+\quad Python has been chosen as the language to develop the machine learner in. The reasoning behind this choice is that all group members have at least some experience working with the language, and others even have experience using it for machine learning. Python’s sckit-learn module also comes with many prebuild machine learning techniques that are easy to comprehend and use.\par
+
+\quad In addition to the basic web development tools like HTML, CSS, and Bootstrap we have decide to use Python Pylons Pyramid. Pylons is an open source Web Framework written in python. The decision to use this as the backend framework came from the fact that the learner will be written in python allowing for easy integration. Also a group member already has experience in using this framework, making it the obvious choice.\par
+
+\subsection{Milestones}
+
+\begin{itemize}
+
+\item API(ASAP) – The API must be created and agreed upon first. This is the backbone to all the programming that will be done during this project and is what will allow us to work individually without running into compatibility issues later down the line. At this point we already have a draft of the API and are working out differences in opinion, and filling gaps.
+
+\item CA1 (10/11/2017) – 
+Frontend Skeleton ()– The website pages are created with little to no functionality. Just a visual representation to give us a sense of what needs to be developed for each page, alongside how the site should be navigated.
+
+\item Backend Skeleton () –  The server for the site is up and running and a database has been created to store the relevant data that will be used in the project. 
+
+\item Data visualization () –  This will be a crucial element in the collecting of data. The models have outputs of up to 17 vegetation types, all of which cannot be visualized at the same time. Without this visualization it would be very difficult for an expert to discern the good outputs from the bad outputs, and even if they could it would be too time consuming.
+
+\item Data Collection Functionality () – The page where an expert comes in and gives their opinion is fully functional. This includes visual representation of the models, user input, and data capture. Completion of this milestone is instrumental in the development of the rest of the project. Currently we have no data on the opinions of experts and without data we cannot develop a machine learning technique.
+
+\item Basic Learner () – Once the data collection is up and running we can begin to develop our learner. At this point the technique used by the learner does not need to be permanent, but a functioning learner is needed so that other components can begin development.
+
+\item Chosen Set of Algorithms () – After a learner has been created we can start experimenting with the different types of machine learning algorithms. Through this experimentation we will come up with a single/small set of machine learning algorithms that users can choose from.
+
+\item Training Stage Complete () – At this point an expert should be able to login to the site, give their opinions on models, have those opinions trained into a learner, and use that model to provide opinions on new models. This element can begin development once the data collection and basic learner are completed.
+
+\item Upload/Result Page Complete – Anyone should be able to come to the site, upload models, select an expert, and get the results from that expert’s learner. At this point the site is fully functional.
+
+\item Final Report (11/05/2018) –
+
+\item Presentation and Demonstration (second half of term 3) –
+
+\subsection{Risk Analysis}
+
+\quad The main risk that this project will face is time management. The entire project is on a short time span, being that it needs to be completed by May 2018. That relatively short amount of time on top of the busy lives of the group members does not leave a lot of wiggle room when it comes to getting different components completed. Up to this point the group has been able to meet regularly with any real hassle. This will most likely become more difficult as the term progresses and other modules start to give out more work. \par
+
+\quad The next risk will be lack of data. At present, we have no data to train a learner on. This would not be too large a problem if we could generate the data ourselves, but the group’s ability to do so will be limited, considering that only Dr F Hugo Lambert is the only expert among us. In light of this the development of the Data collection process is crucial, so that we can start collecting data. With a large amount of data there is no guarantee that the learning methods that we implement will be able to accurately represent the experts. With a lack of data, it could prove very hard to find a correlation between model ratings and expert opinion.\par
+
+\quad Other risks to the project include lack of communication outside of term time, differences in opinion among group members, change in requirements late in the development process. The largest of these being the lack of communication outside of term time. The group members all live in different areas, there is even members who reside outside of the U.K. and time zones may make communication sporadic. \par
+
+\quad For fall back plans the first thing to go will be the unnecessary components, such as output on the features that the learner believes the expert to find most important. Further fallback could end up with the use of only one learner as opposed to a set.\par
+
+\subsection{Stuff written for Maintenance and C/B Analysis}
+
+\subsubsection{Maintenance}
+\quad For maintaining code, a Bitbucket repository has been created. This will allow individuals within the group to upload new code, as well as keeping existing code up to date.  Not only does Bitbucket create a secure site where loss of work is not a concern, but it also allows for rollbacks in case of errors caused by new code.\par
+
+\quad The server for our website will be given to us by the University. This cuts maintenance for the group because the University will be in charge of keeping the server running and setting up any needed software. The server will have a SQLite database to store the opinions of experts and the learner models. (Possible duplicate DB as back up?)\par
+
+\quad After the project comes to a close, the server, data, and code will be given over to Dr F Hugo Lambert/the University. He and whomever he chooses to work with will then be responsible for the further development and maintenance of the code, data, and site.\par
+
+
+\subsubsection{C/B Analysis}
+
+\quad There are minimal costs to this project. The main cost will be the time spent by the group members and leaders. Since the group members are all students their time is not very costly. The group leaders such as Dr F Hugo Lambert and Prof Jonathan Fieldsend are much more so, but they will be spending a significantly smaller amount of time working on it. The other cost of this project is the money spent by the University on running and maintaining the server that our website will be hosted from. Again this is a very minimal cost considering that the University already has the equipment and would be maintaining anyway. The only real cost to the school would be setting up our space on the server, a onetime small task.\par
+
+\quad The benefits of this project far out weight the costs. The rating of models is a time consuming process, and time is a precious commodity to the experts that would be scoring models. With this project we hope to accurately represent the opinions of these experts. With this representation the work that would take the real experts hours even days would be done in mere seconds. On top of this the knowledge of these experts can now be easily accessible to the world. \par
+
+\quad A current problem with the rating of models that not all models share the same views on what is “good” and what is “bad”. With the use of our tool the collaborative opinion of the experts can be approximated. Through our website a database of model ratings will be built. Using the same machine learning technique that represents the opinion of a single expert we intend to represent the collaborative, by training the learner with the combined data of all the experts.\par
+
+
 
 
 \end{document}
