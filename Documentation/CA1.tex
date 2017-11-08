@@ -7,18 +7,20 @@
 
 \begin{document}
 
-\tableofcontents
-
 \title{Plan, Cost/Benefit Analysis and Ethical/Legal Considerations Report}
 \author{K Bacon, N Higgins, P Kim, B Townsend}
 \maketitle
 
 \begin{abstract}
-Ensemble models are a key method for tackling uncertainty in the way that we model the earths climate. They involve running many simulations each with different parameters, with the variance in these parameters representing the known uncertainty in measurements such as the initial conditions. In certain cases some of these simulation outputs should be discarded as outliers due to the unphysical nature of the results, but often these unphysical outputs are too subtle for somebody not expert in the particular field to confidently evaluate. This project aims to produce a solution to this issue by utilising machine learning technologies to understand patterns in the opinions of experts, allowing their careers worth of knowledge and experience to be easily distilled into a piece of software that is available to anyone who requires it. Additionally, as ensemble sizes, that are currently limited by the availability of computational resources, continue to grow larger and larger it becomes progressively less feasible to manually evaluate each model. This software should be able to assist in this case as well. The initial focus of this project is to develop a user friendly web tool capable of learning the opinions of individual vegetation experts whilst abstracting any of the machine learning to a level that can be understood by anybody, independent of their level of knowledge , N Higgins,in this field. 
+Ensemble models are a key method for tackling uncertainty in the way that we model the earths climate. They involve running many simulations each with different parameters, with the variance in these parameters representing the known uncertainty in measurements such as the initial conditions. In certain cases some of these simulation outputs should be discarded as outliers due to the unphysical nature of the results, but often these unphysical outputs are too subtle for somebody not expert in the particular field to confidently evaluate. This project aims to produce a solution to this issue by utilising machine learning technologies to understand patterns in the opinions of experts, allowing their careers worth of knowledge and experience to be easily distilled into a piece of software that is available to anyone who requires it. Additionally, as ensemble sizes, that are currently limited by the availability of computational resources, continue to grow larger and larger it becomes progressively less feasible to manually evaluate each model. This software should be able to assist in this case as well. The initial focus of this project is to develop a user friendly web tool capable of learning the opinions of individual vegetation experts whilst abstracting any of the machine learning to a level that can be understood by anybody, independent of their level of knowledge in this field. 
 \end{abstract}
 
 \declaration
 \newpage % forcing a new page to separate the body of the report from the coverpage
+
+\tableofcontents
+
+\newpage
 
 \section{Problem Definition}
 
@@ -375,7 +377,11 @@ and make more valuable contributions to the field.
 
  Other risks to the project include lack of communication outside of term time, differences in opinion among group members, change in requirements late in the development process. The largest of these being the lack of communication outside of term time. The group members all live in different areas, there are even members who reside outside of the U.K. and time zones may make communication sporadic. 
 
- For fall back plans the first thing to go will be the unnecessary components, such as output on the features that the learner believes the expert to find most important. Further fallback could end up with the use of only one learner as opposed to a set.
+In the case of severe setbacks, that are not able to be compensated for by our plan and the agile development methodology, it will be possible to divert attention away from lower priority features. These include, outputting the features that the learner believes the expert to find most important or complex methods for maximising quality of results such as automating the process of selecting the optimal learner for a given experts dataset.
+ 
+ \section{Conclusion}
+ 
+ This project, upon successful completion, has the potential for having a great impact to the future of climate research and ensemble modelling by allowing the efficient distillation of decades of knowledge and opinions in a way that is accessible to the wider climate science community. As a bonus, it is possible that developed techniques or successful research in the machine learning aspect of this project may be useful for other applications within climate science, for which the potential future applications are vast.
 
 \bibliography{CA1}
 \end{document}
