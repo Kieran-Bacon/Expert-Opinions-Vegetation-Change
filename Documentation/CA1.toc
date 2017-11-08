@@ -18,7 +18,7 @@
 \contentsline {subsection}{\numberline {5.1}Project Specific}{8}
 \contentsline {subsubsection}{\numberline {5.1.1}Ethical}{8}
 \contentsline {paragraph}{Misrepresentation Of Opinions:}{9}
-\contentsline {paragraph}{Inaccuracies in the System Affecting Scientific Results or Influence Legislation: }{9}
+\contentsline {paragraph}{Inaccuracies in the System Affecting Scientific Results or Influence Legislation:}{9}
 \contentsline {paragraph}{Malicious Usage:}{9}
 \contentsline {subsubsection}{\numberline {5.1.2}Legal}{9}
 \contentsline {subsubsection}{\numberline {5.1.3}Summary of Terms and Conditions Requirements.}{10}
@@ -26,6 +26,7 @@
 \contentsline {subsubsection}{\numberline {5.1.4}Professional}{10}
 \contentsline {subsection}{\numberline {5.2}Domain Specific}{10}
 \contentsline {subsubsection}{\numberline {5.2.1}Ethical}{10}
-\contentsline {section}{\numberline {6}Development Approach}{11}
+\contentsline {section}{\numberline {6}Development Approach}{10}
 \contentsline {subsection}{\numberline {6.1}Milestones}{11}
 \contentsline {subsection}{\numberline {6.2}Risk Analysis}{12}
+\contentsline {section}{\numberline {7}Conclusion}{12}
