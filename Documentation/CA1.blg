@@ -1,46 +1,48 @@
 This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: CA1.aux
-I found no \bibstyle command---while reading file CA1.aux
+The style file: abbrv.bst
+Database file #1: CA1.bib
+Warning--empty author in eu:gdpr
 You've used 3 entries,
-            0 wiz_defined-function locations,
-            86 strings with 524 characters,
-and the built_in function-call counts, 0 in all, are:
-= -- 0
-> -- 0
-< -- 0
-+ -- 0
-- -- 0
-* -- 0
-:= -- 0
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
+            2118 wiz_defined-function locations,
+            515 strings with 4421 characters,
+and the built_in function-call counts, 846 in all, are:
+= -- 89
+> -- 15
+< -- 1
++ -- 8
+- -- 4
+* -- 49
+:= -- 128
+add.period$ -- 8
+call.type$ -- 3
+change.case$ -- 12
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 0
-format.name$ -- 0
-if$ -- 0
+cite$ -- 4
+duplicate$ -- 38
+empty$ -- 79
+format.name$ -- 4
+if$ -- 186
 int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 0
-num.names$ -- 0
-pop$ -- 0
-preamble$ -- 0
-purify$ -- 0
+int.to.str$ -- 3
+missing$ -- 2
+newline$ -- 17
+num.names$ -- 4
+pop$ -- 14
+preamble$ -- 1
+purify$ -- 9
 quote$ -- 0
-skip$ -- 0
+skip$ -- 33
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
-text.length$ -- 0
+substring$ -- 64
+swap$ -- 12
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
-warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 0
-(There was 1 error message)
+type$ -- 12
+warning$ -- 1
+while$ -- 9
+width$ -- 4
+write$ -- 32
+(There was 1 warning)
