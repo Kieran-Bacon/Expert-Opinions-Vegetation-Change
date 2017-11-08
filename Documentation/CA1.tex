@@ -54,7 +54,7 @@ These localised models can be vastly different in their respective level of spec
 
 \subsection{Web server}
 
-The web server is the primary visual aid to the project. It's requirements are based around the visualisation of information and efficiency of transfering insight. It will be responsible for interacting and operating the machine learning package but is a complementary piece.
+The web server is the primary visual aid to the project. It's requirements are based around the visualisation of information and efficiency of transferring insight. It will be responsible for interacting and operating the machine learning package but is a complementary piece.
 
 \subsubsection{Model Uploading}
 
@@ -96,11 +96,11 @@ To ensure that we do not violate any ethical considerations, there is a requirem
 
 \subsection{Machine Learning Package}
 
-The machine learning system is a standalone package and should be possible to intergated with an arbitrary system. Its responsibilities include training and operating expert models, and managing them on a file system.
+The machine learning system is a standalone package and should be possible to integrated with an arbitrary system. Its responsibilities include training and operating expert models, and managing them on a file system.
 
 \subsubsection{Training}
 
- There is a general requirement for the system to learn/be taught the innate trends in opinion the expert holds, but there is no requirement for a particular method. The process by which this is achieved shall not be known until analysis of available techniques and their viability is complete. An optimal solution would be a technique that can undergo on-line learning and be computationaly inexpensive. On-line learning complements the slow-paced nature of data collection and allows for quick inclusion into the expert model. The inexpensive application of the model would go a long way in reducing the load on the server and ensure quick evaluation of CMOs.
+ There is a general requirement for the system to learn/be taught the innate trends in opinion the expert holds, but there is no requirement for a particular method. The process by which this is achieved shall not be known until analysis of available techniques and their viability is complete. An optimal solution would be a technique that can undergo on-line learning and be computationally inexpensive. On-line learning complements the slow-paced nature of data collection and allows for quick inclusion into the expert model. The inexpensive application of the model would go a long way in reducing the load on the server and ensure quick evaluation of CMOs.
 
  Alternatively it would be possible to use a technique not capable of on-line learning, however, it would require re-creation whenever new labelled information is presented. This would result in a noticeable downtime of a particular experts model on the server, or would require a change to the requirement of immediate teaching.
 
@@ -143,11 +143,11 @@ We require the use of a university server to be able to host our webtool and per
 
  After the project comes to a close, the server, data, and code will be given over to Dr. F Hugo Lambert/the University. He and whomever he chooses to work with will then be responsible for the further development and maintenance of the code, data, and webtool.
 
- Once the development phase is complete, there are still maintenance costs to consider. General upkeep of the webtool and planned or unplanned patches and improvements. Once the webtool is available to the wider scientific community there is the inevitability of required bug fixes to account for as well as planning for performance checks to ensure the expert models are appropriately adjusting to new labelled datasets and making accurate predictions on ‘real’ data.
+ Once the development phase is complete, there are still maintenance costs to consider. General upkeep of the webtool and planned or unplanned patches and improvements. Once the webtool is available to the wider scientific community there is the inevitability of required bug fixes to account for as well as planning for performance checks to ensure the expert models are appropriately adjusting to new labelled datasets and making accurate predictions on 'real'�� data.
 
- The team has a future ambition to intergrate the system into a docker container. We will develop the project with docker in mind however due to server restrictions we will not be implementing it currently. This will ensure longevity and ensure portability along with easy of deployment. Docker facilitates packaging the codebase along with all dependancies resulting in a system that can run anywhere and is agnostic to the host platform.
+ The team has a future ambition to integrate the system into a docker container. We will develop the project with docker in mind however due to server restrictions we will not be implementing it currently. This will ensure longevity and ensure portability along with easy of deployment. Docker facilitates packaging the codebase along with all dependancies resulting in a system that can run anywhere and is agnostic to the host platform.
 
-Attention is being given to ensure model longevity. Model objects are to be serialised and transferable and most importantly forwards compatible. Future iterations of the webtool will not limit expert model availability, and models trained during our project can persit and further improved upon in future iterations of the machine learning package.  
+Attention is being given to ensure model longevity. Model objects are to be serialised and transferable and most importantly forwards compatible. Future iterations of the webtool will not limit expert model availability, and models trained during our project can persist and further improved upon in future iterations of the machine learning package.  
 
 \subsection{Benefits}
  The goal of this project is to provide an efficient way of choosing the best models using a large selection of model outputs. The model outputs represent the observed effects of surface vegetation on carbon feedbacks over the last 200 years. These model outputs are relatively cheap to obtain as they are based on existing observational data hence they can be run a large number of times. However running these models into the future is expensive and requires greater computational power. This computational power is expensive to use therefore only the best models should be chosen. Creating an efficient method to select these models will save the expense of using sub-optimal models for future predictions.
@@ -192,11 +192,9 @@ results or influence legislation.
 opinions and preferences to estimate what their opinion is of unseen
 data. In the worst case, having their name attached
 to opinions that are not representative of their own may be damaging to their career. To mitigate against this risk it is suggested
-that the page that produces inference results will include a disclaimer.
-This will clearly state that the results produced during evaluation of CMOs 
-it is not necessarily an opinion shared by the expert and may sometimes not produce a faithful representation. As an additional
-safeguard at the training phase, metrics such as accuracy or correlation
-metrics will be shown to the expert
+that the page that performs  evaluation of CMOs  will include a disclaimer.
+This disclaimer will clearly state that the results are not necessarily an opinion shared by the expert and may sometimes produce incorrect results.
+As an additional safeguard at the training phase, metrics such as accuracy or correlation metrics will be shown to the expert
 before he/she decides whether to publish his ``opinion predictor''
 to be usable by the public. It is believed that these two safeguards
 will mitigate the risk as much as possible.
@@ -213,7 +211,7 @@ are not necessarily 100\% representative and should not be taken as concrete evi
 \paragraph{Malicious Usage:}
 
  Climate change is a very contentious topic that has been shown to
-drive people to extreme lengths to convice others of their opinion\cite{nerlich2010climategate}. As a result
+drive people to extreme lengths to convince others of their opinion\cite{nerlich2010climategate}. As a result
 of this it must be ensured that the system is:
 \begin{itemize}
 \item As secure against hacking as possible and keeping thorough logs of
@@ -241,29 +239,28 @@ learning experts.
 under the Data Protection Act 1998 and the new General Data Protection
 Regulation (GDPR) 2016. This is due to the ability to identify the individual
 given the information, both explicit and implied that is retained in
-the user accounts of the webtool. For example, Name and Email which when combined
-with the knowledge of the field of research would make it very trivial
-to find out precisely who the information relates to. For the purposes
-of this section, the GDPR will be specifically focused on due to its
+the system For example, name and email address which when combined
+with the knowledge of the field of research would make it trivial
+to find out who the information relates to. Opinions are also covered by the GDPR \cite{eu:gdpr}. 
+
+ For the purposes of this section, the GDPR will be the focu due to its
 replacement of the Data Protection Act on the 25th May 2018. The GDPR
-states that anyway the data will be used or processed should be
+states that any way the data will be used or processed should be
 transparent and clearly presented to the user. It also states that
 the information should be viewable by the user and have the ability
-to be updated should it be found to be inaccurate or deleted upon
+to be updated should it be found to be inaccurate. Data also needs to be deletable upon
 request. All of these points have fairly trivial solutions such as
 clear disclaimers and a simple accounts page showing all the information
 stored relating to that user as well as a delete account button to
 cover the right to erasure \cite{eu:gdpr}. 
 
- Something that is a more interesting for this context is the ``Right
-to explanation'' that states that a user has the right to understand decisions that are made using their data. This is interesting
+ Something that is a more difficult in this context is the ``Right
+to explanation'' that states that a user has the right to understand any decisions that are made using their data. This is interesting
 as in some machine learning systems it is extremely difficult, if
 not impossible, to explain the decision that was learned from the
 data. Luckily article 9(2) allows somebody to explicitly consent
 to forego this right. In this case this is probably very likely to
-be the solution that is taken it is very possible however that certain
-algorithms such as decision trees or KNN may offer suitably explainable
-algorithms and asking the user to waiver this right may not be necessary. 
+be the best solution in this case \cite{eu:gdpr}. 
 
 \subsubsection{Summary of Terms and Conditions Requirements.}
 
@@ -280,27 +277,25 @@ For experts who are labelling data:
 offered to the general public.
 \item Waiving their rights to explanation of how decisions are made based
 on their data. Note, an explanation of the algorithms used to make
-the decisions will be shown, but it may not be possible to show how
+the decisions will be shown, but it may not be possible to show precisely how
 these algorithms make the decisions they do, which appears to be in
 violation.
 \end{itemize}
 
 \paragraph{Software License Agreements}
 
- Consideration must be taken throughout the development process to use
-only libraries that are free to use for academic work. Each piece of software must be considered on a case by case basis based on the licensing agreement for
+ Consideration must be taken throughout the development process to only use libraries that are free to use for academic work. 
+ Each piece of software must be considered on an individual basis depending on the licensing agreement for
 the particular library or software. Some useful information can be found in \cite{ethicalandlegal}.
 
 
 \subsubsection{Professional}
 
- A large consideration that needs to be made is on the professional
-responsibilities of taking on a project such as this. This project
-is a very high-risk endeavour whereby it is possible that there are unresolvable chalenges. Limitations arrising from the laws of information theory are an example and no amount of clever engineering will ever be able to solve this.
-For example, it is possible that the machine learning aspect of performing
-the desired inference on this data requires so much data that attempting
-to represent the opinions of a single expert may be completely infeasible
-due to the volumes of samples that the expert might need to label. 
+ A consideration that needs to be made is the professional responsibilities of taking on a project such as this.
+ This project is a high-risk endeavour, it is possible that there are very difficult or possibly unresolvable challenges.
+ Limitations arising from the laws of information theory are an example of unresolvable issues and no amount of clever engineering will ever be able to solve this.
+For example, it may be possible that to learn the patterns in the CMO data requires so much data that attempting
+to represent the opinions of a single expert may be infeasible due to the volumes of samples that the expert might need to label. 
 
 \subsection{Domain Specific}
 
@@ -308,26 +303,16 @@ Issues that relate the domain of machine learning and climate science but do not
 
 \subsubsection{Ethical}
 
- Technology, and more predominantly machine learning, has 
-a potential byproduct of significantly reducing the number of skilled
-jobs in certain fields, either by making people's jobs easier or by removing them all together.
-Cases of this have been seen in areas from robots replacing factory
-workers all the way through to uber researching autonomous vehicles
-gearing up to replace their human drivers. Fortunately, this is a non-issue
-in this case due to the fact that we are only ``imitating'' for the people who the developed
-system will be ``imitating'', assigning rankings to climate model
-data is a tiny and likely unenjoyable slice of their job. The rest bite
-from this process will allow them to focus more on their core research
-and make more valuable contributions to the field. 
+Technological innovation, particularly within machine learning has an unfortunate history of reducing the number of skilled jobs in certain fields. This is caused either by making people's jobs easier or by removing them all together. Fortunately, this is not an issue in this case due to the work we are automating being a small part of the researchers jobs. It is likely that in this case that it may allow the expert to concentrate more on their primary research focus by reducing  the number of CMOs they have to rank. 
 
 
 
 \section{Development Approach}
- This project will be completed using an Agile methodology. Agile has been chosen because it allows for not only changes to the time plan, but to changes in requirements/desirables of the “customer”. Other module projects and the generally packed lives of the collaborators to this project will no doubt cause changes to when different components are to be complete. This factor along with the evolving idea of what is wanted, and possible, correspond well with the Agile methodology.
+ This project will be completed using an Agile methodology. Agile has been chosen because it allows for not only changes to the time plan, but to changes in requirements/desirables of the 'customer'��. Other module projects and the generally packed lives of the collaborators to this project will no doubt cause changes to when different components are to be complete. This factor along with the evolving idea of what is wanted, and possible, correspond well with the Agile methodology.
 
- Python has been chosen as the language to develop the machine learner in. The reasoning behind this choice is that all group members have at least some experience working with the language, and others even have experience using it for machine learning. Python’s scikit-learn module also comes with many prebuilt machine learning techniques that are easy to comprehend and use.
+ Python has been chosen as the language to develop the expert model in. The reasoning behind this choice is that all group members have at least some experience working with the language, and others even have experience using it for machine learning. Python'��s scikit-learn module also comes with many prebuilt machine learning techniques that are easy to use and familiar to the team.
 
- In addition to the basic web development tools like HTML, CSS, and Bootstrap we have decided to use Python Pylons Pyramid. Pylons is an open source Web Framework written in python. The decision to use this as the backend framework was influenced by the plan for the learner to be written in python, allowing for easy integration. Also a group member already has experience in using this framework, making it the obvious choice.
+ In addition to the basic web development tools like HTML, CSS, and Bootstrap we have decided to use Python Pylons Pyramid. Pylons is an open source Web Framework written in python. The decision to use this as the backend framework was influenced by the plan for the expert model to be written in python, allowing for easy integration. Also a group member already has experience in using this framework, making it the obvious choice.
 
 \subsection{Milestones}
 
@@ -341,7 +326,7 @@ and make more valuable contributions to the field.
 
 \item Backend Skeleton (28/11/2017) –  The server for the site is up and running and a database has been created to store the relevant data that will be used in the project. 
 
-\item Data visualization (15/12/2017) –  This will be a crucial element in the collecting of data. The models have outputs of up to 17 vegetation types, all need to be accessible visually at the same time. Without this visualization it would be very difficult for an expert to discern the good outputs from the bad outputs, and even if they could it would be too time-consuming.
+\item Data visualisation (15/12/2017) –  This will be a crucial element in the collecting of data. The models have outputs of up to 17 vegetation types, all need to be accessible visually at the same time. Without this visualization it would be very difficult for an expert to discern the good outputs from the bad outputs, and even if they could it would be too time-consuming.
 
 \item Data Collection Functionality (15/1/2018) – The page where an expert gives their opinion is fully functional. This includes visual representation of the models, user input, and data capture. Completion of this milestone is instrumental in the development of the rest of the project. Currently we have no data on the opinions of experts and without data we cannot develop a machine learning technique.
 
@@ -355,7 +340,7 @@ and make more valuable contributions to the field.
 
 \item Final Report (11/05/2018) – Our experiences throughout the process will be aggregated into a comprehensive report describing our insight along the way and the final state of the project.
 
-\item Presentation and Demonstration (second half of term 3) – We will present our findings and demonstrate its use. The aim would be to prove its viablility as a useful tool for experts.
+\item Presentation and Demonstration (second half of term 3) – We will present our findings and demonstrate its use. The aim would be to prove its viability as a useful tool for experts.
 
 \end{itemize}
 
@@ -363,11 +348,11 @@ and make more valuable contributions to the field.
 
  The main risk that this project will face is time management. The entire project is on a short time span, being that it needs to be completed by May 2018. That relatively short amount of time on top of the busy lives of the group members does not leave a lot of room, when it comes to getting different components completed. Up to this point, the group has been able to meet regularly with any real hassle. This will most likely become more difficult as the term progresses and other modules start to give out more work. 
 
- Equally impeding, will be size of the data set. At present, we have no data to train a learner on. This would not be too large a problem if we could generate the data ourselves, but the group’s ability to do so will be limited, considering that only Dr. F Hugo Lambert is the only expert among us. In light of this the development of the Data collection process is crucial so that we can start collecting data. With a large amount of data, there is no guarantee that the learning methods that we implement will be able to accurately represent the experts. With a lack of data, it could prove very hard to find a correlation between model ratings and expert opinion.
+ Equally impeding, will be size of the data set. At present, we have no data to train an expert model on. This would not be too large a problem if we could generate the data ourselves, but the group’s ability to do so will be limited, considering that only Dr. F Hugo Lambert is the only expert among us. In light of this, the development of the Data collection process is crucial so that we can start collecting data. With a large amount of data, there is no guarantee that the learning methods that we implement will be able to accurately represent the experts. With a lack of data, it could prove very hard to find a correlation between model ratings and expert opinion.
 
- Other risks to the project include lack of communication outside of term time, differences in opinion among group members, change in requirements late in the development process. The largest of these being the lack of communication outside of term time. The group members all live in different areas, there are even members who reside outside of the U.K. and time zones may make communication sporadic. 
+ Other risks to the project include lack of communication outside of term time, differences in opinion among group members and change in requirements late in the development process. The largest of these being the lack of communication outside of term time. The group members all live in different areas, there are even members who reside outside of the U.K. and time zones may make communication sporadic. 
 
-We have implemented the agile development strategy to ensure we keep focus within scope. However, if we encounter severe setbacks that are not able to be compensated for by our plan, it will be possible to divert attention away from lower priority features. This potentially includes the analytical insight we aimed to acquire during the process. Focus shall always be on the learner functionality.
+We have implemented the agile development strategy to ensure we keep focus within scope. However, if we encounter severe setbacks that are not able to be compensated for by our plan, it will be possible to divert attention away from lower priority features. This potentially includes the analytical insight we aimed to acquire during the process. Focus shall always be on the expert model functionality.
  
  \section{Conclusion}
  
