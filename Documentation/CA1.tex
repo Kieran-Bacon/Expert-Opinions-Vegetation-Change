@@ -10,6 +10,7 @@
 \title{Plan, Cost/Benefit Analysis and Ethical/Legal Considerations Report}
 \author{K Bacon, N Higgins, P Kim, B Townsend}
 \maketitle
+\thispagestyle{empty}
 
 \begin{abstract}
 Ensemble models are a key method for tackling uncertainty in the way that we model the earths climate. They involve running many simulations each with different parameters, with the variance in these parameters representing the known uncertainty in measurements such as the initial conditions. In certain cases some of these simulation outputs should be discarded as outliers due to the unphysical nature of the results, but often these unphysical outputs are too subtle for somebody not expert in the particular field to confidently evaluate. This project aims to produce a solution to this issue by utilising machine learning technologies to understand patterns in the opinions of experts, allowing their careers worth of knowledge and experience to be easily distilled into a piece of software that is available to anyone who requires it. Additionally, as ensemble sizes, that are currently limited by the availability of computational resources, continue to grow larger and larger it becomes progressively less feasible to manually evaluate each model. This software should be able to assist in this case as well. The initial focus of this project is to develop a user friendly web tool capable of learning the opinions of individual vegetation experts whilst abstracting any of the machine learning to a level that can be understood by anybody, independent of their level of knowledge in this field. 
@@ -19,8 +20,10 @@ Ensemble models are a key method for tackling uncertainty in the way that we mod
 \newpage % forcing a new page to separate the body of the report from the coverpage
 
 \tableofcontents
+\thispagestyle{empty}
 
 \newpage
+\pagenumbering{arabic}
 
 \section{Problem Definition}
 
@@ -164,8 +167,8 @@ require an extra level of care due to legal aspects of handling data,
 as well as the ethical aspects of the decisions that are derived from
 it. This project has a very specific set of issues that should be
 dealt with as the project itself is designed to simulate the professional
-opinions of experts, something that has both the potential for abuse
-and has potentially damaging consequences for the professional.
+opinions of experts, something that has both potential for abuse
+and damaging consequences for the professional.
 
 \subsection{Project Specific}
 
@@ -190,16 +193,15 @@ results or influence legislation.
 
  The underlying principle of this project is to generalise a researchers
 opinions and preferences to estimate what their opinion is of unseen
-data. In the worst case, having their name attached
+data. In the worst case scenario, having their name attached
 to opinions that are not representative of their own may be damaging to their career. To mitigate against this risk it is suggested
 that the page that performs  evaluation of CMOs  will include a disclaimer.
 This disclaimer will clearly state that the results are not necessarily an opinion shared by the expert and may sometimes produce incorrect results.
 As an additional safeguard at the training phase, metrics such as accuracy or correlation metrics will be shown to the expert
-before he/she decides whether to publish his ``opinion predictor''
-to be usable by the public. It is believed that these two safeguards
+before they decide whether to publish their ``opinion predictor''. It is believed that these two safeguards
 will mitigate the risk as much as possible.
 
-\paragraph{Inaccuracies in the System Affecting Scientific Results or Influence
+\paragraph{Inaccuracies in the System Affecting Scientific Results or Influencing
 Legislation:}
 
  Related to the above point is the capabilities of the system to bias
@@ -211,13 +213,13 @@ are not necessarily 100\% representative and should not be taken as concrete evi
 \paragraph{Malicious Usage:}
 
  Climate change is a very contentious topic that has been shown to
-drive people to extreme lengths to convince others of their opinion\cite{nerlich2010climategate}. As a result
+drive people to extreme lengths to convince others of their opinion \cite{nerlich2010climategate}. As a result
 of this it must be ensured that the system is:
 \begin{itemize}
-\item As secure against hacking as possible and keeping thorough logs of
-usage to help understand what has been compromised upon a breach.
+\item Protected against hacking and unauthorised access.
+\item Keeping logs of usage to understand what has been compromised upon a breach. The aim of this is to remove the risk of malicious biases being attributed to an expert if a breach does occur.
 \item Enforcing that accounts cannot be set up in the names of others so
-that they can impersonate them. 
+that they can't impersonate them. 
 \item A method of disambiguating experts with the same name, eg. Institution
 \item Some form of verification status. This may be as simple as verifying
 that account holders for the ``experts'' possess {*}.ac.{*}, {*}.gov
@@ -235,51 +237,43 @@ learning experts.
 
 \subsubsection{Legal}
 
- The data held in as a result of this project is covered
+ The data held as a result of this project is covered
 under the Data Protection Act 1998 and the new General Data Protection
 Regulation (GDPR) 2016. This is due to the ability to identify the individual
-given the information, both explicit and implied that is retained in
-the system For example, name and email address which when combined
+given the information, both explicit and implied, that is retained in
+the system. For example, name and email address which when combined
 with the knowledge of the field of research would make it trivial
 to find out who the information relates to. Opinions are also covered by the GDPR \cite{eu:gdpr}. 
 
- For the purposes of this section, the GDPR will be the focu due to its
+ The GDPR will be the focus due to its
 replacement of the Data Protection Act on the 25th May 2018. The GDPR
 states that any way the data will be used or processed should be
 transparent and clearly presented to the user. It also states that
-the information should be viewable by the user and have the ability
-to be updated should it be found to be inaccurate. Data also needs to be deletable upon
-request. All of these points have fairly trivial solutions such as
-clear disclaimers and a simple accounts page showing all the information
-stored relating to that user as well as a delete account button to
+the information should be viewable by the user and editable when found to be inaccurate. User information needs to be deletable upon
+request. All of these points have fairly trivial solutions such as:
+clear disclaimers illustrating the nature of the legal requirements; a simple accounts page showing all the information partaining to the user; and a delete account button to
 cover the right to erasure \cite{eu:gdpr}. 
 
- Something that is a more difficult in this context is the ``Right
-to explanation'' that states that a user has the right to understand any decisions that are made using their data. This is interesting
-as in some machine learning systems it is extremely difficult, if
+The ``Right to explanation'' within the GDPR dictates that a user should be able to understand how their data was used to come to a decision. This is a concern as, in some machine learning systems it is extremely difficult, if
 not impossible, to explain the decision that was learned from the
-data. Luckily article 9(2) allows somebody to explicitly consent
-to forego this right. In this case this is probably very likely to
-be the best solution in this case \cite{eu:gdpr}. 
+data. Fortunately, article 9(2) allows somebody to explicitly consent
+to forego this right. This provides us the flexibility to choose the machine learning technique that yields the highest performance \cite{eu:gdpr}. 
 
-\subsubsection{Summary of Terms and Conditions Requirements.}
-
-For somebody who is going to be using the systems as a non-expert
-to evaluate CMOs:
+\subsubsection{Summary of Terms and Conditions}
+A general user of the system who is evaluating CMOs must:
 \begin{itemize}
-\item Consenting their awareness that the algorithm is not to be assumed
+\item Be aware that the algorithm cannot be assumed
 to give a totally faithful representation of an experts opinion for
 all cases.
 \end{itemize}
-For experts who are labelling data:
+For experts who are labelling data, they must:
 \begin{itemize}
-\item Consenting for their personal information to be held and their ``opinions''
+\item Consent for their personal information to be held and their ``opinions''
 offered to the general public.
-\item Waiving their rights to explanation of how decisions are made based
-on their data. Note, an explanation of the algorithms used to make
+\item Waiver their rights to explanation of how decisions are made based
+on their data. An explanation of the algorithms used to make
 the decisions will be shown, but it may not be possible to show precisely how
-these algorithms make the decisions they do, which appears to be in
-violation.
+these algorithms make the decisions they do.
 \end{itemize}
 
 \paragraph{Software License Agreements}
@@ -293,9 +287,10 @@ the particular library or software. Some useful information can be found in \cit
 
  A consideration that needs to be made is the professional responsibilities of taking on a project such as this.
  This project is a high-risk endeavour, it is possible that there are very difficult or possibly unresolvable challenges.
- Limitations arising from the laws of information theory are an example of unresolvable issues and no amount of clever engineering will ever be able to solve this.
-For example, it may be possible that to learn the patterns in the CMO data requires so much data that attempting
-to represent the opinions of a single expert may be infeasible due to the volumes of samples that the expert might need to label. 
+ Limitations arising from the laws of information theory are an example of unresolvable issues, and no amount of clever engineering will ever be able to solve this.
+For example, it may be possible that to learn the patterns in the CMO data, it may require an infeasable number of labeled data points. 
+
+
 
 \subsection{Domain Specific}
 
@@ -303,60 +298,59 @@ Issues that relate the domain of machine learning and climate science but do not
 
 \subsubsection{Ethical}
 
-Technological innovation, particularly within machine learning has an unfortunate history of reducing the number of skilled jobs in certain fields. This is caused either by making people's jobs easier or by removing them all together. Fortunately, this is not an issue in this case due to the work we are automating being a small part of the researchers jobs. It is likely that in this case that it may allow the expert to concentrate more on their primary research focus by reducing  the number of CMOs they have to rank. 
-
+Technological innovation, particularly within machine learning, has an unfortunate history of reducing the number of skilled jobs in certain fields. This is caused either by making people's jobs easier or by removing them all together. This is not an issue in this case due to the work we are automating being a small part of the researchers jobs. It is likely that in this case that it may allow the expert to concentrate more on their primary research focus by reducing  the number of CMOs they have to rank. 
 
 
 \section{Development Approach}
- This project will be completed using an Agile methodology. Agile has been chosen because it allows for not only changes to the time plan, but to changes in requirements/desirables of the 'customer'��. Other module projects and the generally packed lives of the collaborators to this project will no doubt cause changes to when different components are to be complete. This factor along with the evolving idea of what is wanted, and possible, correspond well with the Agile methodology.
+ This project will be completed using an Agile methodology. Agile has been chosen because it allows for adjustments to the time plan, and requirements/desirables of the 'customer'. These are preferred aspects as collaborators will have various other projects and time demands to uphold during the development of the project. This factor along with the evolving scope correspond well with the Agile methodology.
 
- Python has been chosen as the language to develop the expert model in. The reasoning behind this choice is that all group members have at least some experience working with the language, and others even have experience using it for machine learning. Python'��s scikit-learn module also comes with many prebuilt machine learning techniques that are easy to use and familiar to the team.
+ Python has been chosen as the implementation language of the backend of the product. The reasoning behind this choice is that all group members have at least some experience working with the language, and others even have experience using it for machine learning. Python's scikit-learn module also comes with many prebuilt machine learning techniques that are easy to use and familiar to the team.
 
- In addition to the basic web development tools like HTML, CSS, and Bootstrap we have decided to use Python Pylons Pyramid. Pylons is an open source Web Framework written in python. The decision to use this as the backend framework was influenced by the plan for the expert model to be written in python, allowing for easy integration. Also a group member already has experience in using this framework, making it the obvious choice.
+ In addition to the basic web development tools like HTML, CSS, and Bootstrap we have decided to use Python Pylons Pyramid. Pylons is an open source Web Framework written in python. The decision to use this as the backend framework was influenced by a need to easily integrate with the Machine learning package. Additionally, a group member already has experience in using this framework making it the obvious choice.
 
 \subsection{Milestones}
 
 \begin{itemize}
 
-\item API(ASAP) – The API must be created and agreed upon first. This is the backbone of all the programming that will be done during this project and is what will allow us to work individually without running into compatibility issues later down the line. At this point we already have a draft of the API and are working out differences in opinion, and filling gaps.
+\item API(COMPLETED) - The API must be created and agreed upon first. This is the backbone of all the programming that will be done during this project. This will allow us to work individually without running into compatibility issues later down the line.
 
-\item CA1 (10/11/2017) – 
+\item CA1 (10/11/2017) - Plan, cost/benefit analysis and ethical/legal considerations report. 
 
-\item Frontend Skeleton (28/11/2017)– The website pages are created with little to no functionality. Just a visual representation to give us a sense of what needs to be developed for each page, alongside how the site should be navigated.
+\item Frontend skeleton (28/11/2017) - The website pages are created with little to no functionality. Just a visual representation to give us the basic structure. It identifies what needs to be developed for each page, alongside how the site should be navigated.
 
-\item Backend Skeleton (28/11/2017) –  The server for the site is up and running and a database has been created to store the relevant data that will be used in the project. 
+\item Webtool skeleton (28/11/2017) - The server for the site is up and running and a database has been created to store the relevant data that will be used in the project. 
 
-\item Data visualisation (15/12/2017) –  This will be a crucial element in the collecting of data. The models have outputs of up to 17 vegetation types, all need to be accessible visually at the same time. Without this visualization it would be very difficult for an expert to discern the good outputs from the bad outputs, and even if they could it would be too time-consuming.
+\item Data visualisation (15/12/2017) - This will be a crucial element in the collecting of data. The models have outputs of up to 17 vegetation types, all need to be accessible visually at the same time.  
 
-\item Data Collection Functionality (15/1/2018) – The page where an expert gives their opinion is fully functional. This includes visual representation of the models, user input, and data capture. Completion of this milestone is instrumental in the development of the rest of the project. Currently we have no data on the opinions of experts and without data we cannot develop a machine learning technique.
+\item Data collection functionality (15/1/2018) - The page where an expert gives their opinion is fully functional. This includes visual representation of the models, user input, and data capture. Completion of this milestone is instrumental in the development of the rest of the project.
 
-\item Basic Learner (30/1/2018) – Once the data collection is implemented we can begin to develop our learner. At this point the technique used by the learner does not need to be permanent, but a functioning learner is needed so that other components can begin development.
+\item Basic expert model (30/1/2018) - Once the data collection is implemented we can begin to develop our expert model. Analysis into the machine learning technique will begin. A prototype expert model will be used to test other components.
 
-\item Chosen Set of Algorithms (10/2/2018) – After a learner has been created we can start experimenting with the different types of machine learning algorithms. Through this experimentation we will come up with a single/small set of machine learning algorithms that users can choose from.
+\item Chosen set of algorithms (10/2/2018) - After a expert model has been created we can start experimenting with the different types of machine learning algorithms. Through this experimentation we will come up with a single/small set of machine learning algorithms that users can choose from.
 
-\item Training Stage Complete (17/2/2018) – At this point an expert should be able to login to the site, give their opinions on models, have those opinions trained into a learner, and use that model to provide opinions on new models. This element can begin development once the data collection and basic learner are completed.
+\item Training stage complete (17/2/2018) - At this point an expert should be able to login to the site, give their opinions on CMOs, have those opinions trained into a expert model, and use that model to provide opinions on new data. This element can begin development once the data collection and basic learner are completed.
 
-\item Upload/Result Page Complete (3/3/2018) – Anyone should be able to come to the site, upload models, select an expert, and get the results from that expert’s learner. At this point the site is fully functional.
+\item Upload/result page complete (3/3/2018) - Anyone should be able to come to the site, upload models, select an expert, and get the results from that expert's model. At this point the site is fully functional.
 
-\item Final Report (11/05/2018) – Our experiences throughout the process will be aggregated into a comprehensive report describing our insight along the way and the final state of the project.
+\item Final report (11/05/2018) - Our experiences throughout the process will be aggregated into a comprehensive report describing our insight and results along the way and the final state of the project.
 
-\item Presentation and Demonstration (second half of term 3) – We will present our findings and demonstrate its use. The aim would be to prove its viability as a useful tool for experts.
+\item Presentation and demonstration (second half of term 3) - We will present our findings and demonstrate its use. The aim would be to prove its viability as a useful tool for experts.
 
 \end{itemize}
 
 \subsection{Risk Analysis}
 
- The main risk that this project will face is time management. The entire project is on a short time span, being that it needs to be completed by May 2018. That relatively short amount of time on top of the busy lives of the group members does not leave a lot of room, when it comes to getting different components completed. Up to this point, the group has been able to meet regularly with any real hassle. This will most likely become more difficult as the term progresses and other modules start to give out more work. 
+ The main risk that this project will face is time management. The entire project is on a short time span, being that it needs to be completed by May 2018. That relatively short amount of time on top of the busy lives of the group members does not leave a lot of room, when it comes to getting different components completed. Up to this point, the group has been able to meet regularly without any real hassle. This will most likely become more difficult as the term progresses and other modules start to demand more time. 
 
- Equally impeding, will be size of the data set. At present, we have no data to train an expert model on. This would not be too large a problem if we could generate the data ourselves, but the group’s ability to do so will be limited, considering that only Dr. F Hugo Lambert is the only expert among us. In light of this, the development of the Data collection process is crucial so that we can start collecting data. With a large amount of data, there is no guarantee that the learning methods that we implement will be able to accurately represent the experts. With a lack of data, it could prove very hard to find a correlation between model ratings and expert opinion.
+ Equally impeding, will be size of the data set. At present, we have no data to train an expert model on. This would not be too large a problem if we could generate the data ourselves, but the group's ability to do so will be limited, considering that Dr. F Hugo Lambert is the only expert among us. In light of this, the development of the data collection process is crucial so that we can start collecting data. With a large amount of data, there is no guarantee that the learning methods that we implement will be able to accurately represent the experts. With a lack of data, it could prove very hard to find a correlation between model ratings and expert opinions.
 
- Other risks to the project include lack of communication outside of term time, differences in opinion among group members and change in requirements late in the development process. The largest of these being the lack of communication outside of term time. The group members all live in different areas, there are even members who reside outside of the U.K. and time zones may make communication sporadic. 
+ Other risks to the project include lack of communication outside of term time, differences in opinion among group members and change in requirements late in the development process. The group members all live in different areas, there are even members who reside outside of the U.K. and time zones may make communication sporadic. 
 
 We have implemented the agile development strategy to ensure we keep focus within scope. However, if we encounter severe setbacks that are not able to be compensated for by our plan, it will be possible to divert attention away from lower priority features. This potentially includes the analytical insight we aimed to acquire during the process. Focus shall always be on the expert model functionality.
  
  \section{Conclusion}
  
- This project, upon successful completion, has the potential for great impact to the future of climate research and ensemble modelling by allowing the efficient distillation of decades of knowledge and opinions in a way that is accessible to the wider climate science community. As a bonus, it is possible that developed techniques or successful research in the machine learning aspect of this project may be useful for other applications within climate science, for which the potential future applications are vast.
+ This project, upon successful completion, has the potential for great impact to the future of climate research. Allowing the efficient distillation of decades of knowledge and opinions in a way that is accessible to the wider climate science community. As a bonus, it is possible that developed techniques or successful research in the machine learning aspect of this project may be useful for other applications within climate science. For which the potential future applications are vast.
 
 \bibliography{CA1}
 \end{document}
