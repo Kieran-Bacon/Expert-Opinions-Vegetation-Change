@@ -1,0 +1,3 @@
+SELECT m.filepath, q.text
+FROM users u, models m, questions q, labels l
+WHERE u.username = ? AND m.mid <> 
