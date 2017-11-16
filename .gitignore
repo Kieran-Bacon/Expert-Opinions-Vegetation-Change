@@ -3,3 +3,4 @@
 *.cpython*
 .vscode/
 *afpDeleted*
+*.db
