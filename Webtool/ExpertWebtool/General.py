@@ -10,11 +10,9 @@ import sqlite3
 
 @view_config(route_name='blank', renderer="templates/base.html")
 def blank(request):
-	print("Got to blank page")
 	permissions(request) # Validates user
-
 	# Returns the base template page.
-	return {"title":"Blank Page", "name":"Kieran"}
+	return { **request.session, **{"title":"Blank Page"}}
 
 @view_defaults(route_name="login", renderer="templates/login.html")
 class LoginHandler:
@@ -27,13 +25,10 @@ class LoginHandler:
 
 	@view_config(route_name="login")
 	def loginGET(self):
-		print('LoginGet')
 		return {}
 
 	@view_config(route_name="loggingIn", request_method='POST')
 	def loginPOST(self):
-
-		print('LoginPost')
 
 		# Collect the posted information from the login form
 		username = self.request.params.get('username', None)
@@ -61,6 +56,7 @@ class LoginHandler:
 			self.request.session["username"] = username
 			self.request.session["firstname"] = user["firstname"]
 			self.request.session["lastname"] = user["lastname"]
+			self.request.session["avatar"] = user["avatar"]
 
 			# Redirect the client to the new page
 			raise exc.HTTPFound(self.request.route_url("blank"))

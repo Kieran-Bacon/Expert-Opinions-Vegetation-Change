@@ -12,11 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">Expert Training</h1>
-    </div>
-</div>
+<br/>
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
@@ -35,17 +31,67 @@
             <div class="panel-heading">Parameter Sensitivity</div>
 			<div class="panel-body">
 				<div class="panel-group" id="accordion">
-				    <div class="panel panel-default">
-				        <div class="panel-heading">
-				            <h4 class="panel-title">
-				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">Grass Types</a>
-				            </h4>
-				        </div>
-				        <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-				            <div class="panel-body">
+
+					<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a data-toggle="collapse" data-parent="#accordion" href="#generalSwitchs" aria-expanded="false" class="collapsed">General</a>
+								</h4>
+							</div>
+							<div id="generalSwitchs" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-lg-6">
+											<p>Bare soil</p>
+										</div>
+										<div class="col-lg-6">
+											<input type="checkbox" class="js-switch" checked />
+										</div>
+									</div>
+									<br>
+									<div class="row">
+										<div class="col-lg-6">
+											<p>Concrete</p>
+										</div>
+										<div class="col-lg-6">
+											<input type="checkbox" class="js-switch" checked />
+										</div>
+									</div>
+									<br>
+									<div class="row">
+										<div class="col-lg-6">
+											<p>Ice</p>
+										</div>
+										<div class="col-lg-6">
+											<input type="checkbox" class="js-switch" checked />
+										</div>
+									</div>
+									<br>
+									<div class="row">
+										<div class="col-lg-6">
+											<p>Lake</p>
+										</div>
+										<div class="col-lg-6">
+											<input type="checkbox" class="js-switch" checked />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">Broad leaf</a>
+							</h4>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+							<div class="panel-body">
 								<div class="row">
 									<div class="col-lg-6">
-										<p>Marshland</p>
+										<p>Decidous</p>
 									</div>
 									<div class="col-lg-6">
 										<input type="checkbox" class="js-switch" checked />
@@ -54,7 +100,7 @@
 								<br>
 								<div class="row">
 									<div class="col-lg-6">
-										<p>Toxic Grass</p>
+										<p>Evergreen Tropic</p>
 									</div>
 									<div class="col-lg-6">
 										<input type="checkbox" class="js-switch" checked />
@@ -63,39 +109,111 @@
 								<br>
 								<div class="row">
 									<div class="col-lg-6">
-										<p>Limewire</p>
+										<p>Cooler Forest</p>
 									</div>
 									<div class="col-lg-6">
 										<input type="checkbox" class="js-switch" checked />
 									</div>
 								</div>
-				            </div>
-				        </div>
-				    </div>
-				    <div class="panel panel-default">
-				        <div class="panel-heading">
-				            <h4 class="panel-title">
-				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed" aria-expanded="false">Paramater set sensitivity</a>
-				            </h4>
-				        </div>
-				        <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-				            <div class="panel-body">
-				                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				            </div>
-				        </div>
-				    </div>
-				    <div class="panel panel-default">
-				        <div class="panel-heading">
-				            <h4 class="panel-title">
-				                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed" aria-expanded="false">Something else and so on</a>
-				            </h4>
-				        </div>
-				        <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false">
-				            <div class="panel-body">
-				                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				            </div>
-				        </div>
-				    </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" class="collapsed">Narrow leaf</a>
+							</h4>
+						</div>
+						<div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-lg-6">
+										<p>Decidous</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>Evergreen</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" class="collapsed">Plant life</a>
+							</h4>
+						</div>
+						<div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-lg-6">
+										<p>C3G and C4G</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>C3P and C4P</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>C3C and C4C</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" class="collapsed">Shrubs</a>
+							</h4>
+						</div>
+						<div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-lg-6">
+										<p>Decidous</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>Evergreen</p>
+									</div>
+									<div class="col-lg-6">
+										<input type="checkbox" class="js-switch" checked />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
         </div>
@@ -147,10 +265,14 @@
                 Model Score
             </div>
             <div class="panel-body">
+
+				<input type="text" id="mid" name="mid" value="" style="display: none;"/>
+				<input type="text" id="qid" name="qid" value="" style="display: none;"/>
+
                 <p>How well do you think this model represents the state of yeti life in Canada?</p>
                 <input type="text" id="modelScore" name="score" value="" />
                 <div class="col-lg-2 col-lg-offset-10">
-                	<button type="button" class="btn btn-primary btn-sm btn-block">Submit</button>
+                	<button onclick="scoreSubmit()" type="button" class="btn btn-primary btn-sm btn-block">Submit</button>
                 </div>
             </div>
         </div>

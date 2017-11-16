@@ -25,8 +25,10 @@ def main(global_config, **settings):
     config.add_route('logout', 'logout')
 
     config.add_route('training', '/training.html')
+    config.add_route('retrieveLabellingInformation', '/training_CMOData')
+
     config.add_route('model_uploader', '/model_uploader.html')
-    config.add_route('evaluation', '/evalutation.html')
+    config.add_route('evaluation', '/evaluation.html')
 
     # Link views
     config.scan(".General")    # General server functions
