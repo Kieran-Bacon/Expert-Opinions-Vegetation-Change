@@ -12,14 +12,31 @@ for table in tables:
 
 # Create tables in the database
 
-cursor.execute("CREATE TABLE users (id PRIMARY KEY, username TEXT, salt TEXT, password TEXT, firstname TEXT, lastname TEXT)")
+cursor.execute("CREATE TABLE users (username TEXT PRIMARY KEY, salt TEXT, password TEXT, firstname TEXT, lastname TEXT)")
+cursor.execute("CREATE TABLE models (mid PRIMARY KEY, filepath TEXT)")
+cursor.execute("CREATE TABLE questions (qid PRIMARY KEY, text TEXT)")
+cursor.execute("CREATE TABLE labels (username TEXT, mid INT, qid INT, score INT)")
 
 # Developer accounts
 #	- Kieran's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "admin1").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES (NULL, 'kb437', ?, ?, 'Kieran', 'Bacon')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('kb437', ?, ?, 'Kieran', 'Bacon')", (salt, hashedPassword))
 
+#	- Ben's
+salt = uuid.uuid4().hex
+hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
+cursor.execute("INSERT INTO users VALUES ('ben', ?, ?, 'Ben', 'Townsend')", (salt, hashedPassword))
+
+#	- Paul's
+salt = uuid.uuid4().hex
+hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
+cursor.execute("INSERT INTO users VALUES ('paul', ?, ?, 'Paul', 'Kim')", (salt, hashedPassword))
+
+#	- Nick's
+salt = uuid.uuid4().hex
+hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
+cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 'Nick', 'Higgins')", (salt, hashedPassword))
 
 # Commit the changes close the connection to the database
 database.commit()
