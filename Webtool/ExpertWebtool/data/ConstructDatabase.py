@@ -17,11 +17,13 @@ cursor.execute("CREATE TABLE models (mid PRIMARY KEY, filepath TEXT)")
 cursor.execute("CREATE TABLE questions (qid PRIMARY KEY, text TEXT)")
 cursor.execute("CREATE TABLE labels (username TEXT, mid INT, qid INT, score INT)")
 
+# Database contents creation
+
 # Developer accounts
 #	- Kieran's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "admin1").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('kb437', ?, ?, 'Kieran', 'Bacon', 'imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('bammins', ?, ?, 'Kieran', 'Bacon', 'imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
 
 #	- Ben's
 salt = uuid.uuid4().hex
@@ -37,6 +39,21 @@ cursor.execute("INSERT INTO users VALUES ('paul', ?, ?, 'Paul', 'Kim', 'imgs/ava
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
 cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 'Nick', 'Higgins', 'imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+
+# models
+
+cursor.execute("INSERT INTO models VALUES (1, 'data/CMOs/1.txt')")
+cursor.execute("INSERT INTO models VALUES (2, 'data/CMOs/2.txt')")
+
+# questions
+
+cursor.execute("INSERT INTO questions VALUES (1, 'Does this model reflect the true nature of evergreen plants?')")
+cursor.execute("INSERT INTO questions VALUES (2, 'Does this model illustrate sea current well?')")
+
+# lables
+
+cursor.execute("INSERT INTO labels VALUES ('bammins', 1, 2, 69)")
+cursor.execute("INSERT INTO labels VALUES ('bammins', 2, 1, 83)")
 
 # Commit the changes close the connection to the database
 database.commit()
