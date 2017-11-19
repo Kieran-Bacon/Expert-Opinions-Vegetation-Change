@@ -25,8 +25,9 @@ function scoreCMO(mid, qid, score){
 		"contentType": "application/x-www-form-urlencoded",
 		"data": {"mid": mid, "qid": qid, "score": score},
 		"success": function(data, status){
-			console.log("Hello");
 			console.log(data);
+
+			$("#questionText").text(data.question);
 		}
 	});
 }

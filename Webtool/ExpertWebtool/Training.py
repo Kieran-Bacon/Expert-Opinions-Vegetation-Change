@@ -35,7 +35,7 @@ def retrieveLabellingInformation(request):
         raise exc.HTTPFound(request.route_url("AllLabelled"))
     
     # Randomly choose a model question pair to annotate
-    modelPath, question = unlabelled[random.randint(0,len(unlabelled))]
+    modelPath, question = random.choice(unlabelled)
 
     # TODO: collect the CMO data.
 
