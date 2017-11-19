@@ -1,0 +1,7 @@
+SELECT m.mid, q.qid
+FROM models m CROSS JOIN questions q
+WHERE NOT EXISTS(
+    SELECT 1 
+    FROM labels l 
+    WHERE l.username = ? AND l.mid = m.mid AND l.qid = q.qid
+)

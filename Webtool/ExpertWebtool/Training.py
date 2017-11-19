@@ -1,5 +1,6 @@
 from pyramid.response import Response
 from pyramid.view import view_config
+import pyramid.httpexceptions as exc
 
 import random
 
@@ -27,25 +28,16 @@ def retrieveLabellingInformation(request):
         db.execute('labelModel', [request.session["username"], modelID, questionID, score])
 
     # Collected all model question pairs still not annotated by the user
-    # TODO: unlabelled = db.execute('collectUnlabelled', [request.session["username"]])
+    unlabelled = db.execute('collectUnlabelled', [request.session["username"]])
 
-    models = db.execute_literal("SELECT mid FROM models", [])
-    questions = db.execute_literal("SELECT qid FROM questions", [])
-    answered = db.execute_literal("SELECT mid, qid FROM labels WHERE username = ?", [request.session["username"]])
-
-    unlabelled = []
-    for mid in models:
-        for qid in questions:
-            if (mid, qid) not in answered:
-                unlabelled.append((mid,qid))
+    if not len(unlabelled):
+        # Redirect the user as they have done all the annotations they can
+        raise exc.HTTPFound(request.route_url("AllLabelled"))
     
     # Randomly choose a model question pair to annotate
-    if len(unlabelled):
-        modelPath, question = unlabelled[random.randint(0,len(unlabelled))]
-    else:
-        question = "Hello"
+    modelPath, question = unlabelled[random.randint(0,len(unlabelled))]
 
-    # Collect model information.
+    # TODO: collect the CMO data.
 
     return {"model": "placeholder", "question": question}
 
