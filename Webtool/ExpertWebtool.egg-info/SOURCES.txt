@@ -1,6 +1,0 @@
-ExpertWebtool.egg-info/PKG-INFO
-ExpertWebtool.egg-info/SOURCES.txt
-ExpertWebtool.egg-info/dependency_links.txt
-ExpertWebtool.egg-info/entry_points.txt
-ExpertWebtool.egg-info/requires.txt
-ExpertWebtool.egg-info/top_level.txt
