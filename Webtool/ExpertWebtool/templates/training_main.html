@@ -9,6 +9,7 @@
 <script src="js/ion.rangeSlider.min.js"></script>
 <script src="js/switchery.min.js"></script>
 <script src="js/training_main.js"></script>
+<script src="https://openlayers.org/en/v4.5.0/build/ol.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -226,10 +227,6 @@
 			    <ul class="nav nav-tabs">
 			        <li class="active"><a href="#home" data-toggle="tab" aria-expanded="false">Model</a>
 			        </li>
-			        <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">Output</a>
-			        </li>
-			        <li class=""><a href="#messages" data-toggle="tab" aria-expanded="false">Sections</a>
-			        </li>
 			        <li class="pull-right"><a href="#settings" data-toggle="tab" aria-expanded="true">merge</a>
 			        </li>
 			    </ul>
@@ -240,17 +237,9 @@
 			            <img src="imgs/co2_growth.jpeg" alt="Output heat map" width="600px" height="400px">
 			            <img src="imgs/temp_dash.png" alt="temp dashboard" width="800px" height="400px">
 			        </div>
-			        <div class="tab-pane fade" id="profile">
-			            <h4>Profile Tab</h4>
-			            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			        </div>
-			        <div class="tab-pane fade" id="messages">
-			            <h4>Messages Tab</h4>
-			            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			        </div>
 			        <div class="tab-pane fade active in" id="settings">
-			            <h4>Settings Tab</h4>
-			            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+						<h4>Settings Tab</h4>
+						<div id="map" class="map"></div>
 			        </div>
 			    </div>
 			</div>

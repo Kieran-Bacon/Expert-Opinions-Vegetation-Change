@@ -11,6 +11,29 @@ $(document).ready( function(){
 		var switchery = new Switchery(html);
 	});
 
+	// TODO drawing the map here
+
+	// Constraining map view
+	//var myExtent = new ol.Extent([0,0,0,0])
+	var myView = new ol.View({center: [0, 0],
+							  zoom: 2,
+							  enableRotation: false,
+							  minZoom: 2,
+							  // TODO use mapsize to properly constrain looking around
+							  extent: [10,0,1000000,1000000]}); // Control how much looking around you can do
+    var map = new ol.Map({
+        view: myView,
+        layers: [
+            new ol.layer.Tile({
+            source: new ol.source.OSM()
+            })
+        ],
+		target: 'map',
+		controls: [] // Remove default controls
+	});
+	
+	console.log("hello")
+
 	scoreCMO(null, null, null);
 });
 
