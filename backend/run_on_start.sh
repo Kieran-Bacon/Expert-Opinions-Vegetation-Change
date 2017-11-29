@@ -2,4 +2,4 @@
 
 export PYTHONPATH=/root/code
 
-pytest /root/code/tests/TestAPIImplementations.py
+pytest -s /root/code/tests/TestAPIImplementations.py

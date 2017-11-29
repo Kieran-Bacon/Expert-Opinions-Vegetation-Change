@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 file = "/Users/bentownsend/Desktop/cs/4thYear/group_proj/machine-learning-and-weather/backend/model_outputs/numpy_flat.npy"
 
 cmos = np.load(file)
+print(cmos.shape)
 cmos = cmos[:, ::-1, ::-1]
 labels = []
 plt.ion()

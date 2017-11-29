@@ -11,10 +11,10 @@ for file in files:
         continue
     file = NetCDFFile(os.path.join("/root/code/backend/model_outputs/", file))
 
-    veg_layer = np.sum(file.get_numpy_arrays()[:10], axis=0)
+    veg_layer = file.get_numpy_arrays()
 
     net_cdf_files.append(veg_layer)
 
 net_cdf_files = np.array(net_cdf_files)
 
-np.save("/root/code/backend/model_outputs/numpy_flat", net_cdf_files)
+np.save("/root/code/backend/model_outputs/numpy_not_flat", net_cdf_files)
