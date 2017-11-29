@@ -20,7 +20,9 @@ class TestModelFiles(unittest.TestCase):
 
     def test_kml(self):
         f1 = NetCDFFile("/root/code/model_outputs/JULES-ES.1p6.vn4.8.spinup_50.dump_vegfrac.18800101.0.nc")
-        f1.get_kml()
+        for i, dic in enumerate(f1.get_kml()):
+            with open("/root/code/kmls/testKML{}.kml".format(i), "wt") as fp:
+                fp.write(dic)
 
 
 if __name__ == '__main__':

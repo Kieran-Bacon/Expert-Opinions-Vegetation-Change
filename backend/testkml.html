@@ -18,13 +18,13 @@
 
       var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-          url: 'http://localhost:8000/testKML.kml',
+          url: 'http://localhost:8000/kmls/testKML1.kml',
           format: new ol.format.KML({
             extractStyles: false
           })
         }),
-        blur: 5,
-        radius: 6
+        blur: 4,
+        radius: 3
       });
 
       vector.getSource().on('addfeature', function(event) {
@@ -53,22 +53,14 @@
 
 
       layer.addEventListener('input', function() {
-//        vector.setBlur(parseInt(blur.value, 10));
-	vector = new ol.layer.Heatmap({
-        source: new ol.source.Vector({
-          url: 'http://localhost:8000/testKML{X}.kml'.replace("{X}",layer.value),
+	vector.setSource(new ol.source.Vector({
+          url: 'http://localhost:8000/kmls/testKML{X}.kml'.replace("{X}",layer.value),
           format: new ol.format.KML({
             extractStyles: false
           })
-        }),
-        blur: 5,
-        radius: 6
-	})
-      });
+        })
+      )});
 
-//      radius.addEventListener('input', function() {
-//        vector.setRadius(parseInt(radius.value, 10));
-//      });
     </script>
   </body>
 </html>
