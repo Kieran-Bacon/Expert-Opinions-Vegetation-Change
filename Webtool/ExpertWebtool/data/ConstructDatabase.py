@@ -13,7 +13,7 @@ for table in tables:
 # Create tables in the database
 
 cursor.execute("CREATE TABLE users (username TEXT PRIMARY KEY, salt TEXT, password TEXT, firstname TEXT, lastname TEXT, avatar TEXT)")
-cursor.execute("CREATE TABLE models (mid PRIMARY KEY, filepath TEXT)")
+cursor.execute("CREATE TABLE models (mid PRIMARY KEY, username TEXT)")
 cursor.execute("CREATE TABLE questions (qid PRIMARY KEY, text TEXT)")
 cursor.execute("CREATE TABLE labels (username TEXT, mid INT, qid INT, score INT)")
 
@@ -42,8 +42,8 @@ cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 'Nick', 'Higgins', 'imgs
 
 # models
 
-cursor.execute("INSERT INTO models VALUES (1, 'data/CMOs/1.txt')")
-cursor.execute("INSERT INTO models VALUES (2, 'data/CMOs/2.txt')")
+cursor.execute("INSERT INTO models VALUES (1, 'bammins')")
+cursor.execute("INSERT INTO models VALUES (2, 'bammins')")
 
 # questions
 

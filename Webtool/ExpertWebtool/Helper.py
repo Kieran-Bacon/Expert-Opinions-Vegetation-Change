@@ -1,4 +1,8 @@
+import os, uuid
+
 import pyramid.httpexceptions as exc
+
+from . import TEMPSTORAGE
 
 def permissions(request) -> None:
 	"""
@@ -16,3 +20,16 @@ def permissions(request) -> None:
 	if status == 1: return None
 	if status is None: raise exc.HTTPFound(request.route_url("login"))
 	raise exc.HTTPFound(request.route_url("locked"))
+
+def tempStorage(fileContents):
+
+    filename = uuid.uuid4().hex.upper()
+    while os.path.exists(os.path.join(TEMPSTORAGE, filename)):
+        filename = uuid.uuid4().hex.upper()
+
+    path = os.path.join(TEMPSTORAGE, filename)
+
+    with open(path, "wb") as fileHandler:
+        fileHandler.write(fileContents.read())
+
+    return path

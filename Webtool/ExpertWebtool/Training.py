@@ -4,7 +4,8 @@ import pyramid.httpexceptions as exc
 
 import random
 
-from .helper import *
+from . import MODELSTORAGE
+from .Helper import *
 from .DatabaseHandler import DatabaseHandler as db
 
 @view_config(route_name="training", renderer="templates/training_main.html")
@@ -41,6 +42,26 @@ def retrieveLabellingInformation(request):
 
     return {"model": "placeholder", "question": question}
 
-@view_config(route_name="model_uploader", renderer="templates/training_modelUploader.html")
-def model_uploader(request):
-	return {**request.session, **{"title": "Model Uploader"}}
+@view_config(route_name="modelUploader", renderer="templates/training_modelUploader.html")
+def modelUploader(request):
+    permissions(request)
+    return {**request.session, **{"title": "Model Uploader"}}
+
+@view_config(route_name="modelFileUploader", renderer="json")
+def modelFileUploader(request):
+    permissions(request)
+
+    tempLocation = tempStorage(request.POST['file'].file)
+    
+    try:
+        model = NetCDFFile(tempLocation)
+    except Exception as e:
+        request.response.status = 406
+        return {"alert": str(e)}
+    finally:
+        os.remove(tempLocation)
+
+    modelID = db.executeID("modelUploaded",[request.session["username"]])
+    model.save(os.path.join(MODELSTORAGE, modelID))
+
+    return {}

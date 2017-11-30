@@ -2,7 +2,7 @@ from pyramid.response import Response
 from pyramid.view import view_defaults, view_config
 import pyramid.httpexceptions as exc
 
-from .helper import permissions
+from .Helper import permissions
 from .DatabaseHandler import DatabaseHandler as db
 import hashlib, uuid
 import sqlite3

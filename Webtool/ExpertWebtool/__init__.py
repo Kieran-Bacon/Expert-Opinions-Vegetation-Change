@@ -1,7 +1,13 @@
+from os.path import abspath
+
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
 
 from .DatabaseHandler import DatabaseHandler
+
+
+TEMPSTORAGE = abspath("./ExpertWebtool/temp/")
+MODELSTORAGE = abspath("./ExpertWebtool/data/CMO")
 
 def main(global_config, **settings):
 
@@ -27,7 +33,8 @@ def main(global_config, **settings):
     config.add_route('training', '/training.html')
     config.add_route('retrieveLabellingInformation', '/training_CMOData')
 
-    config.add_route('model_uploader', '/model_uploader.html')
+    config.add_route('modelUploader', '/model_uploader.html')
+    config.add_route('modelFileUploader', '/model_upload')
     config.add_route('evaluation', '/evaluation.html')
 
     # Link views
