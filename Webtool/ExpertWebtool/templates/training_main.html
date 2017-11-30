@@ -36,7 +36,7 @@
 					<div class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
-									<a data-toggle="collapse" data-parent="#accordion" href="#generalSwitchs" aria-expanded="false" class="collapsed">General</a>
+									<a id="default_collapse" data-toggle="collapse" data-parent="#accordion" href="#generalSwitchs" aria-expanded="false" class="collapsed">General</a>
 								</h4>
 							</div>
 							<div id="generalSwitchs" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
@@ -46,16 +46,16 @@
 											<p>Bare soil</p>
 										</div>
 										<div class="col-lg-6">
-											<input type="checkbox" class="js-switch" checked />
+											<input id="Soil-0" type="checkbox" class="js-switch js-check-change"/>
 										</div>
 									</div>
 									<br>
 									<div class="row">
 										<div class="col-lg-6">
-											<p>Concrete</p>
+											<p>Urban</p>
 										</div>
 										<div class="col-lg-6">
-											<input type="checkbox" class="js-switch" checked />
+											<input id="Urban-1" type="checkbox" class="js-switch js-check-change"/>
 										</div>
 									</div>
 									<br>
@@ -64,7 +64,7 @@
 											<p>Ice</p>
 										</div>
 										<div class="col-lg-6">
-											<input type="checkbox" class="js-switch" checked />
+											<input id="Ice-2" type="checkbox" class="js-switch js-check-change"/>
 										</div>
 									</div>
 									<br>
@@ -73,7 +73,7 @@
 											<p>Lake</p>
 										</div>
 										<div class="col-lg-6">
-											<input type="checkbox" class="js-switch" checked />
+											<input id="Lake-3" type="checkbox" class="js-switch js-check-change"/>
 										</div>
 									</div>
 								</div>
@@ -92,10 +92,10 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-lg-6">
-										<p>Decidous</p>
+										<p>Deciduous</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="BLD-4 "type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 								<br>
@@ -104,7 +104,7 @@
 										<p>Evergreen Tropic</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="BLE_Trop-5" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 								<br>
@@ -113,7 +113,7 @@
 										<p>Cooler Forest</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="BLE_Temp-6" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 							</div>
@@ -130,10 +130,10 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-lg-6">
-										<p>Decidous</p>
+										<p>Deciduous</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="NLD-7" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 								<br>
@@ -142,7 +142,7 @@
 										<p>Evergreen</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="NLE-8" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 							</div>
@@ -159,28 +159,55 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-lg-6">
-										<p>C3G and C4G</p>
+										<p>C3G</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
-									</div>
-								</div>
-								<br>
-								<div class="row">
-									<div class="col-lg-6">
-										<p>C3P and C4P</p>
-									</div>
-									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="C3G-9" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 								<br>
 								<div class="row">
 									<div class="col-lg-6">
-										<p>C3C and C4C</p>
+										<p>C4G</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="C4G-10" type="checkbox" class="js-switch js-check-change"/>
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>C3P</p>
+									</div>
+									<div class="col-lg-6">
+										<input id="C3P-11" type="checkbox" class="js-switch js-check-change"/>
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>C4P</p>
+									</div>
+									<div class="col-lg-6">
+										<input id="C4P-12" type="checkbox" class="js-switch js-check-change"/>
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>C3C</p>
+									</div>
+									<div class="col-lg-6">
+										<input id="C3C-13" type="checkbox" class="js-switch js-check-change"/>
+									</div>
+								</div>
+								<br>
+								<div class="row">
+									<div class="col-lg-6">
+										<p>C4C</p>
+									</div>
+									<div class="col-lg-6">
+										<input id="C4C-14" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 							</div>
@@ -190,17 +217,17 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" class="collapsed">Shrubs</a>
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" class="collapsed">Shrubs</a>
 							</h4>
 						</div>
-						<div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+						<div id="collapseFour" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-lg-6">
-										<p>Decidous</p>
+										<p>Deciduous</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="SHD-15" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 								<br>
@@ -209,7 +236,7 @@
 										<p>Evergreen</p>
 									</div>
 									<div class="col-lg-6">
-										<input type="checkbox" class="js-switch" checked />
+										<input id="SHE-16" type="checkbox" class="js-switch js-check-change"/>
 									</div>
 								</div>
 							</div>
@@ -224,20 +251,14 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 			    <!-- Nav tabs -->
-			    <ul class="nav nav-tabs">
-			        <li class="active"><a href="#home" data-toggle="tab" aria-expanded="false">Model</a>
-			        </li>
-			        <li class="pull-right"><a href="#settings" data-toggle="tab" aria-expanded="true">merge</a>
+			    <ul class="nav nav-tabs", id="tabs">
+			        <li class="pull-right"><a href="#map-content" data-toggle="tab" aria-expanded="false">merge</a>
 			        </li>
 			    </ul>
 
 			    <!-- Tab panes -->
 			    <div class="tab-content">
-			        <div class="tab-pane fade" id="home">
-			            <img src="imgs/co2_growth.jpeg" alt="Output heat map" width="600px" height="400px">
-			            <img src="imgs/temp_dash.png" alt="temp dashboard" width="800px" height="400px">
-			        </div>
-			        <div class="tab-pane fade active in" id="settings">
+			        <div class="tab-pane fade in active" id="map-content">
 						<!--<h4>Settings Tab</h4>-->
 						<div id="map" class="map"></div>
 			        </div>
