@@ -6,6 +6,7 @@ import random
 
 from .helper import *
 from .DatabaseHandler import DatabaseHandler as db
+from .netcdf_file import NetCDFFile
 
 @view_config(route_name="training", renderer="templates/training_main.html")
 def training(request):
@@ -43,4 +44,4 @@ def retrieveLabellingInformation(request):
 
 @view_config(route_name="model_uploader", renderer="templates/training_modelUploader.html")
 def model_uploader(request):
-	return {**request.session, **{"title": "Model Uploader"}}
+    return {**request.session, **{"title": "Model Uploader"}}

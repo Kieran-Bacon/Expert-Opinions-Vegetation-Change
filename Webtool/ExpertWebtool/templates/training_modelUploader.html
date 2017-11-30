@@ -2,6 +2,7 @@
 {% block css %}{% endblock %}
 {% block js %}
 <script src="js/dropzone.js"></script>
+<script src="js/model_upload.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +14,7 @@
             <div class="panel-body">
                 <h1>Hello there captain</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                <form action="/file-upload" class="dropzone" id="my-awesome-dropzone" style="height: 100px; width: 100%;"></form>
+                <form action="/uploads" class="dropzone" id="model-uploader" style="height: 100px; width: 100%;"></form>
             </div>
         </div>
     </div>

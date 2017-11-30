@@ -14,13 +14,17 @@ $(document).ready( function(){
 	// TODO drawing the map here
 
 	// Constraining map view
-	//var myExtent = new ol.Extent([0,0,0,0])
-	var myView = new ol.View({center: [0, 0],
-							  zoom: 2,
+	var myZoom = 2.3
+	var centerX = 1000000
+	var centerY = 5000000
+	var extentY = 4000000
+	var myView = new ol.View({center: [centerX, centerY],
+							  zoom: myZoom,
 							  enableRotation: false,
-							  minZoom: 2,
+							  minZoom: myZoom,
+							  maxZoom: myZoom,
 							  // TODO use mapsize to properly constrain looking around
-							  extent: [10,0,1000000,1000000]}); // Control how much looking around you can do
+							  extent: [centerX,centerY-extentY,centerX,centerY+extentY]}); // Control how much looking around you can do
     var map = new ol.Map({
         view: myView,
         layers: [
@@ -31,8 +35,6 @@ $(document).ready( function(){
 		target: 'map',
 		controls: [] // Remove default controls
 	});
-	
-	console.log("hello")
 
 	scoreCMO(null, null, null);
 });
