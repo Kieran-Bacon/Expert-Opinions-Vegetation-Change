@@ -7,6 +7,7 @@ import random
 from . import MODELSTORAGE
 from .Helper import *
 from .DatabaseHandler import DatabaseHandler as db
+from .netcdf_file import NetCDFFile
 
 @view_config(route_name="training", renderer="templates/training_main.html")
 def training(request):
