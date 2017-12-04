@@ -23,16 +23,22 @@ $(document).ready(function() {
 			var lindex = lid[1];
 			if (!elem.checked) { // If element is not CURRENTLY checked
 				$('#'+lcode).remove();
+				// Show last tab
 				$('#tabs a:last').tab('show');
 			} else {
 				// Create the tab
 				$('<li id="'+lcode+'"><a href="#map-content" data-toggle="tab">'+lcode+'</a></li>').appendTo('#tabs');
+				// On tab change listener
+				$('#'+lcode).on('shown.bs.tab', function (e) {
+					// Update map
+					console.log(lcode);
+				});
 				// Make the new tab active
-  				$('#'+lcode).tab('show');
+				$('#'+lcode).tab('show');
 			}
 
 			// TODO remove currently drawn map and draw new layer on map
-			
+			console.log(lcode)
 		};
 	});
 	// Default tab pick (bit ugly)
