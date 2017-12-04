@@ -1,4 +1,6 @@
-$(document).ready( function(){
+var MODEL_KML = null;
+
+$(document).ready(function() {
 	// Select the element and convert it to a ion slider
 	$("#modelScore").ionRangeSlider({
 		"start":50,
@@ -9,7 +11,39 @@ $(document).ready( function(){
 	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 	elems.forEach(function(html) {
 		var switchery = new Switchery(html);
+		// TODO all turned off by default
+		setSwitchery(switchery, false);
 	});
+	// Set up listeners
+	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-check-change'));
+	elems.forEach(function(elem) {
+		elem.onchange = function() {
+			var lid = elem.id.split("-");
+			var lcode = lid[0];
+			var lindex = lid[1];
+			if (!elem.checked) { // If element is not CURRENTLY checked
+				$('#'+lcode).remove();
+				// Show last tab
+				$('#tabs a:last').tab('show');
+			} else {
+				// Create the tab
+				$('<li id="'+lcode+'"><a href="#map-content" data-toggle="tab">'+lcode+'</a></li>').appendTo('#tabs');
+				// On tab change listener
+				$('#'+lcode).on('shown.bs.tab', function (e) {
+					// Update map
+					console.log(lcode);
+				});
+				// Make the new tab active
+				$('#'+lcode).tab('show');
+			}
+
+			// TODO remove currently drawn map and draw new layer on map
+			console.log(lcode)
+		};
+	});
+	// Default tab pick (bit ugly)
+	$('#Soil-0').click();
+	$('#default_collapse').click();
 
 	// TODO drawing the map here
 
@@ -25,13 +59,14 @@ $(document).ready( function(){
 							  maxZoom: myZoom,
 							  // TODO use mapsize to properly constrain looking around
 							  extent: [centerX,centerY-extentY,centerX,centerY+extentY]}); // Control how much looking around you can do
-    var map = new ol.Map({
-        view: myView,
-        layers: [
-            new ol.layer.Tile({
-            source: new ol.source.OSM()
-            })
-        ],
+
+	var map = new ol.Map({
+		view: myView,
+		layers: [
+			new ol.layer.Tile({
+			source: new ol.source.OSM()
+			})
+		],
 		target: 'map',
 		controls: [] // Remove default controls
 	});
@@ -52,7 +87,19 @@ function scoreCMO(mid, qid, score){
 		"success": function(data, status){
 			console.log(data);
 
+			// Update question text
 			$("#questionText").text(data.question);
+
+			// Get handle on model.getkml()
+			MODEL_KML = data.model;
 		}
 	});
+}
+
+// Check or un-check a switch
+function setSwitchery(switchElement, checked) {
+    if((checked && !switchElement.isChecked()) || (!checked && switchElement.isChecked())) {
+        switchElement.setPosition(true);
+        switchElement.handleOnchange(true); // TODO
+    }
 }
