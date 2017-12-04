@@ -13,8 +13,8 @@ for table in tables:
 # Create tables in the database
 
 cursor.execute("CREATE TABLE users (username TEXT PRIMARY KEY, salt TEXT, password TEXT, firstname TEXT, lastname TEXT, avatar TEXT)")
-cursor.execute("CREATE TABLE models (mid PRIMARY KEY, username TEXT)")
-cursor.execute("CREATE TABLE questions (qid PRIMARY KEY, text TEXT)")
+cursor.execute("CREATE TABLE models (mid INTEGER PRIMARY KEY, username TEXT)")
+cursor.execute("CREATE TABLE questions (qid INTEGER PRIMARY KEY, text TEXT)")
 cursor.execute("CREATE TABLE labels (username TEXT, mid INT, qid INT, score INT)")
 
 # Database contents creation

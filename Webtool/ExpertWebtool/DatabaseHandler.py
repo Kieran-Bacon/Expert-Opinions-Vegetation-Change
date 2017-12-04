@@ -45,8 +45,6 @@ class DatabaseHandler:
 
 		return rows[0]
 
-
-
 	def execute(queryTitle: str, queryVariables: list):
 		"""
 		Locates and executes the query content that is stored under the query title.
@@ -97,7 +95,22 @@ class DatabaseHandler:
 			queryVariables - Values that are to be entered into the query before execution
 
 		Returns:
-			int - Row id of the last accessed row
+			int - Row id of the last accessed row (the primary key for the row)
+		"""
+
+		return DatabaseHandler.execute_literalID(DatabaseHandler._SQLStore[queryTitle], queryVariables)
+
+	def execute_literalID(queryContent: str, queryVariables: list):
+		"""
+		Executes SQL command and return the ID of the last row that was accessed or generated.
+		Used to retrieve the Primary key of a new inserted row element
+
+		Params:
+			queryContent - The SQL command to be run
+			queryVariables - Values that are to be entered into the query before execution
+
+		Returns:
+			int - Row id of the last accessed row (the primary key for the row)
 		"""
 
 		# Open connection to the database
