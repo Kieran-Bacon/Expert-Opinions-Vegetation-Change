@@ -29,12 +29,15 @@ def main(global_config, **settings):
     config.add_route('login', 'login.html')
     config.add_route('loggingIn','login')
     config.add_route('logout', 'logout')
+    config.add_route('createQuestion', '/createQuestion')
+    config.add_route('deleteQuestion', '/deleteQuestion')
 
     config.add_route('training', '/training.html')
     config.add_route('retrieveLabellingInformation', '/training_CMOData')
 
     config.add_route('modelUploader', '/model_uploader.html')
     config.add_route('modelFileUploader', '/model_upload')
+
     config.add_route('evaluation', '/evaluation.html')
 
     # Link views

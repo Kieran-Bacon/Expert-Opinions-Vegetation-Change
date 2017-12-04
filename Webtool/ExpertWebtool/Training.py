@@ -45,7 +45,10 @@ def retrieveLabellingInformation(request):
 @view_config(route_name="modelUploader", renderer="templates/training_modelUploader.html")
 def modelUploader(request):
     permissions(request)
-    return {**request.session, **{"title": "Model Uploader"}}
+    questions = db.execute("collectQuestions",[])
+    for a in questions:
+        print(a[0], a[1])
+    return {**request.session, **{"title": "Content Uploader", "questions": questions}}
 
 @view_config(route_name="modelFileUploader", renderer="json")
 def modelFileUploader(request):

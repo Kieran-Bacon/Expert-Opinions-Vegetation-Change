@@ -68,3 +68,39 @@ def logout(request):
 	# TODO: Delete the redundant session information
 	request.session["status"] = None
 	return exc.HTTPFound(request.route_url("login.html"))
+
+@view_config(route_name="createQuestion", renderer="json")
+def createQuestion(request):
+    """ Add a parsed question text into the database if it is from a authorised
+	user """
+    permissions(request)
+
+    questionText = request.params.get("text", None)
+
+    # TODO: Parse/edit the question text
+    # Remove starting and trailing white space
+    # Remove unnecessary white space
+    # Ensure last character is question mark
+
+    if questionText is None or len(db.execute_literal("SELECT * FROM questions WHERE text = ?", [questionText])) > 0:
+        request.response.status = 400
+        return {"error": "Question already exists"}
+
+    qid = db.executeID("insertQuestion",[questionText])
+
+    return {"qid": qid}
+
+@view_config(route_name="deleteQuestion", renderer="json")
+def deleteQuestion(request):
+    """ Delete a question from the data base if the request is authorised """
+    permissions(request)
+
+    qid = request.params.get("qid", None)
+
+    if qid is None:
+        request.response.status = 400
+        return {"error": "qid is not supplied"}
+
+    db.execute("deleteQuestion", [qid])
+
+    return {}
