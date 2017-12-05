@@ -1,4 +1,4 @@
-from backend.netcdf_file import NetCDFFile
+from VegML.netcdf_file import NetCDFFile
 import os
 import numpy as np
 

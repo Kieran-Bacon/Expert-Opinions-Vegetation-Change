@@ -34,7 +34,7 @@ classifiers = [
     QuadraticDiscriminantAnalysis()
 ]
 
-root = "/Users/bentownsend/Desktop/cs/4thYear/group_proj/machine-learning-and-weather/backend/model_outputs/"
+root = "/Users/bentownsend/Desktop/cs/4thYear/group_proj/machine-learning-and-weather/concrete/model_outputs/"
 labels = "ben_labels_.npy"
 features = "numpy_flat.npy"
 

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-file = "/Users/bentownsend/Desktop/cs/4thYear/group_proj/machine-learning-and-weather/backend/model_outputs/numpy_flat.npy"
+file = "/Users/bentownsend/Desktop/cs/4thYear/group_proj/machine-learning-and-weather/concrete/model_outputs/numpy_flat.npy"
 
 cmos = np.load(file)
 print(cmos.shape)
@@ -25,5 +25,5 @@ finally:
     if save == "y":
         labels = [label == "1" for label in labels]
         np.save(
-            "/Users/bentownsend/Desktop/cs/4thYear/group_proj/machine-learning-and-weather/backend/model_outputs/hugo_labels",
+            "/Users/bentownsend/Desktop/cs/4thYear/group_proj/machine-learning-and-weather/concrete/model_outputs/hugo_labels",
             np.array(labels))
