@@ -38,7 +38,7 @@ def retrieveLabellingInformation(request):
     # Randomly choose a model question pair to annotate
     modelPath, question = random.choice(unlabelled)
 
-    # TODO: collect the CMO data.
+    # TODO: collect the CMO data as NetCDFFile object.
 
     return {"model": "placeholder", "question": question}
 
