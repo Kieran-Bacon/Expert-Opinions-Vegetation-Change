@@ -2,6 +2,8 @@ from pyramid.response import Response
 from pyramid.view import view_defaults, view_config
 import pyramid.httpexceptions as exc
 
+from ExpertRep import ExpertModelAPI
+
 from .Helper import permissions
 from .DatabaseHandler import DatabaseHandler as db
 import hashlib, uuid
@@ -88,6 +90,14 @@ def createQuestion(request):
 
     qid = db.executeID("insertQuestion",[questionText])
 
+    # For every user create a new expert model to represent this question.
+    # TODO: Move this functionality to be operated on after returning qid.
+    usernames = db.execute_literal("SELECT username FROM users", [])
+    for row in usernames:
+        identifier = ExpertModelAPI().create_model(model_type="KNN")
+        print(identifier)
+        db.execute_literal("INSERT INTO expertModels VALUES(?, ?, ?)", [identifier, row["username"], qid])
+
     return {"qid": qid}
 
 @view_config(route_name="deleteQuestion", renderer="json")
@@ -101,7 +111,18 @@ def deleteQuestion(request):
         request.response.status = 400
         return {"error": "qid is not supplied"}
     
-    db.execute("deleteQuestion", [qid])
-    db.execute("deleteQuestionLabels", [qid])
+    db.execute("deleteQuestion", [qid])        # Delete the question row
+    db.execute("deleteQuestionLabels", [qid])  # Delete annotated label info
+
+    # Delete expert model information
+    for row in db.execute_literal("SELECT identifier FROM expertModels WHERE qid = ?", [qid]):
+        print(row["identifier"])
+        try:
+            ExpertModelAPI().delete_model(model_id=row["identifier"])
+        except:
+            # TODO: fix
+            print("Error passed for convience - Must fix")
+            pass
+    db.execute_literal("DELETE FROM expertModels WHERE qid = ?", [qid])
 
     return {}

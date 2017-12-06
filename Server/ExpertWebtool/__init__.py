@@ -7,7 +7,7 @@ from .DatabaseHandler import DatabaseHandler
 
 
 TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
-MODELSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
+CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
 
 def main(global_config, **settings):
 
