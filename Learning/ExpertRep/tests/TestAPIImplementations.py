@@ -48,6 +48,11 @@ class TestAPI(unittest.TestCase):
         self.assertNotEqual(model_id, model_id2)
 
         model.delete_model(model_id=model_id)
+        print(model.models_that_exist)
+
+        model = VegML()
+        print(model.models_that_exist)
+
         model.predict(model_id=model_id, data=train)
 
 
