@@ -6,8 +6,8 @@ from pyramid.session import SignedCookieSessionFactory
 from .DatabaseHandler import DatabaseHandler
 
 
-TEMPSTORAGE = abspath("./ExpertWebtool/temp/")
-MODELSTORAGE = abspath("./ExpertWebtool/data/CMO")
+TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
+MODELSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
 
 def main(global_config, **settings):
 
@@ -34,6 +34,7 @@ def main(global_config, **settings):
 
     config.add_route('training', '/training.html')
     config.add_route('retrieveLabellingInformation', '/training_CMOData')
+    config.add_route('allLabelled', '/all_labelled_screen')
 
     config.add_route('modelUploader', '/model_uploader.html')
     config.add_route('modelFileUploader', '/model_upload')

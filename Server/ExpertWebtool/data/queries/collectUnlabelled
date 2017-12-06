@@ -1,4 +1,4 @@
-SELECT m.filepath, q.text
+SELECT m.mid, q.qid, q.text
 FROM models m CROSS JOIN questions q
 WHERE NOT EXISTS(
     SELECT 1 

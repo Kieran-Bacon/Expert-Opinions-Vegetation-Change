@@ -1,4 +1,4 @@
-from VegML.abstract.ModelAPI import MachineLearningModel
+from ExpertRep.abstract.ModelAPI import MachineLearningModel
 import logging
 
 _LOG = logging.getLogger(__name__)

@@ -2,13 +2,13 @@ import os
 import logging
 
 import numpy as np
-from VegML.tools.locked_file import LockedFile
+from ExpertRep.tools.locked_file import LockedFile
 from sklearn.model_selection import train_test_split
-from VegML.abstract.ClimateEvalAPI import VegetationMachineLearningAPI, ModelOutputs, ModelInfo, \
+from ExpertRep.abstract.ClimateEvalAPI import VegetationMachineLearningAPI, ModelOutputs, ModelInfo, \
     ModelDoesNotExistException
-from VegML.abstract.ModelAPI import MachineLearningModel
-from VegML.registry.model_registry import Registry
-from VegML import machine_learning_models  # required to run the registry code
+from ExpertRep.abstract.ModelAPI import MachineLearningModel
+from ExpertRep.registry.model_registry import Registry
+from ExpertRep import machine_learning_models  # required to run the registry code
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
 _VEG_ML_DIR = "~/.VegML"  # TODO (Ben) Not good, but works for now.
