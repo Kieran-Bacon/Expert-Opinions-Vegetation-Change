@@ -96,9 +96,11 @@ class Backend(VegetationMachineLearningAPI):
         self._check_and_load_if_not_loaded(model_id=model_id)
 
         def remove_from_registry(model_ids: str):
-            mid = model_ids.split()
+            mid = model_ids.split("\n")
             mid.remove(model_id)
-            return "\n".join(model_ids)
+            return "\n".join(mid)
+
+        self.models_that_exist.remove(model_id)
 
         self.registry_file.read_and_write(remove_from_registry)
         os.remove(os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id)))
