@@ -75,8 +75,6 @@ $(document).ready(function() {
 });
 
 function scoreSubmit(){
-	console.log("Hello",$("#mid").val());
-	console.log("there",$("#qid").val());
 	scoreCMO($("#mid").val(), $("#qid").val(), $("#modelScore").val());
 };
 
@@ -101,6 +99,7 @@ function scoreCMO(mid, qid, score){
 		"error": function(data, status){
 			console.log(data);
 			console.log(status);
+			// TODO: Change the path name if and only if status is 303
 			window.location.pathname = "/all_labelled_screen";
 		}
 	});

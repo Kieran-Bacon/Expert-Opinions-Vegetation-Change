@@ -1,7 +1,7 @@
-from VegML.abstract.ModelAPI import MachineLearningModel
-from VegML.abstract.ClimateEvalAPI import ModelInfo, ModelType,ModelOutputs
+from ExpertRep.abstract.ModelAPI import MachineLearningModel
+from ExpertRep.abstract.ClimateEvalAPI import ModelInfo, ModelType,ModelOutputs
 from sklearn.neighbors import KNeighborsClassifier
-from VegML.registry.model_registry import Registry
+from ExpertRep.registry.model_registry import Registry
 import numpy as np
 
 

@@ -6,8 +6,8 @@ from pyramid.session import SignedCookieSessionFactory
 from .DatabaseHandler import DatabaseHandler
 
 
-TEMPSTORAGE = abspath("./ExpertWebtool/temp/")
-MODELSTORAGE = abspath("./ExpertWebtool/data/CMO")
+TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
+MODELSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
 
 def main(global_config, **settings):
 

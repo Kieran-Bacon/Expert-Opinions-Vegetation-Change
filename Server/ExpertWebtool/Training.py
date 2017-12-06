@@ -4,6 +4,8 @@ import pyramid.httpexceptions as exc
 
 import random
 
+from ExpertRep import ExpertModelAPI, ClimateModelOutput
+
 from . import MODELSTORAGE
 from .Helper import *
 from .DatabaseHandler import DatabaseHandler as db
@@ -27,14 +29,13 @@ def retrieveLabellingInformation(request):
     questionID = request.params.get('qid', None)
     score = request.params.get('score', None)
 
+    print("Check ::", modelID, questionID, score)
+    print(type(modelID), type(questionID), type(score))
+
     # if the information has been given, record it
-    if None not in (modelID, questionID, score):
-
-        # TODO Training
-        #from ExpertRepresentation import VegetationMachineLearningAPI as VegtableModels
-        #from ExpertRepresentation import NetCDFFile
-        #VegtableModels.partial_fit(request.session["username"], [NetCDFFile.load(MODELSTORAGE + str(modelID))], [score])
-
+    if None not in (modelID, questionID, score) and "" not in (modelID, questionID, score):
+        cmo = ClimateModelOutput.load(os.path.join(MODELSTORAGE + str(modelID)))
+        ExpertModelAPI().partial_fit(model_id=request.session["username"], data=[cmo], targets=[int(score)*0.05])
         db.execute('labelModel', [request.session["username"], modelID, questionID, score])
 
     # Collected all model question pairs still not annotated by the user
@@ -48,9 +49,11 @@ def retrieveLabellingInformation(request):
     # Randomly choose a model question pair to annotate
     modelID, questionID, question = random.choice(unlabelled)
 
-    # TODO: collect the CMO data.
+    # Load climate model output
+    output = ClimateModelOutput.load(os.path.join(MODELSTORAGE + str(modelID)))
 
-    return {"mid": modelID, "qid": questionID, "question": question}
+    return {"mid": modelID, "model": output.get_kml(),\
+            "qid": questionID, "question": question}
 
 @view_config(route_name="allLabelled", renderer="templates/base.html")
 def allLabelled(request):
@@ -69,14 +72,14 @@ def modelFileUploader(request):
     tempLocation = tempStorage(request.POST['file'].file)
     
     try:
-        model = NetCDFFile(tempLocation)
+        model = ClimateModelOutput(tempLocation)
     except Exception as e:
         request.response.status = 406
         return {"alert": str(e)}
     finally:
         os.remove(tempLocation)
-
+    
+    model.save(os.path.join(MODELSTORAGE, str(modelID)))
     modelID = db.executeID("modelUploaded",[request.session["username"]])
-    model.save(os.path.join(MODELSTORAGE, modelID))
 
     return {}
