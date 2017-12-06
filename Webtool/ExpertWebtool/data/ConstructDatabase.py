@@ -50,7 +50,7 @@ cursor.execute("INSERT INTO models VALUES (2, 'bammins')")
 cursor.execute("INSERT INTO questions VALUES (1, 'Does this model reflect the true nature of evergreen plants?')")
 cursor.execute("INSERT INTO questions VALUES (2, 'Does this model illustrate sea current well?')")
 
-# lables
+# labels
 
 cursor.execute("INSERT INTO labels VALUES ('bammins', 1, 2, 69)")
 cursor.execute("INSERT INTO labels VALUES ('bammins', 2, 1, 83)")

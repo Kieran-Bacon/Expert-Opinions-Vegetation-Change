@@ -75,6 +75,8 @@ $(document).ready(function() {
 });
 
 function scoreSubmit(){
+	console.log("Hello",$("#mid").val());
+	console.log("there",$("#qid").val());
 	scoreCMO($("#mid").val(), $("#qid").val(), $("#modelScore").val());
 };
 
@@ -85,13 +87,21 @@ function scoreCMO(mid, qid, score){
 		"contentType": "application/x-www-form-urlencoded",
 		"data": {"mid": mid, "qid": qid, "score": score},
 		"success": function(data, status){
+
 			console.log(data);
 
 			// Update question text
+			$("#mid").val(data.mid);
+			$("#qid").val(data.qid);
 			$("#questionText").text(data.question);
 
 			// Get handle on model.getkml()
 			MODEL_KML = data.model;
+		},
+		"error": function(data, status){
+			console.log(data);
+			console.log(status);
+			window.location.pathname = "/all_labelled_screen";
 		}
 	});
 }

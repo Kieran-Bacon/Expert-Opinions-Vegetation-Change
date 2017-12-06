@@ -29,7 +29,7 @@ function deleteQuestion(qid){
 		"success": function(data, status){
             $("#questionrow-" + qid).remove();
         },
-        "failure": function(data, status){
+        "error": function(data, status){
             console.log("failed");
         }
 	});

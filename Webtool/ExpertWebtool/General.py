@@ -100,7 +100,8 @@ def deleteQuestion(request):
     if qid is None:
         request.response.status = 400
         return {"error": "qid is not supplied"}
-
+    
     db.execute("deleteQuestion", [qid])
+    db.execute("deleteQuestionLabels", [qid])
 
     return {}
