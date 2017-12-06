@@ -1,0 +1,4 @@
+{
+  "TestAPIImplementations.py::TestAPI::test_initialise_and_create": true,
+  "TestAPIImplementations.py::TestAPI::test_initialise_create_and_train": true
+}
