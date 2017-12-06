@@ -1,6 +1,6 @@
 import logging
 from abc import ABCMeta, abstractmethod
-from VegML.abstract.ClimateEvalAPI import ModelInfo, ModelOutputs
+from ExpertRep.abstract.ClimateEvalAPI import ModelInfo, ModelOutputs
 import pickle as pkl
 
 _LOG = logging.getLogger(__name__)

@@ -1,7 +1,11 @@
+# thanks. I realise I forgot to cache the kml files which isn't a big deal but 
+# can you put a #TODO in there plz
+
+
 from netCDF4 import Dataset
 import numpy as np
-from VegML.abstract.ClimateEvalAPI import ModelFile
-from VegML.tools.KML_gen import dict_to_KML
+from ExpertRep.abstract.ClimateEvalAPI import ModelFile
+from ExpertRep.tools.KML_gen import dict_to_KML
 
 
 class NetCDFFile(ModelFile):
@@ -43,6 +47,8 @@ class NetCDFFile(ModelFile):
         with open(file_path, "wb") as f:
             np.save(f, np.array([self.netcdf_file_path]))
             np.save(f, self.numpy_arrays)
+            np.save(f, self.lat)
+            np.save(f, self.lon)
 
     def __hash__(self):
         return hash(self.numpy_arrays.data.tobytes())
@@ -54,4 +60,6 @@ class NetCDFFile(ModelFile):
             numpy_arrays = np.load(f)
             instance = cls(str(str_array[0]), initialise=False)
             instance.numpy_arrays = numpy_arrays
+            instance.lat = np.load(f)
+            instance.lon = np.load(f)
             return instance

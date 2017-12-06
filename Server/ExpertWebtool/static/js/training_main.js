@@ -95,9 +95,12 @@ function scoreCMO(mid, qid, score){
 		"contentType": "application/x-www-form-urlencoded",
 		"data": {"mid": mid, "qid": qid, "score": score},
 		"success": function(data, status){
+
 			console.log(data);
 
 			// Update question text
+			$("#mid").val(data.mid);
+			$("#qid").val(data.qid);
 			$("#questionText").text(data.question);
 
 			// Get handle on model.getkml()
@@ -106,6 +109,12 @@ function scoreCMO(mid, qid, score){
 			// Default tab pick (quick and dirty)
 			$('#Soil-0').click();
 			$('#default_collapse').click();
+		},
+		"error": function(data, status){
+			console.log(data);
+			console.log(status);
+			// TODO: Change the path name if and only if status is 303
+			window.location.pathname = "/all_labelled_screen";
 		}
 	});
 }

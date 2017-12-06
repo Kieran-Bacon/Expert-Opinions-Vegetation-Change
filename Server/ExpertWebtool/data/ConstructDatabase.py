@@ -40,20 +40,15 @@ salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
 cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 'Nick', 'Higgins', 'imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
-# models
-
-cursor.execute("INSERT INTO models VALUES (1, 'bammins')")
-cursor.execute("INSERT INTO models VALUES (2, 'bammins')")
-
 # questions
 
 cursor.execute("INSERT INTO questions VALUES (1, 'Does this model reflect the true nature of evergreen plants?')")
 cursor.execute("INSERT INTO questions VALUES (2, 'Does this model illustrate sea current well?')")
 
-# lables
+# labels
 
-cursor.execute("INSERT INTO labels VALUES ('bammins', 1, 2, 69)")
-cursor.execute("INSERT INTO labels VALUES ('bammins', 2, 1, 83)")
+#cursor.execute("INSERT INTO labels VALUES ('bammins', 1, 2, 69)")
+#cursor.execute("INSERT INTO labels VALUES ('bammins', 2, 1, 83)")
 
 # Commit the changes close the connection to the database
 database.commit()
