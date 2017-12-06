@@ -32,6 +32,49 @@ $(document).ready(function() {
 				$('#'+lcode).on('shown.bs.tab', function (e) {
 					// Update map
 					console.log(lcode);
+
+					kmlLocation = "http://" + window.location.hostname + ":" + window.location.port + "/collect_model_kml/" + $("#mid").val() + "/" + lindex;
+					console.log(kmlLocation);
+
+					var vector = new ol.layer.Heatmap({
+						source: new ol.source.Vector({
+						  url: kmlLocation,
+						  format: new ol.format.KML({
+							extractStyles: false
+						  })
+						}),
+						blur: 4,
+						radius: 3
+					  });
+				
+					  vector.getSource().on('addfeature', function(event) {
+						// 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
+						// standards-violating <magnitude> tag in each Placemark.  We extract it from
+						// the Placemark's name instead.
+						var name = event.feature.get('name');
+						var magnitude = parseFloat(name.substr(2));
+						event.feature.set('weight', magnitude);
+					  });
+				
+					  var raster = new ol.layer.Tile({
+						source: new ol.source.Stamen({
+						  layer: 'toner'
+						})
+					  });
+				
+					  $(".ol-viewport").remove();
+
+					  var map = new ol.Map({
+						layers: [raster, vector],
+						target: 'map',
+						view: new ol.View({
+						  center: [0, 0],
+						  zoom: 2
+						})
+					  });
+
+
+
 				});
 				// Make the new tab active
 				$('#'+lcode).tab('show');
@@ -41,9 +84,7 @@ $(document).ready(function() {
 			console.log(lcode)
 		};
 	});
-	// Default tab pick (bit ugly)
-	$('#Soil-0').click();
-	$('#default_collapse').click();
+
 
 	// TODO drawing the map here
 
@@ -95,6 +136,10 @@ function scoreCMO(mid, qid, score){
 
 			// Get handle on model.getkml()
 			MODEL_KML = data.model;
+
+			// Default tab pick (bit ugly)
+			$('#Soil-0').click();
+			$('#default_collapse').click();
 		},
 		"error": function(data, status){
 			console.log(data);

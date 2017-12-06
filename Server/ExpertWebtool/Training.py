@@ -20,6 +20,12 @@ def training(request):
 
     return {**request.session, **{"title":"Training Page"}}
 
+@view_config(route_name="collectModelKML", renderer="string")
+def collectModelKML(request):
+    cmo = ClimateModelOutput.load(os.path.join(CMOSTORAGE + request.matchdict['cmoid']))
+    return cmo.get_kml(int(request.matchdict["layer"]))
+
+
 @view_config(route_name="retrieveLabellingInformation", renderer="json")
 def retrieveLabellingInformation(request):
     permissions(request) # Check user permissions for this action
@@ -63,10 +69,9 @@ def retrieveLabellingInformation(request):
     modelID, questionID, question = random.choice(unlabelled)
 
     # Load climate model output
-    output = ClimateModelOutput.load(os.path.join(CMOSTORAGE + str(modelID)))
+    #output = ClimateModelOutput.load(os.path.join(CMOSTORAGE + str(modelID)))
 
-    return {"mid": modelID, "model": output.get_kml(),\
-            "qid": questionID, "question": question}
+    return {"mid": modelID, "qid": questionID, "question": question}
 
 @view_config(route_name="allLabelled", renderer="templates/base.html")
 def allLabelled(request):
