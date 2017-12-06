@@ -1,2 +1,2 @@
-INSERT INTO models VALUES
+INSERT INTO climateOutputs VALUES
 (null, ?)

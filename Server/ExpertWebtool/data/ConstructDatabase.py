@@ -13,9 +13,10 @@ for table in tables:
 # Create tables in the database
 
 cursor.execute("CREATE TABLE users (username TEXT PRIMARY KEY, salt TEXT, password TEXT, firstname TEXT, lastname TEXT, avatar TEXT)")
-cursor.execute("CREATE TABLE models (mid INTEGER PRIMARY KEY, username TEXT)")
+cursor.execute("CREATE TABLE expertModels (identifier TEXT PRIMARY KEY, username TEXT, qid INTEGER)")
+cursor.execute("CREATE TABLE climateOutputs (cmoid INTEGER PRIMARY KEY, username TEXT)")
 cursor.execute("CREATE TABLE questions (qid INTEGER PRIMARY KEY, text TEXT)")
-cursor.execute("CREATE TABLE labels (username TEXT, mid INT, qid INT, score INT)")
+cursor.execute("CREATE TABLE labels (username TEXT, qid INT, cmoid INT, score INT)")
 
 # Database contents creation
 
@@ -39,16 +40,6 @@ cursor.execute("INSERT INTO users VALUES ('paul', ?, ?, 'Paul', 'Kim', 'imgs/ava
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
 cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 'Nick', 'Higgins', 'imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
-
-# questions
-
-cursor.execute("INSERT INTO questions VALUES (1, 'Does this model reflect the true nature of evergreen plants?')")
-cursor.execute("INSERT INTO questions VALUES (2, 'Does this model illustrate sea current well?')")
-
-# labels
-
-#cursor.execute("INSERT INTO labels VALUES ('bammins', 1, 2, 69)")
-#cursor.execute("INSERT INTO labels VALUES ('bammins', 2, 1, 83)")
 
 # Commit the changes close the connection to the database
 database.commit()

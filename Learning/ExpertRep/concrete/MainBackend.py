@@ -11,7 +11,7 @@ from ExpertRep.registry.model_registry import Registry
 from ExpertRep import machine_learning_models  # required to run the registry code
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
-_VEG_ML_DIR = "~/.VegML"  # TODO (Ben) Not good, but works for now.
+_VEG_ML_DIR = "~/.ExpertRep"  # TODO (Ben) Not good, but works for now.
 _MODEL_REGISTRY = "model_registry.nlsv"
 
 _LOG = logging.getLogger(__name__)
@@ -96,9 +96,11 @@ class Backend(VegetationMachineLearningAPI):
         self._check_and_load_if_not_loaded(model_id=model_id)
 
         def remove_from_registry(model_ids: str):
-            mid = model_ids.split()
+            mid = model_ids.split("\n")
             mid.remove(model_id)
-            return "\n".join(model_ids)
+            return "\n".join(mid)
+
+        self.models_that_exist.remove(model_id)
 
         self.registry_file.read_and_write(remove_from_registry)
         os.remove(os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id)))

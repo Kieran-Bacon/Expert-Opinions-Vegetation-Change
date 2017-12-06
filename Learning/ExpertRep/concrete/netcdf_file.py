@@ -36,12 +36,20 @@ class NetCDFFile(ModelFile):
     def get_info(self) -> dict:
         raise NotImplemented("Not yet implemented")
 
-    def get_kml(self):
+    def get_kml(self, layerID: int) -> str:
+
+        """ TODO FIX """
+
+        """ TODO DOcument the shit out of everything! """
         sparse = [dict() for _ in range(self.numpy_arrays.shape[0])]
+
+
         vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
+
         for layer, i, j in zip(*vals):
             sparse[layer][(self.lat[i], self.lon[j])] = self.numpy_arrays[layer, i, j]
-        return list(map(dict_to_KML, sparse))
+
+        return list(map(dict_to_KML, sparse))[layerID]
 
     def save(self, file_path: str) -> None:
         with open(file_path, "wb") as f:
