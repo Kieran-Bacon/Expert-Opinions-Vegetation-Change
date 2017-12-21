@@ -1,6 +1,6 @@
 from setuptools import setup
 
-requires = []
+requires = ['sklearn', 'numpy', 'scipy', 'netCDF4']
 
 setup(name='ExpertRep',
       install_requires=requires,
