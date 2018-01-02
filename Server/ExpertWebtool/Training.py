@@ -73,8 +73,9 @@ def retrieveLabellingInformation(request):
 
     return {"mid": modelID, "qid": questionID, "question": question}
 
-@view_config(route_name="allLabelled", renderer="templates/base.html")
+@view_config(route_name="allLabelled", renderer="templates/training_AllLabelled.html")
 def allLabelled(request):
+    permissions(request)
     return {**request.session, **{"title":"All labelled", "alert":"All pairs have been labelled, check back later for new pairings"}}
 
 @view_config(route_name="modelUploader", renderer="templates/training_modelUploader.html")
