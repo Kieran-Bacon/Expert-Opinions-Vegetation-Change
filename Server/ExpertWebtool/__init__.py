@@ -7,7 +7,7 @@ from .DatabaseHandler import DatabaseHandler
 
 
 TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
-MODELSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
+CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
 
 def main(global_config, **settings):
 
@@ -33,6 +33,7 @@ def main(global_config, **settings):
     config.add_route('deleteQuestion', '/deleteQuestion')
 
     config.add_route('training', '/training.html')
+    config.add_route('collectModelKML', '/collect_model_kml/{cmoid}/{layer}')
     config.add_route('retrieveLabellingInformation', '/training_CMOData')
     config.add_route('allLabelled', '/all_labelled_screen')
 

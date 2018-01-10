@@ -6,7 +6,7 @@ import random
 
 from ExpertRep import ExpertModelAPI, ClimateModelOutput
 
-from . import MODELSTORAGE
+from . import CMOSTORAGE
 from .Helper import *
 from .DatabaseHandler import DatabaseHandler as db
 
@@ -20,6 +20,12 @@ def training(request):
 
     return {**request.session, **{"title":"Training Page"}}
 
+@view_config(route_name="collectModelKML", renderer="string")
+def collectModelKML(request):
+    cmo = ClimateModelOutput.load(os.path.join(CMOSTORAGE + request.matchdict['cmoid']))
+    return cmo.get_kml(int(request.matchdict["layer"]))
+
+
 @view_config(route_name="retrieveLabellingInformation", renderer="json")
 def retrieveLabellingInformation(request):
     permissions(request) # Check user permissions for this action
@@ -29,14 +35,27 @@ def retrieveLabellingInformation(request):
     questionID = request.params.get('qid', None)
     score = request.params.get('score', None)
 
-    print("Check ::", modelID, questionID, score)
-    print(type(modelID), type(questionID), type(score))
-
     # if the information has been given, record it
     if None not in (modelID, questionID, score) and "" not in (modelID, questionID, score):
-        cmo = ClimateModelOutput.load(os.path.join(MODELSTORAGE + str(modelID)))
-        ExpertModelAPI().partial_fit(model_id=request.session["username"], data=[cmo], targets=[int(score)*0.05])
-        db.execute('labelModel', [request.session["username"], modelID, questionID, score])
+
+        # TODO: Discuss the score values
+        score = float(int(score))*0.05 # Reduce score to between 0-5
+
+        # Collect the expert model identifier
+        expert = db.executeOne("collectEMIdentifier",[request.session["username"],questionID])
+
+        # Produce the climate model output object the score relates too
+        cmo = ClimateModelOutput.load(os.path.join(CMOSTORAGE + str(modelID)))
+
+        # Train the expert model
+        try:
+            ExpertModelAPI().partial_fit(model_id=expert["identifier"], data=[cmo], targets=[score])
+        except:
+            #TODO: Doesn't like a single datapoint apparently.
+            pass
+
+        # Store the training information
+        db.execute('labelModel', [request.session["username"], questionID, modelID, score])
 
     # Collected all model question pairs still not annotated by the user
     unlabelled = db.execute('collectUnlabelled', [request.session["username"]])
@@ -50,13 +69,13 @@ def retrieveLabellingInformation(request):
     modelID, questionID, question = random.choice(unlabelled)
 
     # Load climate model output
-    output = ClimateModelOutput.load(os.path.join(MODELSTORAGE + str(modelID)))
+    #output = ClimateModelOutput.load(os.path.join(CMOSTORAGE + str(modelID)))
 
-    return {"mid": modelID, "model": output.get_kml(),\
-            "qid": questionID, "question": question}
+    return {"mid": modelID, "qid": questionID, "question": question}
 
-@view_config(route_name="allLabelled", renderer="templates/base.html")
+@view_config(route_name="allLabelled", renderer="templates/training_AllLabelled.html")
 def allLabelled(request):
+    permissions(request)
     return {**request.session, **{"title":"All labelled", "alert":"All pairs have been labelled, check back later for new pairings"}}
 
 @view_config(route_name="modelUploader", renderer="templates/training_modelUploader.html")
@@ -69,17 +88,21 @@ def modelUploader(request):
 def modelFileUploader(request):
     permissions(request)
 
-    tempLocation = tempStorage(request.POST['file'].file)
+    tempLocation = tempStorage(request.POST['file'].file) # Store the file temporarily 
     
     try:
+        # Produce a climate model output object
         model = ClimateModelOutput(tempLocation)
     except Exception as e:
+        # report the issue when trying to work on climate model output
         request.response.status = 406
         return {"alert": str(e)}
     finally:
+        # Delete the tempory file
         os.remove(tempLocation)
     
-    model.save(os.path.join(MODELSTORAGE, str(modelID)))
+    # Record the new model file and store appropriately 
     modelID = db.executeID("modelUploaded",[request.session["username"]])
+    model.save(os.path.join(CMOSTORAGE, str(modelID)))
 
     return {}

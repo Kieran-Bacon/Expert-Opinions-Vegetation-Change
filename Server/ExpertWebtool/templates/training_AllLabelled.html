@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block css %}{% endblock %}
+{% block js %}{% endblock %}
+
+{% block content %}
+<br/>
+
+<div class="jumbotron">
+    <h1>Bootstrap Tutorial</h1> 
+    <p>Bootstrap is the most popular HTML, CSS, and JS framework for developing responsive,
+    mobile-first projects on the web.</p> 
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                What to do now...
+            </div>
+            <div class="panel-body">
+                <p>
+                    Thank you! You have now annotated all the current combinations of model 
+                    question pairings. We will be adding more climate model outputs in the
+                    future, and the questions are likely to change as dialog society is having
+                    changes. Remember to check back in everyone and again to see if there is anymore
+                    to do.
+                </p>
+
+                <p>
+                    Although you are done with the training, you can still checkout the progress of 
+                    your representation and the kinds of evaluations it provides to new climate model
+                    outputs. Check them out below.
+                </p>
+
+                <button type="button" class="btn btn-outline btn-primary">Profile</button>
+                <button type="button" class="btn btn-outline btn-primary">Evaluation</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
