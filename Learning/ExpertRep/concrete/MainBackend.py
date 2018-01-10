@@ -123,13 +123,10 @@ class Backend(VegetationMachineLearningAPI):
         if not self._check_and_load_if_not_loaded(model_id=model_id):
             raise ModelDoesNotExistException("The model with id: {} does not exist!!".format(model_id))
 
-        # TODO (Ben) work out a better way to do this
-        train, test, train_t, test_t = train_test_split(data, targets, test_size=0.5)
-
-        self.open_models[model_id].partial_fit(train, train_t)
-        predicted = self.open_models[model_id].predict(test)
+        model_out = self.open_models[model_id].partial_fit(data=data, targets=targets)
         self._save_model(model_id=model_id)
-        return ModelOutputs(accuracy=np.mean(predicted == np.array(test_t)), precision=None)
+
+        return model_out
 
     def predict(self, *, model_id: str, data: list) -> list:
         """
@@ -180,3 +177,14 @@ class Backend(VegetationMachineLearningAPI):
         """
         if model_id in self.open_models:
             del self.open_models[model_id]
+
+    def fit_unsupervised(self, *, model_id: str, data: list) -> None:
+        """
+        Raises:
+            ModelDoesNotExistException
+        """
+
+        if not self._check_and_load_if_not_loaded(model_id=model_id):
+            raise ModelDoesNotExistException("The model with id: {} does not exist!!".format(model_id))
+        self.open_models[model_id].fit_unsupervised(data)
+        self._save_model(model_id=model_id)

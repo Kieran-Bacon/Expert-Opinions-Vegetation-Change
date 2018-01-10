@@ -90,7 +90,15 @@ class ModelType(Enum):
     # ...
 
 
-class ModelOutputs(namedtuple("ModelOutputs", ["accuracy", "precision"])):
+class ModelOutputs(object):
+    pass
+
+
+class ModelOutputsClassify(namedtuple("ModelOutputsClassify", ["accuracy", "precision"]), ModelOutputs):
+    pass
+
+
+class ModelOutputsRegression(namedtuple("ModelOutputsRegression", ["R2"]), ModelOutputs):
     pass
 
 
@@ -137,6 +145,13 @@ class VegetationMachineLearningAPI(metaclass=ABCMeta):
         Returns:
             An instance of ModelOutputs object containing the training results, eg, final accuracy or precision ect?
 
+        Raises:
+            ModelDoesNotExistException
+        """
+
+    @abstractmethod
+    def fit_unsupervised(self, *, model_id: str, data: list) -> None:
+        """
         Raises:
             ModelDoesNotExistException
         """

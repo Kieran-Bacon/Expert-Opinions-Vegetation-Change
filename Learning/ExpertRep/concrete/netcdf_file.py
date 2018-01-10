@@ -43,7 +43,6 @@ class NetCDFFile(ModelFile):
         """ TODO DOcument the shit out of everything! """
         sparse = [dict() for _ in range(self.numpy_arrays.shape[0])]
 
-
         vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
 
         for layer, i, j in zip(*vals):
