@@ -20,7 +20,7 @@ class MachineLearningModel(metaclass=ABCMeta):
         return self.fit(long_data, long_targets, *args, **kwargs)
 
     @abstractmethod
-    def fit(self, data: list, targets: list, *args, **kwargs) -> ModelOutputs:
+    def fit(self, data: list, targets: list, test_data: list, test_targets: list, *args, **kwargs) -> ModelOutputs:
         """
         """
 
