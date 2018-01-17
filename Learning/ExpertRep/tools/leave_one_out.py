@@ -1,18 +1,45 @@
+"""
+Tools required to perform leave one out cross validation to achieve accurate approximations of evaluation metrics.
+"""
 import numpy as np
-from ExpertRep.abstract.ModelAPI import ModelOutputs
-import warnings
 
 
-def mean_model_outputs(output: list):
+def mean_model_outputs(list_of_model_outs: list):
+    """
+    Calculates the means of a list of model outputs and returns it in the same format it was received.
+
+    Args:
+        list_of_model_outs:
+
+    Returns:
+        An instance of the same type as one element of list_of_model_outs
+
+    """
     try:
-        model_outputs_class = output[0].__class__
+        model_outputs_class = list_of_model_outs[0].__class__
     except IndexError:
-        warnings.warn("Mean of empty array is undefined")
+        raise ArithmeticError("Mean of empty array is undefined")
 
-    return model_outputs_class(*[np.mean([model[i] for model in output]) for i in range(len(model_outputs_class._fields))])
+    return model_outputs_class(*[np.mean([model[i] for model in list_of_model_outs])
+                                 for i in range(len(model_outputs_class._fields))])
 
 
-def leave_one_out(data: list, target: list, fit_fn: callable, score_fn: callable, *args, **kwargs):
+def leave_one_out(data: list, target: list, fit_fn: callable, score_fn: callable, *args, **kwargs) -> "ModelOutputs":
+    """
+    Calculates leave one out cross-validation and retrains the model on the completed dataset.
+
+    Args:
+        data: A list of data.
+        target: A list of target values
+        fit_fn: A fit fn with signature func(data, targets, *args, **kwargs)
+        score_fn: A scoring fn with signature func(data, targets) -> ModelOutputs
+        *args: Any args for the fit function
+        **kwargs: any kwargs for the fit function
+
+    Returns:
+        An instance of ModelOutputs
+
+    """
     model_outputs = []
     for i, _ in enumerate(target):
         data_fold = data[:i] + data[i + 1:]

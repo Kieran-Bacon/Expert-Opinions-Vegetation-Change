@@ -4,4 +4,5 @@ export PYTHONPATH=/root/code/
 
 ls $PYTHONPATH
 
-pytest -s /root/code/ExpertRep/tests/TestAPIImplementations.py
+pylint /root/code/ExpertRep/*/*.py --max-line-length=120
+pytest -s /root/code/ExpertRep/tests/*

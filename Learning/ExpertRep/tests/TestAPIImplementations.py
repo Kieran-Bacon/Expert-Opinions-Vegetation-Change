@@ -1,19 +1,13 @@
+# pylint: skip-file
+
 import unittest
+import numpy as np
+
 from ExpertRep import ClimateModelOutput
 from ExpertRep import ExpertModelAPI
 from ExpertRep.abstract.ClimateEvalAPI import ModelOutputs
 from ExpertRep.abstract.ClimateEvalAPI import ModelDoesNotExistException
-import numpy as np
-
-TEST_NC = "/root/code/ExpertRep/test_model_outputs/JULES-ES.1p6.vn4.8.spinup_50.dump_vegfrac.18800101.0.nc"
-
-
-class TestModelFiles(unittest.TestCase):
-    def test_initialise_save_and_load(self):
-        f1 = ClimateModelOutput(TEST_NC)
-        f1.save("~/x.pkl")
-        f2 = ClimateModelOutput.load("~/x.pkl")
-        self.assertTrue(np.allclose(f1.get_numpy_arrays(), f2.get_numpy_arrays(), equal_nan=True))
+from ExpertRep.tests.constants import TEST_NC
 
 
 class TestAPI(unittest.TestCase):

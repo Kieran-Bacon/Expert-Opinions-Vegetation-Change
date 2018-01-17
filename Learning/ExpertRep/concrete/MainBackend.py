@@ -1,14 +1,17 @@
+"""
+A simple non-restful implementation of the ModelAPI class.
+"""
 import os
 import logging
 
-import numpy as np
 from ExpertRep.tools.locked_file import LockedFile
-from sklearn.model_selection import train_test_split
 from ExpertRep.abstract.ClimateEvalAPI import VegetationMachineLearningAPI, ModelOutputs, ModelInfo, \
     ModelDoesNotExistException
 from ExpertRep.abstract.ModelAPI import MachineLearningModel
 from ExpertRep.registry.model_registry import Registry
-from ExpertRep import machine_learning_models  # required to run the registry code
+import ExpertRep.machine_learning_models  # pylint disable=unused-import
+
+# This previous line is required for the registry.
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
 _VEG_ML_DIR = "~/.ExpertRep"  # TODO (Ben) Not good, but works for now.
@@ -18,6 +21,9 @@ _LOG = logging.getLogger(__name__)
 
 
 class Backend(VegetationMachineLearningAPI):
+    """
+    A simple backend implementation for training and evaluating Machine Learning models.
+    """
     MODEL_TYPE_TO_CLASS = Registry()
 
     def __init__(self):

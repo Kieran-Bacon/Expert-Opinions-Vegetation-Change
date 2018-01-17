@@ -25,7 +25,16 @@ _DEFAULT_PLACEMARK = """
             """
 
 
-def dict_to_KML(data: dict) -> str:
+def dict_to_kml(data: dict) -> str:
+    """
+    Converts a dictionary of the format
+
+    Args:
+        data:
+
+    Returns:
+
+    """
     kml = _HEADER
     for (lon, lat), value in data.items():
         kml += _DEFAULT_PLACEMARK.format("Some ID", lat, lon, value, "Some Name", value, lat, lon)
