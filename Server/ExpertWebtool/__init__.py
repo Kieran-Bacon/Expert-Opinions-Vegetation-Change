@@ -20,6 +20,7 @@ def main(global_config, **settings):
     # Static resources
     config.add_static_view(name='fonts', path='static/fonts')
     config.add_static_view(name='imgs', path='static/imgs')
+    config.add_static_view(name='images', path='static/imgs')
     config.add_static_view(name='css', path='static/css')
     config.add_static_view(name='js', path='static/js')
 
@@ -42,10 +43,14 @@ def main(global_config, **settings):
 
     config.add_route('evaluation', '/evaluation.html')
 
+    config.add_route('personalSettings', '/settings/personal.html')
+    config.add_route('manageUsers', '/settings/manage_users.html')
+
     # Link views
     config.scan(".General")    # General server functions
     config.scan(".Training")   # Handles the training interactions
     config.scan(".Evaluation") # Handles the prediction aspects of the tool
+    config.scan(".Settings")   # Contains webtool settings functions
 
     # Load database information
     DatabaseHandler.load()

@@ -12,16 +12,16 @@
     <title>{{title}}</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link href="css/metisMenu.min.css" rel="stylesheet">
+    <link href="/css/metisMenu.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- Page specific css -->
     {% block css %}{% endblock %}
@@ -285,8 +285,19 @@
                         <li><a href="/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                         <li><a href="/model_uploader.html"><i class="fa fa-upload fa-fw"></i> Content Uploader</a></li>
                         <li><a href="/training.html"><i class="fa fa-language fa-fw"></i> Model Annotator</a></li>
-                        <li><a href="evaluation.html"><i class="fa fa-bar-chart-o fa-fw"></i> Prediction Evaluation</a></li>
-                        <li><a href="#"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
+                        <li><a href="/evaluation.html"><i class="fa fa-bar-chart-o fa-fw"></i> Prediction Evaluation</a></li>
+                        <li>
+                            <a href="#"><i class="fa fa-cog fa-fw"></i> Settings</a>
+                            <ul class="nav nav-second-level collapse">
+                                <li>
+                                    <a href="/settings/personal.html">Personal Settings</a>
+                                </li>
+                                <li>
+                                    <a href="/settings/manage_users.html">Manage Users</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -308,16 +319,16 @@
     </div>
 
     <!-- jQuery -->
-    <script src="js/jquery.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="js/metisMenu.min.js"></script>
+    <script src="/js/metisMenu.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="js/sb-admin-2.js"></script>
+    <script src="/js/sb-admin-2.js"></script>
 
     <!-- Page specific js -->
     {% block js %}{% endblock %}
