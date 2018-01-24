@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link href="/css/metisMenu.min.css" rel="stylesheet">
+
+<link href="/css/dataTables.bootstrap.css" rel="stylesheet">
+
+<!-- DataTables Responsive CSS -->
+<link href="/css/dataTables.responsive.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+<!-- Metis Menu Plugin JavaScript -->
+<script src="/js/metisMenu.min.js"></script>
+
+<!-- DataTables JavaScript -->
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/dataTables.bootstrap.min.js"></script>
+<script src="/js/dataTables.responsive.js"></script>
+
+<script src="/js/settings_manageUsers.js"></script>
+{% endblock %}
+
+{% block content %}
+<br/>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                System users
+            </div>
+            <div class="panel-body">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Full name</th>
+                            <th>Disipline</th>
+                            <th>CMO uploading</th>
+                            <th>Password Generation</th>
+                            <th>Expert invitation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>bammins</td>
+                            <td>Mr Kieran Bacon</td>
+                            <td>Computer Science</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                            <td>No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

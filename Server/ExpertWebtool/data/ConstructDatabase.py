@@ -12,34 +12,53 @@ for table in tables:
 
 # Create tables in the database
 
-cursor.execute("CREATE TABLE users (username TEXT PRIMARY KEY, salt TEXT, password TEXT, firstname TEXT, lastname TEXT, avatar TEXT)")
+cursor.execute("CREATE TABLE users (\
+	username TEXT PRIMARY KEY,\
+	salt TEXT,\
+	password TEXT,\
+	permission INTEGER,\
+	firstname TEXT,\
+	lastname TEXT,\
+	avatar TEXT)")
 cursor.execute("CREATE TABLE expertModels (identifier TEXT PRIMARY KEY, username TEXT, qid INTEGER)")
 cursor.execute("CREATE TABLE climateOutputs (cmoid INTEGER PRIMARY KEY, username TEXT)")
 cursor.execute("CREATE TABLE questions (qid INTEGER PRIMARY KEY, text TEXT)")
 cursor.execute("CREATE TABLE labels (username TEXT, qid INT, cmoid INT, score INT)")
+cursor.execute("CREATE TABLE permissions (pid INTEGER PRIMARY KEY, uploading INTEGER, question INTEGER, invitation INTEGER)")
 
 # Database contents creation
+
+permissions = [[0],[1]]
+for i in range(2):
+	edit = []
+	for pSet in permissions:
+		edit.append(pSet + [0])
+		edit.append(pSet + [1])
+	permissions = edit
+
+for i, combination in enumerate(permissions):
+	cursor.execute("INSERT INTO permissions VALUES (?, ?, ?, ?)", [i] + combination)
 
 # Developer accounts
 #	- Kieran's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "admin1").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('bammins', ?, ?, 'Kieran', 'Bacon', 'imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('bammins', ?, ?, 0, 'Kieran', 'Bacon', '/imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
 
 #	- Ben's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('ben', ?, ?, 'Ben', 'Townsend', 'imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('ben', ?, ?, 0, 'Ben', 'Townsend', '/imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
 
 #	- Paul's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('paul', ?, ?, 'Paul', 'Kim', 'imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('paul', ?, ?, 0, 'Paul', 'Kim', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 #	- Nick's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 'Nick', 'Higgins', 'imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 0, 'Nick', 'Higgins', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 # Commit the changes close the connection to the database
 database.commit()
