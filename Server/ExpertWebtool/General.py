@@ -75,8 +75,3 @@ def logout(request):
 	# TODO: Delete the redundant session information
 	request.session.invalidate()
 	return exc.HTTPFound(request.route_url("login"))
-
-@view_config(route_name="dashboardMain", renderer="templates/dashboard_main.html")
-def dashboardMain(request):
-	permissions(request)
-	return Helper.generatePageVariables(request, {"title":"Dashboard"})

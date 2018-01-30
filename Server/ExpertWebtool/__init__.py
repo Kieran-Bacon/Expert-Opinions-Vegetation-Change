@@ -27,11 +27,12 @@ def main(global_config, **settings):
 
     # Route requests
     config.add_route('blank', '/')
-    config.add_route('dashboardMain', 'dashboard.html')
+    config.add_route('dashboardMain', '/dashboard.html')
+    config.add_route('userProfile', '/user_profile.html')
 
-    config.add_route('login', 'login.html')
-    config.add_route('loggingIn','login')
-    config.add_route('logout', 'logout')
+    config.add_route('login', '/login.html')
+    config.add_route('loggingIn','/login')
+    config.add_route('logout', '/logout')
     config.add_route('createQuestion', '/createQuestion')
     config.add_route('deleteQuestion', '/deleteQuestion')
 
@@ -52,6 +53,7 @@ def main(global_config, **settings):
 
     # Link views
     config.scan(".General")    # General server functions
+    config.scan(".Dashboard")  # Handles landing pages
     config.scan(".Training")   # Handles the training interactions
     config.scan(".Question")   # Handlers for question manipulation
     config.scan(".Evaluation") # Handles the prediction aspects of the tool

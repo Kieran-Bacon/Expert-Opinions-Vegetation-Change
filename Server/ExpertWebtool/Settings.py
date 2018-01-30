@@ -11,7 +11,7 @@ from . import TEMPLATES
 from .Helper import HiddenPages, permissions, EMAIL_REGEX
 from .DatabaseHandler import DatabaseHandler as db
 
-@view_config(route_name='personalSettings', renderer="templates/base.html")
+@view_config(route_name='personalSettings', renderer="templates/settings_personal.html")
 def personalSettings(request):
 	permissions(request) # Validates user
 	# Returns the base template page.
