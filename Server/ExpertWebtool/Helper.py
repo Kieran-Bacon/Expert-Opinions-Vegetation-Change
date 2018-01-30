@@ -37,6 +37,15 @@ class HiddenPages:
 	def remove(address: str) -> None:
 		HiddenPages.pages.remove(address)
 
+def generatePageVariables(request, additional=None) -> dict:
+
+	alerts = request.session.get("alerts", [])
+	request.session["alerts"] = []
+
+	if additional is None:
+		return {**request.session, "alerts":alerts}
+	return {**request.session, **additional, "alerts":alerts}
+
 def permissions(request) -> None:
 	"""
 	Takes a request object for an arbitary page and redirects the user if they

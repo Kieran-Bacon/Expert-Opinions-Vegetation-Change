@@ -23,6 +23,9 @@
     <!-- Custom Fonts -->
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <!-- Pnotify css -->
+    <link href="/css/pnotify.custom.css" rel="stylesheet" type="text/css">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -45,10 +48,10 @@
                         <form role="form" method="POST" action="/login">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Username" name="username" type="text" autofocus>
+                                    <input id="usernameInput" class="form-control" placeholder="Username" name="username" type="text" value="{{username}}" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    <input id="passwordInput" class="form-control" placeholder="Password" name="password" type="password" value="">
                                 </div>
                                 <div class="checkbox">
                                     <label>
@@ -76,6 +79,23 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/sb-admin-2.js"></script>
+
+    <script src="/js/pnotify.custom.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            PNotify.prototype.options.styling = "fontawesome";
+
+            {% for alert in alerts %}
+            new PNotify({
+                "title":"{{alert['title']}}",
+                "text":"{{alert['text']}}",
+                "type":"{{alert['type']}}",
+                "styling":"fontawesome"
+            });
+            {% endfor %}
+        });
+    </script>
 
 </body>
 
