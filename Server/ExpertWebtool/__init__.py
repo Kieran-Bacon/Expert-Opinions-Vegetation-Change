@@ -8,6 +8,7 @@ from .DatabaseHandler import DatabaseHandler
 
 TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
 CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
+TEMPLATES = abspath("./ExpertWebtool/templates") + "/"
 
 def main(global_config, **settings):
 
@@ -44,7 +45,9 @@ def main(global_config, **settings):
     config.add_route('evaluation', '/evaluation.html')
 
     config.add_route('personalSettings', '/settings/personal.html')
+    config.add_route('createUser', '/create_user/{accountLink}')
     config.add_route('manageUsers', '/settings/manage_users.html')
+    config.add_route('inviteUser', '/settings/invite_user')
 
     # Link views
     config.scan(".General")    # General server functions

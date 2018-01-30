@@ -1,8 +1,41 @@
 import os, uuid
+import re
 
 import pyramid.httpexceptions as exc
 
 from . import TEMPSTORAGE
+
+# Regular expressions for cross site things
+EMAIL_REGEX = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+
+class HiddenPages:
+
+	pages = set()
+
+	def newAddress(leading: str, following="") -> str:
+		""" Generate a random address at some point of the tree
+
+		Params:
+			lead - A string that will appear at the beginning of the path
+			following - A string that will appear after the randomly generated segment
+
+		Returns:
+			str - The address of the new location
+		"""
+
+		location = leading + uuid.uuid4().hex.upper() + following
+		while location in HiddenPages.pages:
+			location = leading + uuid.uuid4().hex.upper() + following
+
+		HiddenPages.pages.add(location)
+
+		return location
+
+	def validate(address: str) -> bool:
+		return address in HiddenPages.pages
+
+	def remove(address: str) -> None:
+		HiddenPages.pages.remove(address)
 
 def permissions(request) -> None:
 	"""

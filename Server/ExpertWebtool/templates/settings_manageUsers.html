@@ -27,6 +27,32 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                Add a user
+            </div>
+            <div class="panel-body">
+                <p>
+                    To invite users to the user please provide us with their e-mail address. We
+                    shall e-mail them with a link to a account setup page for them to input their 
+                    information.
+                </p>
+                <div class="col-sm-9 col-md-10 col-lg-11">
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">@</span>
+                        <input id="inviteUserAddress" type="text" class="form-control" placeholder="E-mail Address">
+                    </div>
+                </div>
+                <div class="col-sm-3 col-md-2 col-lg-1">
+                    <button style="width:100%" type="button" class="btn btn-outline btn-primary" onclick="inviteUser();">Invite</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
                 System users
             </div>
             <div class="panel-body">
@@ -37,19 +63,23 @@
                             <th>Full name</th>
                             <th>Disipline</th>
                             <th>CMO uploading</th>
-                            <th>Password Generation</th>
+                            <th>Question Generation</th>
                             <th>Expert invitation</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>bammins</td>
-                            <td>Mr Kieran Bacon</td>
-                            <td>Computer Science</td>
-                            <td>Yes</td>
-                            <td>No</td>
-                            <td>No</td>
-                        </tr>
+
+                        {% for user in users_information %}
+                            <tr>
+                                <td>{{user["username"]}}</td>
+                                <td>Mr {{user["firstname"]}} {{user["lastname"]}}</td>
+                                <td>Computer Science</td>
+                                <td>{{user["uploading"]}}</td>
+                                <td>{{user["question"]}}</td>
+                                <td>{{user["invitation"]}}</td>
+                            </tr>
+                        {% endfor %}
+
                     </tbody>
                 </table>
             </div>
