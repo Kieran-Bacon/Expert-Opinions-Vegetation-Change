@@ -23,6 +23,9 @@
     <!-- Custom Fonts -->
     <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <!-- Pnotify css -->
+    <link href="/css/pnotify.custom.css" rel="stylesheet" type="text/css">
+
     <!-- Page specific css -->
     {% block css %}{% endblock %}
 
@@ -329,6 +332,14 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="/js/sb-admin-2.js"></script>
+
+    <!-- Pnotify js -->
+    <script src="/js/pnotify.custom.js"></script>
+    <script>
+        $(document).ready(function() {
+            PNotify.prototype.options.styling = "fontawesome";
+        });
+    </script>
 
     <!-- Page specific js -->
     {% block js %}{% endblock %}
