@@ -112,27 +112,32 @@ $(document).ready(function() {
 		controls: [] // Remove default controls
 	});
 
-	scoreCMO(null, null, null);
+	collectModel();
+	$("#questionSelect").change(collectModel);
 });
 
-function scoreSubmit(){
-	scoreCMO($("#mid").val(), $("#qid").val(), $("#modelScore").val());
-};
+function collectModel(){
 
-function scoreCMO(mid, qid, score){
+	var qid = $("#questionSelect option:selected").val();
+	if( qid == null){ return; }
+
 	$.ajax({
-		"url": "/training_CMOData",
+		"url": "/training/collectCMO",
 		"type": "POST",
 		"contentType": "application/x-www-form-urlencoded",
-		"data": {"mid": mid, "qid": qid, "score": score},
+		"data": {"qid": qid},
 		"success": function(data, status){
 
 			console.log(data);
+			console.log(status);
 
-			// Update question text
+			if(status == "nocontent"){
+				// No more models for that question ID - Refresh the page for new information
+				location.reload();
+				return;
+			}
+
 			$("#mid").val(data.mid);
-			$("#qid").val(data.qid);
-			$("#questionText").text(data.question);
 
 			// Get handle on model.getkml()
 			MODEL_KML = data.model;
@@ -140,12 +145,41 @@ function scoreCMO(mid, qid, score){
 			// Default tab pick (bit ugly)
 			$('#Soil-0').click();
 			$('#default_collapse').click();
+
 		},
 		"error": function(data, status){
-			console.log(data);
-			console.log(status);
-			// TODO: Change the path name if and only if status is 303
-			window.location.pathname = "/all_labelled_screen";
+			new PNotify({
+                title: 'Error when connecting to server',
+                text: data.responseText,
+                type: 'error',
+                styling: 'fontawesome'
+            });
+		}
+	});
+}
+
+function scoreModel(){
+
+	var qid = $("#questionSelect option:selected").val();
+	var mid = $("#mid").val();
+	var score = $("#modelScore").val();
+
+	$.ajax({
+		"url": "/training/scoreCMO",
+		"type": "POST",
+		"contentType": "application/x-www-form-urlencoded",
+		"data": {"qid": qid, "mid":mid, "score": score},
+		"success": function(data, status){
+			// Get next Model
+			collectModel();
+		},
+		"error": function(data, status){
+			new PNotify({
+                title: 'Error when connecting to server',
+                text: data.responseText,
+                type: 'error',
+                styling: 'fontawesome'
+            });
 		}
 	});
 }

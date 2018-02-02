@@ -13,6 +13,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% if questions %}
+
 <br/>
 <div class="row">
     <div class="col-lg-12">
@@ -21,7 +24,12 @@
                 Labelling machine
             </div>
             <div class="panel-body">
-                <p>Through your persistant use of the labeller, your expert representation learns to become more and more like yourself. Shift through the model outputs on the left, see a representation of a particular output on the right.</p>
+                <p>
+					Through your persistant use of the labeller, your expert representation learns 
+					to become more and more like yourself. Shift through the model outputs on the 
+					left, see a representation of a particular output on the right.
+				</p>
+				<p>{{questions}}</p>
             </div>
         </div>
     </div>
@@ -279,14 +287,54 @@
 				<input type="text" id="mid" name="mid" value="" style="display: none;"/>
 				<input type="text" id="qid" name="qid" value="" style="display: none;"/>
 
-                <p id="questionText">How well do you think this model represents the state of yeti life in Canada?</p>
+				<div class="form-group">
+						<label>Selects</label>
+						<select id="questionSelect" class="form-control">
+							{% for question in questions %}
+								<option value="{{question['qid']}}">{{question["text"]}}</option>
+							{% endfor %}
+						</select>
+					</div>
+
                 <input type="text" id="modelScore" name="score" value="" />
                 <div class="col-lg-2 col-lg-offset-10">
-                	<button onclick="scoreSubmit()" type="button" class="btn btn-primary btn-sm btn-block">Submit</button>
+                	<button onclick="scoreModel()" type="button" class="btn btn-primary btn-sm btn-block">Submit</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{% endif %}
+{% if not questions %}
+<br/>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                What to do now...
+            </div>
+            <div class="panel-body">
+                <p>
+                    Thank you! You have now annotated all the current combinations of model 
+                    question pairings. We will be adding more climate model outputs in the
+                    future, and the questions are likely to change as dialog society is having
+                    changes. Remember to check back in everyone and again to see if there is anymore
+                    to do.
+                </p>
+
+                <p>
+                    Although you are done with the training, you can still checkout the progress of 
+                    your representation and the kinds of evaluations it provides to new climate model
+                    outputs. Check them out below.
+                </p>
+
+                <a href="/user_profile.html"><button type="button" class="btn btn-outline btn-primary">Profile</button></a>
+                <a href="/evaluation.html"><button type="button" class="btn btn-outline btn-primary">Evaluation</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}

@@ -37,9 +37,9 @@ def main(global_config, **settings):
     config.add_route('deleteQuestion', '/deleteQuestion')
 
     config.add_route('training', '/training.html')
+    config.add_route('collectCMO','/training/collectCMO')
+    config.add_route('scoreCMO', '/training/scoreCMO')
     config.add_route('collectModelKML', '/collect_model_kml/{cmoid}/{layer}')
-    config.add_route('retrieveLabellingInformation', '/training_CMOData')
-    config.add_route('allLabelled', '/all_labelled_screen')
 
     config.add_route('modelUploader', '/model_uploader.html')
     config.add_route('modelFileUploader', '/model_upload')
