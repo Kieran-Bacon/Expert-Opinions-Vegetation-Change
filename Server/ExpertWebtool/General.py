@@ -10,12 +10,6 @@ from .DatabaseHandler import DatabaseHandler as db
 import hashlib, uuid
 import sqlite3
 
-@view_config(route_name='blank', renderer="templates/base.html")
-def blank(request):
-	permissions(request) # Validates user
-	# Returns the base template page.
-	return { **request.session, **{"title":"Blank Page"}}
-
 @view_defaults(route_name="login", renderer="templates/login.html")
 class LoginHandler:
 	"""
@@ -64,7 +58,7 @@ class LoginHandler:
 			self.request.session["alerts"] = []
 
 			# Redirect the client to the new page
-			raise exc.HTTPFound(self.request.route_url("blank"))
+			raise exc.HTTPFound(self.request.route_url("index"))
 
 		self.request.session["username"] = username
 		self.request.session["alerts"] = [{"type":"error", "text":"The information provided is invalid.", "title":"Ow no, unable to log in!"}]

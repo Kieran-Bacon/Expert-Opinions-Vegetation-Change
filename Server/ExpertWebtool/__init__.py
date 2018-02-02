@@ -26,7 +26,7 @@ def main(global_config, **settings):
     config.add_static_view(name='js', path='static/js')
 
     # Route requests
-    config.add_route('blank', '/')
+    config.add_route('index', '/')
     config.add_route('dashboardMain', '/dashboard.html')
     config.add_route('userProfile', '/user_profile.html')
 
