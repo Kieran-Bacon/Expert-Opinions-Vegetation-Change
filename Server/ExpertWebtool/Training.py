@@ -24,7 +24,7 @@ def training(request):
         if len(db.execute('collectUnlabelled', [request.session["username"],qInfo["qid"]])):
             questions.append({"qid": qInfo["qid"], "text": qInfo["text"]})
 
-    return Helper.generatePageVariables(request, {"title":"Training Page", "questions":questions})
+    return Helper.pageVariables(request, {"title":"Training Page", "questions":questions})
 
 @view_config(route_name="collectModelKML", renderer="string")
 def collectModelKML(request):
@@ -77,35 +77,6 @@ def scoreCMO(request):
     db.execute('labelModel', [request.session["username"], qid, mid, score])
 
     raise exc.HTTPNoContent()
-
-@view_config(route_name="modelUploader", renderer="templates/training_modelUploader.html")
-def modelUploader(request):
-    permissions(request)
-    questions = db.execute("collectQuestions",[])
-    return {**request.session, **{"title": "Content Uploader", "questions": questions}}
-
-@view_config(route_name="modelFileUploader", renderer="json")
-def modelFileUploader(request):
-    permissions(request)
-
-    tempLocation = tempStorage(request.POST['file'].file) # Store the file temporarily 
-    
-    try:
-        # Produce a climate model output object
-        model = ClimateModelOutput(tempLocation)
-    except Exception as e:
-        # report the issue when trying to work on climate model output
-        request.response.status = 406
-        return {"alert": str(e)}
-    finally:
-        # Delete the tempory file
-        os.remove(tempLocation)
-    
-    # Record the new model file and store appropriately 
-    modelID = db.executeID("modelUploaded",[request.session["username"]])
-    model.save(os.path.join(CMOSTORAGE, str(modelID)))
-
-    return {}
 
 @view_config(route_name="submitBatch", renderer="json")
 def submitBatch(request):

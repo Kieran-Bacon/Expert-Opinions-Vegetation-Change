@@ -37,7 +37,7 @@ class HiddenPages:
 	def remove(address: str) -> None:
 		HiddenPages.pages.remove(address)
 
-def generatePageVariables(request, additional=None) -> dict:
+def pageVariables(request, additional=None) -> dict:
 
 	alerts = request.session.get("alerts", [])
 	request.session["alerts"] = []

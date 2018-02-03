@@ -19,8 +19,7 @@ class DatabaseHandler:
 		Returns:
 			None
 		"""
-
-
+		
 		for sqlFilename in listdir(DatabaseHandler._QueryLocation):
 
 			SQLPath = join(DatabaseHandler._QueryLocation, sqlFilename)

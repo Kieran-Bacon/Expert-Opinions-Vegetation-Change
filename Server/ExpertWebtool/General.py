@@ -5,7 +5,6 @@ import pyramid.httpexceptions as exc
 from ExpertRep import ExpertModelAPI
 
 from . import Helper
-from .Helper import permissions
 from .DatabaseHandler import DatabaseHandler as db
 import hashlib, uuid
 import sqlite3
@@ -21,27 +20,31 @@ class LoginHandler:
 
 	@view_config(route_name="login")
 	def loginGET(self):
-		return Helper.generatePageVariables(self.request)
+		return Helper.pageVariables(self.request)
 
 	@view_config(route_name="loggingIn", request_method='POST')
 	def loginPOST(self):
 
-		# Collect the posted information from the login form
-		username = self.request.params.get('username', None)
-		password = self.request.params.get('password', None)
+		invalidAlert = [{\
+			"title":"Ow no, unable to log in!",\
+			"text":"The information provided is invalid.",\
+			"type":"error"}]
 
-		# Ensure both pieces of information are present
-		if username is None or password is None:
-			self.request.session["alerts"] = [{"type":"error", "text":"The information provided is invalid.", "title":"Ow no, unable to log in!"}]
-			return exc.HTTPFound(self.request.route_url("login"))
+		# Collect the posted information from the login form
+		try:
+			username = self.request.params['username']
+			password = self.request.params['password']
+		except KeyError as e:
+			self.request.session["alerts"] = invalidAlert
+			raise exc.HTTPFound(self.request.route_url("login"))
 
 		# Collect from the database the salt and password for the user
 		try:
 			salt, storedPassword = db.executeOne("User_Password",[username])
 		except:
 			self.request.session["username"] = username
-			self.request.session["alerts"] = [{"type":"error", "text":"The information provided is invalid.", "title":"Ow no, unable to log in!"}]
-			return exc.HTTPFound(self.request.route_url("login"))
+			self.request.session["alerts"] = invalidAlert
+			raise exc.HTTPFound(self.request.route_url("login"))
 
 		password = hashlib.sha512((salt+password).encode("UTF-8")).hexdigest()
 		if password == storedPassword:
@@ -61,11 +64,38 @@ class LoginHandler:
 			raise exc.HTTPFound(self.request.route_url("index"))
 
 		self.request.session["username"] = username
-		self.request.session["alerts"] = [{"type":"error", "text":"The information provided is invalid.", "title":"Ow no, unable to log in!"}]
-		return exc.HTTPFound(self.request.route_url("login"))
+		self.request.session["alerts"] = invalidAlert
+		raise exc.HTTPFound(self.request.route_url("login"))
 
 @view_config(route_name="logout")
 def logout(request):
-	# TODO: Delete the redundant session information
 	request.session.invalidate()
 	return exc.HTTPFound(request.route_url("login"))
+
+@view_config(route_name="modelUploader", renderer="templates/training_modelUploader.html")
+def modelUploader(request):
+	Helper.permissions(request)
+	questions = db.execute("collectQuestions",[])
+	return Helper.pageVariables(request, {"title": "Content Uploader", "questions": questions})
+
+@view_config(route_name="modelFileUploader", renderer="json")
+def modelFileUploader(request):
+	Helper.permissions(request)
+
+	tempLocation = tempStorage(request.POST['file'].file) # Store the file temporarily 
+
+	try:
+		# Produce a climate model output object
+		model = ClimateModelOutput(tempLocation)
+	except Exception as e:
+		# report the issue when trying to work on climate model output
+		raise exc.HTTPServerError(str(e))
+	finally:
+		# Delete the tempory file
+		os.remove(tempLocation)
+
+	# Record the new model file and store appropriately 
+	modelID = db.executeID("modelUploaded",[request.session["username"]])
+	model.save(os.path.join(CMOSTORAGE, str(modelID)))
+
+	return {}

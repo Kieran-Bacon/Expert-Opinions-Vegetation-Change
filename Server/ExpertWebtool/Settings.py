@@ -1,33 +1,36 @@
-import os
-from pyramid.response import Response
-from pyramid.view import view_defaults, view_config
+
+# Pyramid
+from pyramid.view import view_config
 import pyramid.httpexceptions as exc
 
-# Sending invitation e-mail
+# Python libraries
+import os
 import smtplib
 from email.message import EmailMessage
 
+# Package modules
 from . import TEMPLATES
-from .Helper import HiddenPages, permissions, EMAIL_REGEX
+from . import Helper
+from .Helper import EMAIL_REGEX
 from .DatabaseHandler import DatabaseHandler as db
 
 @view_config(route_name='personalSettings', renderer="templates/settings_personal.html")
 def personalSettings(request):
-	permissions(request) # Validates user
-	# Returns the base template page.
-	return { **request.session, **{"title":"Personal Settings"}}
+	Helper.permissions(request)
+	return Helper.pageVariables(request, {"title":"Personal Settings"})
 
 @view_config(route_name='manageUsers', renderer="templates/settings_manageUsers.html")
 def manageUsers(request):
-	permissions(request) # Validates user
+	Helper.permissions(request)
 
+	# Collect user information
 	users_information = db.execute("Users&Permissions",[])
 
-	return { **request.session, **{"title":"Manage Users", "users_information": users_information}}
+	return Helper.pageVariables(request, {"title":"Manage Users", "users_information": users_information})
 
 @view_config(route_name='inviteUser', request_method='POST', renderer="json")
 def inviteUser(request):
-	permissions(request) # Validates user
+	Helper.permissions(request)
 
 	# Collect the address passed
 	userAddress = request.params.get("address", None)
@@ -37,7 +40,7 @@ def inviteUser(request):
 	if EMAIL_REGEX.match(userAddress) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
 
 	# Create psuedo link
-	link = HiddenPages.newAddress("/create_user/")
+	link = Helper.HiddenPages.newAddress("/create_user/")
 	link = os.path.join(request.host, link[1:]) # TODO: when the location is stable swap this line out.
 
 	# Create email information
@@ -60,7 +63,7 @@ def inviteUser(request):
 @view_config(route_name='createUser', renderer="templates/settings_createUser.html")
 def createUser(request):
 
-	if not HiddenPages.validate(request.current_route_path()):
+	if not Helper.HiddenPages.validate(request.current_route_path()):
 		# Not a vaid link 
 		# TODO: make the system sleep before responding as to reduce effectiveness of brute forcing.
 		return exc.HTTPNotFound()
