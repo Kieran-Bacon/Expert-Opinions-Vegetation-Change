@@ -1,17 +1,78 @@
 {% extends "base.html" %}
 {% block css %}{% endblock %}
-{% block js %}{% endblock %}
+{% block js %}
+<script src="/js/dashboard_profile.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-12">
         <br>
         <div class="panel panel-default">
-            <div class="panel-heading">Model Uploader</div>
+            <div class="panel-heading">Profile dashboard</div>
             <div class="panel-body">
-                <p>There is a body to this to show that it works.</p>
+                <p>Personal information goes here</p>
             </div>
         </div>
     </div>
 </div>
+
+{% if batches %}
+<div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Batches</div>
+                <div class="panel-body">
+                    <p>
+                        We recommend annotating around 40 models for a particular question before
+                        submitting them for training. If you are dillegent enough to annotate well over 40
+                        models for a particular question we will break down them down into batches of 40 for you.
+                    </p>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Questions</th>
+                                        <th>Batch size</th>
+                                        <th>difference</th>
+                                        <th>actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {% for key, value in batches.items() %}
+
+                                        <tr id="batchRow{{key}}" class="success">
+                                            <td width="20px">{{key}}</td>
+                                            <td>{{questions[key]}}</td>
+                                            <td>{{value|length}}</td>
+                                            <td>
+                                                <div class="progress progress-striped active">
+                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{value|length}}" aria-valuemin="0" aria-valuemax="40" style="width: {{value|length}}%">
+                                                        <span class="sr-only">{{value|length}}% Complete (success)</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td width="80px">
+                                                <button type="button" class="btn btn-info btn-circle"
+                                                    onclick="submitBatch('{{key}}');"><i class="fa fa-check"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-circle"
+                                                    onclick="removeBatch('{{key}}');"><i class="fa fa-trash-o"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
 {% endblock %}

@@ -15,7 +15,13 @@ def dashboardMain(request):
 @view_config(route_name="userProfile", renderer="templates/dashboard_profile.html")
 def userProfile(request):
     Helper.permissions(request)
+    qDBINFO = db.execute("collectQuestions", [])
+    questions = {}
+    for q in qDBINFO:
+        questions[q["qid"]] = q["text"]
+
+
     return Helper.generatePageVariables(request,\
-        {"title":"Profile", "batchs":Trainer.info(request.session["username"])}\
+        {"title":"Profile","questions":questions, "batches":Trainer.info(request.session["username"])}\
     )
     

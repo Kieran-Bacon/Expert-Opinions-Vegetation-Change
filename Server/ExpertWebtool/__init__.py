@@ -39,6 +39,8 @@ def main(global_config, **settings):
     config.add_route('training', '/training.html')
     config.add_route('collectCMO','/training/collectCMO')
     config.add_route('scoreCMO', '/training/scoreCMO')
+    config.add_route('submitBatch', '/training/submitBatch')
+    config.add_route('removeBatch', '/training/removeBatch')
     config.add_route('collectModelKML', '/collect_model_kml/{cmoid}/{layer}')
 
     config.add_route('modelUploader', '/model_uploader.html')
