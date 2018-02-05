@@ -8,4 +8,4 @@
 *.nc
 *.kml
 */~/*
-*/data/CMO/*
+Server/ExpertWebtool/data/CMO/*
