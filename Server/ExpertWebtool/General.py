@@ -1,13 +1,16 @@
-from pyramid.response import Response
+# Pyramid
 from pyramid.view import view_defaults, view_config
 import pyramid.httpexceptions as exc
 
-from ExpertRep import ExpertModelAPI
+# Python libraries 
+import os, hashlib, uuid, sqlite3
 
+# Solution modules
+from ExpertRep import ClimateModelOutput
 from . import Helper
 from .DatabaseHandler import DatabaseHandler as db
-import hashlib, uuid
-import sqlite3
+
+from . import CMOSTORAGE
 
 @view_defaults(route_name="login", renderer="templates/login.html")
 class LoginHandler:
@@ -82,7 +85,7 @@ def modelUploader(request):
 def modelFileUploader(request):
 	Helper.permissions(request)
 
-	tempLocation = tempStorage(request.POST['file'].file) # Store the file temporarily 
+	tempLocation = Helper.tempStorage(request.POST['file'].file) # Store the file temporarily 
 
 	try:
 		# Produce a climate model output object
