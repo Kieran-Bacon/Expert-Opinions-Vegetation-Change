@@ -130,7 +130,7 @@ class Trainer():
             del Trainer._USERBATCHS[username][questionID] # remove batch information
         except Exception as e:
             # An error has occured within the ML backend
-            print("Error when batch learning: "+e)
+            print("Error when batch learning: "+str(e))
     
     def deleteBatch(username: str, questionID: int):
         """ Remove the batch information from the database and the current store """

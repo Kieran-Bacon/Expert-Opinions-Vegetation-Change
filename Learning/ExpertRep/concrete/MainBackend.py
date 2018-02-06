@@ -14,7 +14,7 @@ import ExpertRep.machine_learning_models  # pylint disable=unused-import
 # This previous line is required for the registry.
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
-_VEG_ML_DIR = "~/.ExpertRep"  # TODO (Ben) Not good, but works for now.
+_VEG_ML_DIR = "./ExpertWebtool/data/ExpertRep"  # TODO (Ben) Not good, but works for now.
 _MODEL_REGISTRY = "model_registry.nlsv"
 
 _LOG = logging.getLogger(__name__)

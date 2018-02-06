@@ -44,7 +44,7 @@ class NetCDFFile(ModelFile):
         raise NotImplementedError("Not yet implemented")
 
     def get_kml(self, layer_id: int) -> str:
-        if self.sparse is None:
+        if True: #TODO(BEN) WTF this caching thing is broken. shuld be self.sparse is None
             self.sparse = [dict() for _ in range(self.numpy_arrays.shape[0])]
             with warnings.catch_warnings():
                 # The warning produced by undefined behaviour on self.numpy_arrays > 1e-5
@@ -54,7 +54,6 @@ class NetCDFFile(ModelFile):
                 vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
             for layer, i, j in zip(*vals):
                 self.sparse[layer][(self.lat[i], self.lon[j])] = self.numpy_arrays[layer, i, j]
-
         return list(map(dict_to_kml, self.sparse))[layer_id]
 
     def save(self, file_path: str) -> None:
