@@ -1,4 +1,4 @@
-var MODEL_KML = null;
+switch_list = [];
 
 $(document).ready(function() {
 	// Select the element and convert it to a ion slider
@@ -11,7 +11,7 @@ $(document).ready(function() {
 	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 	elems.forEach(function(html) {
 		var switchery = new Switchery(html);
-		// All turned off by default
+		switch_list.push(switchery);
 		setSwitchery(switchery, false);
 	});
 
@@ -19,9 +19,9 @@ $(document).ready(function() {
 	var mapZoom = 2.25
 	var centerLon = 5.921332  // x
 	var centerLat = 44.791232 // y
-	var extentDegrees = 15
+	var extentDegrees = 23
 	var mapCenter = ol.proj.transform([centerLon, centerLat], 'EPSG:4326', 'EPSG:3857');
-	// Can pan +- 15 degrees North or South
+	// Can pan +- extentDegrees North or South
 	var extent = ol.proj.transform([centerLon, centerLat + extentDegrees], 'EPSG:4326', 'EPSG:3857');
 	var extentY = extent[1] - mapCenter[1]
 
@@ -31,11 +31,12 @@ $(document).ready(function() {
 							  enableZoom: false,
 							  // [minx, miny, maxx, maxy]
 							  extent: [mapCenter[0], mapCenter[1] - extentY,
-									   mapCenter[0], mapCenter[1] + extentY]});
+									   mapCenter[0], mapCenter[1] + extentY],
+							  projection:'EPSG:3857'});
 
 	var vector = new ol.layer.Heatmap({
 		source: new ol.source.OSM()
-	})
+	});
 
 	var raster = new ol.layer.Tile({
         source: new ol.source.OSM()
@@ -43,16 +44,13 @@ $(document).ready(function() {
 
 	var map = new ol.Map({
 		view: myView,
-		layers: [],
-		//layers: [vector],
-		// 	new ol.layer.Tile({
-		// 		source: new ol.source.OSM()
-		// 	})
-		// ],
+		layers: [raster, vector],
 		target: 'map',
 		controls: [], // Remove default controls (e.g. zoom buttons)
-		interactions: [new ol.interaction.DragPan()] // Only enable panning
+		interactions: [new ol.interaction.DragPan()]// new ol.interaction.MouseWheelZoom()] // Only enable panning
 	});
+	map.setSize([1276,561])
+	$('#map').data('map', map);
 
 	// Set up listeners
 	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-check-change'));
@@ -72,55 +70,66 @@ $(document).ready(function() {
 				$('#'+lcode).on('shown.bs.tab', function (e) {
 					// Update map
 					console.log(lcode);
+					// Update map source
+					var map = $('#map').data('map');
 
 					kmlLocation = "http://" + window.location.hostname + ":" + window.location.port + "/collect_model_kml/" + $("#mid").val() + "/" + lindex;
 					console.log(kmlLocation);
 
+					sourceVector = new ol.source.Vector({
+						url: kmlLocation,
+						format: new ol.format.KML({
+						  	extractStyles: false
+						})
+					});
+
 					var vector = new ol.layer.Heatmap({
-						source: new ol.source.Vector({
-						  url: kmlLocation,
-						  format: new ol.format.KML({
-							extractStyles: false
-						  })
-						}),
-						blur: 4,
-						radius: 3
-					  });
-				
-					  vector.getSource().on('addfeature', function(event) {
-						// 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
-						// standards-violating <magnitude> tag in each Placemark.  We extract it from
-						// the Placemark's name instead.
+						source: sourceVector,
+						blur: 3,
+						radius: 5
+					});
+
+					var max = -1
+					var min = 1
+					vector.getSource().on('addfeature', function(event) {
 						var name = event.feature.get('name');
-						var magnitude = parseFloat(name.substr(2));
-						event.feature.set('weight', magnitude);
-					  });
-				
-					  var raster = new ol.layer.Tile({
-						source: new ol.source.Stamen({
-						  layer: 'toner'
-						})
-					  });
-				
-					  $(".ol-viewport").remove();
+						var weight = parseFloat(name.substr(1,name.length-2));
 
-					  var map = new ol.Map({
-						layers: [raster, vector],
-						target: 'map',
-						view: new ol.View({
-						  center: [0, 0],
-						  zoom: 2
-						})
-					  });
+						if (weight > max) {
+							max = weight
+							console.log("Max:", max)
+						}
+						if (weight < min) {
+							min = weight
+							console.log("Min:", min)
+						}
 
+						event.feature.set('weight', weight);
+					});
 
-
+					vectorLayer = map.getLayers().getArray()[1];
+					map.removeLayer(vectorLayer);
+					map.addLayer(vector);
 				});
 				// Make the new tab active
 				$('#'+lcode).tab('show');
 			}
 		};
 	});
+
+	// Add colorbar
+	var cbar  = document.getElementById('cbar'),
+    	ctx = cbar.getContext('2d');
+
+	for(var i = 0; i <= 255; i++) { // fill strokes
+    	ctx.beginPath();
+
+    	var color = 'rgb(' + i + ', ' + (255 - i) + ', 0)';
+    	ctx.fillStyle = color;
+
+    	ctx.fillRect(i, 0, 1, 20);
+	}
+	$('#colorbar').offset().top;
 
 	collectModel();
 	$("#questionSelect").change(collectModel);
@@ -153,7 +162,8 @@ function collectModel(){
 			MODEL_KML = data.model;
 
 			// Default tab pick (bit ugly)
-			$('#Soil-0').click();
+			tabReset()
+			$('#Soil-15').click();
 			$('#default_collapse').click();
 
 		},
@@ -200,4 +210,13 @@ function setSwitchery(switchElement, checked) {
         switchElement.setPosition(true);
         switchElement.handleOnchange(true);
     }
+}
+
+function tabReset() {
+	switch_list.forEach(function(html) {
+		// All turned off by default
+		if (html.isChecked()) {
+			$('#' + html.element.id).click();
+		}
+	});
 }
