@@ -11,9 +11,49 @@ $(document).ready(function() {
 	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 	elems.forEach(function(html) {
 		var switchery = new Switchery(html);
-		// TODO all turned off by default
+		// All turned off by default
 		setSwitchery(switchery, false);
 	});
+
+	// Drawing the map
+	var mapZoom = 2.25
+	var centerLon = 5.921332  // x
+	var centerLat = 44.791232 // y
+	var extentDegrees = 15
+	var mapCenter = ol.proj.transform([centerLon, centerLat], 'EPSG:4326', 'EPSG:3857');
+	// Can pan +- 15 degrees North or South
+	var extent = ol.proj.transform([centerLon, centerLat + extentDegrees], 'EPSG:4326', 'EPSG:3857');
+	var extentY = extent[1] - mapCenter[1]
+
+	var myView = new ol.View({center: mapCenter,
+							  zoom: mapZoom,
+							  enableRotation: false,
+							  enableZoom: false,
+							  // [minx, miny, maxx, maxy]
+							  extent: [mapCenter[0], mapCenter[1] - extentY,
+									   mapCenter[0], mapCenter[1] + extentY]});
+
+	var vector = new ol.layer.Heatmap({
+		source: new ol.source.OSM()
+	})
+
+	var raster = new ol.layer.Tile({
+        source: new ol.source.OSM()
+    });
+
+	var map = new ol.Map({
+		view: myView,
+		layers: [],
+		//layers: [vector],
+		// 	new ol.layer.Tile({
+		// 		source: new ol.source.OSM()
+		// 	})
+		// ],
+		target: 'map',
+		controls: [], // Remove default controls (e.g. zoom buttons)
+		interactions: [new ol.interaction.DragPan()] // Only enable panning
+	});
+
 	// Set up listeners
 	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-check-change'));
 	elems.forEach(function(elem) {
@@ -79,37 +119,7 @@ $(document).ready(function() {
 				// Make the new tab active
 				$('#'+lcode).tab('show');
 			}
-
-			// TODO remove currently drawn map and draw new layer on map
-			console.log(lcode)
 		};
-	});
-
-
-	// TODO drawing the map here
-
-	// Constraining map view
-	var myZoom = 2.3
-	var centerX = 1000000
-	var centerY = 5000000
-	var extentY = 4000000
-	var myView = new ol.View({center: [centerX, centerY],
-							  zoom: myZoom,
-							  enableRotation: false,
-							  minZoom: myZoom,
-							  maxZoom: myZoom,
-							  // TODO use mapsize to properly constrain looking around
-							  extent: [centerX,centerY-extentY,centerX,centerY+extentY]}); // Control how much looking around you can do
-
-	var map = new ol.Map({
-		view: myView,
-		layers: [
-			new ol.layer.Tile({
-			source: new ol.source.OSM()
-			})
-		],
-		target: 'map',
-		controls: [] // Remove default controls
 	});
 
 	collectModel();
@@ -188,6 +198,6 @@ function scoreModel(){
 function setSwitchery(switchElement, checked) {
     if((checked && !switchElement.isChecked()) || (!checked && switchElement.isChecked())) {
         switchElement.setPosition(true);
-        switchElement.handleOnchange(true); // TODO
+        switchElement.handleOnchange(true);
     }
 }
