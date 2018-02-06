@@ -260,7 +260,13 @@
 			    <div class="tab-content">
 			        <div class="tab-pane fade in active" id="map-content">
 						<!--<h4>Settings Tab</h4>-->
-						<div id="map" class="map"></div>
+						<div id="map" class="map">
+							<div id="colorbar" style="position:absolute;z-index:1;bottom:0;padding-bottom:50px;padding-left:15px">
+								<canvas width="255" height="20" id="cbar" style="border-radius:10px"></canvas>
+								<p style="position:absolute;bottom:0;padding-bottom:44px;padding-left:8px">~0</p>
+								<p style="position:absolute;bottom:0;padding-bottom:44px;padding-left:240px">1</p>
+							</div>
+						</div>
 			        </div>
 			    </div>
 			</div>

@@ -31,7 +31,8 @@ $(document).ready(function() {
 							  enableZoom: false,
 							  // [minx, miny, maxx, maxy]
 							  extent: [mapCenter[0], mapCenter[1] - extentY,
-									   mapCenter[0], mapCenter[1] + extentY]});
+									   mapCenter[0], mapCenter[1] + extentY],
+							  projection:'EPSG:3857'});
 
 	var vector = new ol.layer.Heatmap({
 		source: new ol.source.OSM()
@@ -46,7 +47,7 @@ $(document).ready(function() {
 		layers: [raster, vector],
 		target: 'map',
 		controls: [], // Remove default controls (e.g. zoom buttons)
-		interactions: [new ol.interaction.DragPan(), new ol.interaction.MouseWheelZoom()] // Only enable panning
+		interactions: [new ol.interaction.DragPan()]// new ol.interaction.MouseWheelZoom()] // Only enable panning
 	});
 	map.setSize([1276,561])
 	$('#map').data('map', map);
@@ -100,19 +101,6 @@ $(document).ready(function() {
 							min = weight
 							console.log("Min:", min)
 						}
-						// Attempt at changing radius according to coord, this doesn't chage radius, only color on heatmap
-						// coord = event.feature.getGeometry().getCoordinates()
-						// coord = ol.proj.transform(coord, 'EPSG:3857', 'EPSG:4326');
-						// var lat = Math.abs(coord[1]);
-						// if (lat > 90) {
-						// 	console.log("whhatt", lat)
-						// }
-						// weight = weight * (lat / 90)
-						
-						// if (weight > 1) {
-						// 	console.log("over")
-						// 	weight = 1
-						// }
 
 						event.feature.set('weight', weight);
 					});
@@ -126,6 +114,20 @@ $(document).ready(function() {
 			}
 		};
 	});
+
+	// Add colorbar
+	var cbar  = document.getElementById('cbar'),
+    	ctx = cbar.getContext('2d');
+
+	for(var i = 0; i <= 255; i++) { // fill strokes
+    	ctx.beginPath();
+
+    	var color = 'rgb(' + i + ', ' + (255 - i) + ', 0)';
+    	ctx.fillStyle = color;
+
+    	ctx.fillRect(i, 0, 1, 20);
+	}
+	$('#colorbar').offset().top;
 
 	scoreCMO(null, null, null);
 });
