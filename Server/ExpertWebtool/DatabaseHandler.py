@@ -9,7 +9,7 @@ class QueryError(Exception):
 class DatabaseHandler:
 
 	_DatabaseLocation = abspath("./ExpertWebtool/data/site.db")
-	_QueryLocation = abspath("./ExpertWebtool/data/queries/")
+	_QueryLocation = abspath("./ExpertWebtool/queries/")
 	_SQLStore = {}
 
 	def load() -> None:
