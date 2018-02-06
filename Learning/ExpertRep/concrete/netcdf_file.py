@@ -1,11 +1,13 @@
-# thanks. I realise I forgot to cache the kml files which isn't a big deal but 
-# can you put a #TODO in there plz
-
+"""
+Implements the ModelFile class for use with NetCDF files.
+"""
+import warnings
+import numpy as np
 
 from netCDF4 import Dataset
-import numpy as np
+
 from ExpertRep.abstract.ClimateEvalAPI import ModelFile
-from ExpertRep.tools.KML_gen import dict_to_KML
+from ExpertRep.tools.kml_gen import dict_to_kml
 
 
 class NetCDFFile(ModelFile):
@@ -17,10 +19,15 @@ class NetCDFFile(ModelFile):
             self.lat = np.array(dataset.variables['latitude'])
             self.lon = np.array(dataset.variables["longitude"])
             dataset.close()
+        else:
+            self.numpy_arrays = None
+            self.lat = None
+            self.lon = None
+        self.sparse = None
 
     def get_numpy_arrays(self, layer: int = -1, resize_to: tuple = None, remove_nan=True) -> np.array:
         if resize_to is not None:
-            raise NotImplemented("Not yet implemented")
+            raise NotImplementedError("Not yet implemented")
         if layer == -1:
             arrays = self.numpy_arrays
         else:
@@ -34,40 +41,46 @@ class NetCDFFile(ModelFile):
         return arrays
 
     def get_info(self) -> dict:
-        raise NotImplemented("Not yet implemented")
+        raise NotImplementedError("Not yet implemented")
 
-    def get_kml(self, layerID: int) -> str:
+    def get_kml(self, layer_id: int) -> str:
+        if self.sparse is None:
+            self.sparse = [dict() for _ in range(self.numpy_arrays.shape[0])]
+            with warnings.catch_warnings():
+                # The warning produced by undefined behaviour on self.numpy_arrays > 1e-5
+                # for NAN values is dealt with by the previous clause.
+                warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-        """ TODO FIX """
+                vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
+            for layer, i, j in zip(*vals):
+                self.sparse[layer][(self.lat[i], self.lon[j])] = self.numpy_arrays[layer, i, j]
 
-        """ TODO DOcument the shit out of everything! """
-        sparse = [dict() for _ in range(self.numpy_arrays.shape[0])]
-
-
-        vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
-
-        for layer, i, j in zip(*vals):
-            sparse[layer][(self.lat[i], self.lon[j])] = self.numpy_arrays[layer, i, j]
-
-        return list(map(dict_to_KML, sparse))[layerID]
+        return list(map(dict_to_kml, self.sparse))[layer_id]
 
     def save(self, file_path: str) -> None:
-        with open(file_path, "wb") as f:
-            np.save(f, np.array([self.netcdf_file_path]))
-            np.save(f, self.numpy_arrays)
-            np.save(f, self.lat)
-            np.save(f, self.lon)
+        with open(file_path, "wb") as file_obj:
+            np.save(file_obj, np.array([self.netcdf_file_path]))
+            np.save(file_obj, self.sparse)
+            np.save(file_obj, self.numpy_arrays)
+            np.save(file_obj, self.lat)
+            np.save(file_obj, self.lon)
 
     def __hash__(self):
-        return hash(self.numpy_arrays.data.tobytes())
+        return hash((self.numpy_arrays.data.tobytes(), self.lat.tobytes(), self.lon.tobytes()))
+
+    def __eq__(self, other):
+        return (np.allclose(self.get_numpy_arrays(), other.get_numpy_arrays(), equal_nan=True) and
+                np.allclose(self.lat, other.lat, equal_nan=True) and
+                np.allclose(self.lon, other.lon, equal_nan=True))
 
     @classmethod
     def load(cls, file_path: str) -> "ModelFile":
-        with open(file_path, "rb") as f:
-            str_array = np.load(f)
-            numpy_arrays = np.load(f)
+        with open(file_path, "rb") as file_obj:
+            str_array = np.load(file_obj)
             instance = cls(str(str_array[0]), initialise=False)
+            instance.sparse = np.load(file_obj)
+            numpy_arrays = np.load(file_obj)
             instance.numpy_arrays = numpy_arrays
-            instance.lat = np.load(f)
-            instance.lon = np.load(f)
+            instance.lat = np.load(file_obj)
+            instance.lon = np.load(file_obj)
             return instance

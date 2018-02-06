@@ -1,27 +1,50 @@
-from ExpertRep.abstract.ModelAPI import MachineLearningModel
-from ExpertRep.abstract.ClimateEvalAPI import ModelInfo, ModelType,ModelOutputs
-from sklearn.neighbors import KNeighborsClassifier
+"""
+A module containing some simple KNN implementations for demonstration of the Machine Learning API.
+"""
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+
+from ExpertRep.abstract.ClimateEvalAPI import ModelInfo, ModelType
 from ExpertRep.registry.model_registry import Registry
-import numpy as np
+from ExpertRep.tools.unsupervised_helper import SemiSupervisedModel
+from ExpertRep.machine_learning_models.unsupervised import PCA
+from ExpertRep.tools.skbase_model import SKBase
 
 
-@Registry.register_model("KNN")
-class KNN(MachineLearningModel):
+@Registry.register_model("KNN_classify")
+class KNNClassify(SKBase):
+    """
+    A KNN classification implementation.
+    """
+
     def __init__(self, config):
-        super(KNN, self).__init__()
-        self.knn = KNeighborsClassifier(n_neighbors=config.get("k", 5))
+        super().__init__(KNeighborsClassifier(n_neighbors=config.get("k", 2)))
 
     @property
     def model_info(self) -> ModelInfo:
+        """ See superclass docstring """
         return ModelInfo(ModelType.KNN, None)
 
-    def partial_fit(self, data: list, targets: list, *args, **kwargs) -> ModelOutputs:
-        super().partial_fit(data, targets, *args, **kwargs)
 
-    def fit(self, data: list, targets: list, *args, **kwargs) -> ModelOutputs:
-        data_arrays = [np.reshape(d.get_numpy_arrays(), [-1]) for d in data]
-        self.knn.fit(data_arrays, targets)
+@Registry.register_model("KNN_regress")
+class KNNRegress(SKBase):
+    """
+    A KNN regression implementation.
+    """
 
-    def predict(self, data: list) -> list:
-        data_arrays = [np.reshape(d.get_numpy_arrays(), [-1]) for d in data]
-        return self.knn.predict(data_arrays).tolist()
+    def __init__(self, config):
+        super().__init__(KNeighborsRegressor(n_neighbors=config.get("k", 2)))
+
+    @property
+    def model_info(self) -> ModelInfo:
+        """ See superclass docstring """
+        return ModelInfo(ModelType.KNN, None)
+
+
+@Registry.register_model("KNN_PCA")
+class KNNWithPCA(SemiSupervisedModel):
+    """
+    An implementation of KNN regression with an added PCA feature learning step.
+    """
+
+    def __init__(self, config):
+        super().__init__(supervised=KNNRegress, unsupervised=PCA, config=config)

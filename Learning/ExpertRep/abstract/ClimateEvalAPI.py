@@ -8,35 +8,44 @@ with a load balancing system.
 
 Author: Ben Townsend
 """
-from enum import Enum
-import numpy as np
 from abc import ABCMeta, abstractmethod
+from enum import Enum
 from collections import namedtuple
+
+import numpy as np
 
 
 class NotModelFileException(Exception):
+    """ Exception for Incorrect file type """
     pass
 
 
 class ModelDoesNotExistException(Exception):
+    """ Exception for the requested model not existing """
     pass
 
 
 class ModelNotTrainedException(Exception):
+    """ Exception for when inference is requested on a model that has not been trained """
     pass
 
 
 class ModelFile:
+    """
+    A basic API for climate model files.
+    """
+
     def __init__(self, netcdf_file: str):
         self.netcdf_file_path = netcdf_file
 
     @abstractmethod
-    def get_numpy_arrays(self, layer: int = -1, resize_to: tuple = None) -> np.array:
+    def get_numpy_arrays(self, layer: int = -1, resize_to: tuple = None, remove_nan: bool = True) -> np.array:
         """
 
         Args:
             layer (int): Represents the [0, num_layers) netcdf layer ID of which to return
             resize_to: A tuple of the dimensions to resize the returned array to.
+            remove_nan: A boolean, whether to set nans to a constant value, typically 0
 
         Returns:
             A numpy array of rank 2 if layer is set representing the values of that layer.
@@ -52,6 +61,17 @@ class ModelFile:
 
         Returns:
             A dict containing metadata fields.
+        """
+
+    @abstractmethod
+    def get_kml(self, layer_id: int) -> str:
+        """
+        Returns a string in KML format containing the information from the netcdf file.
+        Args:
+            layer_id: The layer number of which to return
+
+        Returns:
+            A string containing the kml file contents
         """
 
     @abstractmethod
@@ -84,17 +104,41 @@ class ModelFile:
 
 
 class ModelType(Enum):
+    """
+    An ENUM for model type IDS
+    """
     KNN = 0
     MLP = 1
     SVM = 2
     # ...
 
 
-class ModelOutputs(namedtuple("ModelOutputs", ["accuracy", "precision"])):
+class ModelOutputs(metaclass=ABCMeta):
+    """
+    The base class of the model outputs.
+    """
+    pass
+
+
+class ModelOutputsClassify(namedtuple("ModelOutputsClassify", ["accuracy", "precision"]), ModelOutputs):
+    """
+    Model Outputs for classification
+    """
+    pass
+
+
+class ModelOutputsRegression(namedtuple("ModelOutputsRegression", ["R2"]), ModelOutputs):
+    """
+    Model Outputs for regression
+    """
     pass
 
 
 class ModelInfo(namedtuple("ModelInfo", ["model_type", "model_outputs_from_last_train", "TODO"])):
+    """
+    Model Information class.
+    """
+    # TODO(Ben) Requires modification pending discussion with front end devs.
     pass
 
 
@@ -137,6 +181,13 @@ class VegetationMachineLearningAPI(metaclass=ABCMeta):
         Returns:
             An instance of ModelOutputs object containing the training results, eg, final accuracy or precision ect?
 
+        Raises:
+            ModelDoesNotExistException
+        """
+
+    @abstractmethod
+    def fit_unsupervised(self, *, model_id: str, data: list) -> None:
+        """
         Raises:
             ModelDoesNotExistException
         """
