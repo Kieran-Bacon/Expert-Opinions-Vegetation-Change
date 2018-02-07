@@ -1,9 +1,9 @@
 FROM ubuntu:latest
-MAINTAINER Ben Townsend
+MAINTAINER Kieran Bacon, Ben Townsend
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update ; \
+RUN apt-get clean; apt-get update; apt-get upgrade; \
 apt-get -y install python3 ipython3 python3-pip libopenjpeg-dev python3-grib python3-netcdf4 python3-pandas ;\
 pip3 install sklearn pytest pyramid pyramid-jinja2
 

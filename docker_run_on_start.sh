@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /root/code/Server
-pserve development.ini
+pserve development.ini --reload
