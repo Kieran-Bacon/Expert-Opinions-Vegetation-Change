@@ -14,6 +14,7 @@ for table in tables:
 
 cursor.execute("CREATE TABLE users (\
 	username TEXT PRIMARY KEY,\
+	email Text,\
 	salt TEXT,\
 	password TEXT,\
 	permission INTEGER,\
@@ -43,22 +44,22 @@ for i, combination in enumerate(permissions):
 #	- Kieran's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "admin1").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('bammins', ?, ?, 0, 'Kieran', 'Bacon', '/imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('bammins','example@exeter.ac.uk', ?, ?, 0, 'Kieran', 'Bacon', '/imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
 
 #	- Ben's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('ben', ?, ?, 0, 'Ben', 'Townsend', '/imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('ben','example@exeter.ac.uk', ?, ?, 0, 'Ben', 'Townsend', '/imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
 
 #	- Paul's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('paul', ?, ?, 0, 'Paul', 'Kim', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('paul','example@exeter.ac.uk', ?, ?, 0, 'Paul', 'Kim', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 #	- Nick's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 0, 'Nick', 'Higgins', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('nick','nh312@exeter.ac.uk', ?, ?, 0, 'Nick', 'Higgins', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 # Commit the changes close the connection to the database
 database.commit()
