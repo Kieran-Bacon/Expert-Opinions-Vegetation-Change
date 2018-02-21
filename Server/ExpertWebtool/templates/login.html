@@ -53,11 +53,17 @@
                                 <div class="form-group">
                                     <input id="passwordInput" class="form-control" placeholder="Password" name="password" type="password" value="">
                                 </div>
+                                <!--
                                 <div class="checkbox">
                                     <label>
-                                        <input name="remember" type="checkbox" value="Remember Me">Remember Me
+                                        <input name="remember" type="checkbox" value="Remember Me">Remember Me 
                                     </label>
                                 </div>
+                                -->
+                                <label>
+                                    <a onclick="resetPassword();">Fogotten your password?</a>
+                                </label>
+                                
                                 <!-- Change this to a button or input when using this as a form -->
                                 <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
                             </fieldset>
@@ -97,6 +103,7 @@
         });
     </script>
 
+    <script src="/js/login.js"></script>
 </body>
 
 </html>
