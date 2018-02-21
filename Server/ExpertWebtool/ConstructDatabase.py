@@ -44,7 +44,7 @@ for i, combination in enumerate(permissions):
 #	- Kieran's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "admin1").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('bammins','example@exeter.ac.uk', ?, ?, 0, 'Kieran', 'Bacon', '/imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('bammins','kieran.bacon.working@gmail.com', ?, ?, 0, 'Kieran', 'Bacon', '/imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
 
 #	- Ben's
 salt = uuid.uuid4().hex

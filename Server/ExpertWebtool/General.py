@@ -128,13 +128,13 @@ def beginPasswordReset(request):
 	link = Helper.HiddenPages.newAddress("/password_reset/"+username+"/")
 	link = os.path.join(request.host, link[1:]) # TODO: when the location is stable swap this line out.
 
-	Helper.email("Reset Password",address,"forgot.email",[link])
+	Helper.email("Reset Password",address,"resetPassword.email",[link])
 	
 	return {"title":"An e-mail to reset has been sent",\
 			"text":"We have just sent an e-mail to the account linked with your username.",\
 			"type":"success"}
 		
-@view_config(route_name='passwordReset', renderer="templates/reset.html")	
+@view_config(route_name='passwordReset', renderer="templates/general_resetPassword.html")	
 def passwordReset(request):
 
 	if Helper.HiddenPages.validate(request.path):

@@ -36,6 +36,10 @@ def main(global_config, **settings):
     config.add_route('createQuestion', '/createQuestion')
     config.add_route('deleteQuestion', '/deleteQuestion')
 
+    config.add_route('beginPasswordReset', '/password_reset')
+    config.add_route('passwordReset', '/password_reset/{username}/{privatekey}')
+    config.add_route('assignmentPasswordReset', '/password_reset/assign')
+
     config.add_route('training', '/training.html')
     config.add_route('collectCMO','/training/collectCMO')
     config.add_route('scoreCMO', '/training/scoreCMO')
@@ -52,10 +56,6 @@ def main(global_config, **settings):
     config.add_route('createUser', '/create_user/{accountLink}')
     config.add_route('manageUsers', '/settings/manage_users.html')
     config.add_route('inviteUser', '/settings/invite_user')
-	
-    config.add_route('reset', '/reset.html')
-    config.add_route('forgot','/temp.html')
-    config.add_route('resetpassword', '/forgot.html')
 
     # Link views
     config.scan(".General")    # General server functions
@@ -64,7 +64,6 @@ def main(global_config, **settings):
     config.scan(".Question")   # Handlers for question manipulation
     config.scan(".Evaluation") # Handles the prediction aspects of the tool
     config.scan(".Settings")   # Contains webtool settings functions
-    config.scan(".Forgot")
 
     # Load database information
     DatabaseHandler.load()
