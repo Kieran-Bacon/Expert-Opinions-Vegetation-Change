@@ -1,5 +1,6 @@
-import os, uuid
-import re
+import os, re, uuid, threading
+
+from datetime import datetime, timedelta
 
 import smtplib
 from email.message import EmailMessage
@@ -37,7 +38,12 @@ class Warehouse:
 
 class HiddenPages:
 
-	pages = set()
+	threadLock = threading.Lock()
+	pages = {}
+
+	def all():
+		for content in HiddenPages.pages.items():
+			yield content 
 
 	def newAddress(leading: str, following="") -> str:
 		""" Generate a random address at some point of the tree
@@ -54,15 +60,19 @@ class HiddenPages:
 		while location in HiddenPages.pages:
 			location = leading + uuid.uuid4().hex.upper() + following
 
-		HiddenPages.pages.add(location)
+		HiddenPages.threadLock.acquire()
+		HiddenPages.pages[location] = datetime.now() + timedelta(days=1)
+		HiddenPages.threadLock.release()
 
 		return location
 
 	def validate(address: str) -> bool:
-		return address in HiddenPages.pages
+		return address in HiddenPages.pages.keys()
 
 	def remove(address: str) -> None:
-		HiddenPages.pages.remove(address)
+		HiddenPages.threadLock.acquire()
+		del HiddenPages.pages[address]
+		HiddenPages.threadLock.release()
 
 def pageVariables(request, additional=None) -> dict:
 
