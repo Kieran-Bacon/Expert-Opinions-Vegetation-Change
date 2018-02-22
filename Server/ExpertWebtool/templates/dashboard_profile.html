@@ -42,8 +42,6 @@
                                 <tbody>
 
                                     {% for key, value in batches.items() %}
-
-                                        {% if value %}
                                         <tr id="batchRow{{key}}" class="success">
                                             <td width="20px">{{key}}</td>
                                             <td>{{questions[key]}}</td>
@@ -64,8 +62,6 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        {% endif %}
-
                                     {% endfor %}
                                 </tbody>
                             </table>

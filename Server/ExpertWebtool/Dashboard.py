@@ -21,7 +21,9 @@ def userProfile(request):
 
     batches = {}
     for qid in questions.keys():
-        batches[qid] = len(db.execute("collectBatch", [request.session["username"],qid]))
+        batchSize = len(db.execute("collectBatch", [request.session["username"],qid]))
+        if batchSize:
+            batches[qid] = batchSize
 
 
     return Helper.pageVariables(request,\
