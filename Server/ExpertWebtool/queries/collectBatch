@@ -1,0 +1,3 @@
+SELECT cmoid, score
+FROM labels
+WHERE username = ? AND qid = ? AND isTrainedOn = 0

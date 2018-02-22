@@ -24,7 +24,7 @@ cursor.execute("CREATE TABLE users (\
 cursor.execute("CREATE TABLE expertModels (identifier TEXT PRIMARY KEY, username TEXT, qid INTEGER)")
 cursor.execute("CREATE TABLE climateOutputs (cmoid INTEGER PRIMARY KEY, username TEXT)")
 cursor.execute("CREATE TABLE questions (qid INTEGER PRIMARY KEY, text TEXT)")
-cursor.execute("CREATE TABLE labels (username TEXT, qid INT, cmoid INT, score INT)")
+cursor.execute("CREATE TABLE labels (username TEXT, qid INT, cmoid INT, isTrainedOn INT, score INT)")
 cursor.execute("CREATE TABLE permissions (pid INTEGER PRIMARY KEY, uploading INTEGER, question INTEGER, invitation INTEGER)")
 
 # Database contents creation

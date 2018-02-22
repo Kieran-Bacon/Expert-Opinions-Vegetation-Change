@@ -8,5 +8,5 @@
 *.nc
 *.kml
 */~/*
-**/data/CMO/*
+**/data/*
 **/log/**

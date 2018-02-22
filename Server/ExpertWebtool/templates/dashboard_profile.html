@@ -43,14 +43,15 @@
 
                                     {% for key, value in batches.items() %}
 
+                                        {% if value %}
                                         <tr id="batchRow{{key}}" class="success">
                                             <td width="20px">{{key}}</td>
                                             <td>{{questions[key]}}</td>
-                                            <td>{{value|length}}</td>
+                                            <td>{{value}}</td>
                                             <td>
                                                 <div class="progress progress-striped active">
-                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{value|length}}" aria-valuemin="0" aria-valuemax="40" style="width: {{value|length}}%">
-                                                        <span class="sr-only">{{value|length}}% Complete (success)</span>
+                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="40" style="width: {{value}}%">
+                                                        <span class="sr-only">{{value}}% Complete (success)</span>
                                                     </div>
                                                 </div>
                                             </td>
@@ -63,6 +64,7 @@
                                                 </button>
                                             </td>
                                         </tr>
+                                        {% endif %}
 
                                     {% endfor %}
                                 </tbody>
