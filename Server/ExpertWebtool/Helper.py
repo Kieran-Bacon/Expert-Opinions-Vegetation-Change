@@ -1,4 +1,4 @@
-import os, re, uuid, threading
+import os, re, uuid, threading, hashlib, time
 
 from datetime import datetime, timedelta
 
@@ -67,7 +67,10 @@ class HiddenPages:
 		return location
 
 	def validate(address: str) -> bool:
-		return address in HiddenPages.pages.keys()
+		if address not in HiddenPages.pages.keys():
+			time.sleep(5)
+			return False
+		return True
 
 	def remove(address: str) -> None:
 		HiddenPages.threadLock.acquire()
@@ -112,3 +115,8 @@ def tempStorage(fileContents):
         fileHandler.write(fileContents.read())
 
     return path
+
+def hashPassword(pwd):
+	salt = uuid.uuid4().hex
+	hashedPassword = hashlib.sha512((salt + pwd).encode("UTF-8")).hexdigest()
+	return salt, hashedPassword

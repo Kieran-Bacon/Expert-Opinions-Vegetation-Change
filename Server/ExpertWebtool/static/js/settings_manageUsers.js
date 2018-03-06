@@ -6,8 +6,13 @@ $(document).ready(function() {
 
 function inviteUser(){
     // Collect the e-mail address, will be validating server side so no need to validate.
-    address = $("#inviteUserAddress").val();
-    if(address == ""){
+    title = $("#invite_title").val();
+    firstname = $("#invite_firstname").val();
+    lastname = $("#invite_lastname").val();
+    organisation = $("#invite_organisation").val();
+    email = $("#invite_email").val();
+
+    if(email == ""){
         // Inform the user they have not entered the e-mail address yet
         new PNotify({
             title: 'Need an e-mail address first!',
@@ -23,8 +28,15 @@ function inviteUser(){
 		"url": "/settings/invite_user",
 		"type": "POST",
 		"contentType": "application/x-www-form-urlencoded",
-		"data": {"address":address},
+		"data": {"title":title,"firstname":firstname,"lastname":lastname,"organisation":organisation,"email":email},
 		"success": function(data, status){
+
+            title = $("#invite_title").val("");
+            firstname = $("#invite_firstname").val("");
+            lastname = $("#invite_lastname").val("");
+            organisation = $("#invite_organisation").val("");
+            email = $("#invite_email").val("");
+
             new PNotify({
                 title: 'User invite sent!',
                 text: 'An invitation has been sent to the user, hope they join us soon!',

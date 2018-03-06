@@ -1,0 +1,4 @@
+UPDATE users
+SET username = ?, email = ?, salt = ?, password = ?, title = ?, firstname = ?, lastname = ?,
+    organisation = ?
+WHERE username = ?

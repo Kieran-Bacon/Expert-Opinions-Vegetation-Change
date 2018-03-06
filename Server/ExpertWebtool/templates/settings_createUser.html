@@ -1,35 +1,143 @@
 {% extends "base.html" %}
 {% block css %}{% endblock %}
-{% block js %}{% endblock %}
+{% block js %}
+<script src="/js/user_CreateUser.js"></script>
+{% endblock %}
 
 {% block content %}
 <br/>
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                What to do now...
+                Personal information
             </div>
             <div class="panel-body">
-                <p>
-                    Thank you! You have now annotated all the current combinations of model 
-                    question pairings. We will be adding more climate model outputs in the
-                    future, and the questions are likely to change as dialog society is having
-                    changes. Remember to check back in everyone and again to see if there is anymore
-                    to do.
-                </p>
+                <div class="row">
+                        <div class="col-lg-3">
+                            Username
+                        </div>
+    
+                        <div class="col-sm-9 col-md-9 col-lg-9">
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                                <input id="username" type="text" class="form-control" placeholder="Username">
+                            </div>
+                        </div>
+                    </div>
 
-                <p>
-                    Although you are done with the training, you can still checkout the progress of 
-                    your representation and the kinds of evaluations it provides to new climate model
-                    outputs. Check them out below.
-                </p>
+                <div class="row">
+                    <div class="col-lg-3">
+                        Title
+                    </div>
 
-                <button type="button" class="btn btn-outline btn-primary">Profile</button>
-                <button type="button" class="btn btn-outline btn-primary">Evaluation</button>
+                    <div class="col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group input-group">
+                            <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                            <input id="title" type="text" class="form-control" placeholder="Title" value="{{user['title']}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        Firstname
+                    </div>
+
+                    <div class="col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group input-group">
+                            <span class="input-group-addon"><i class="fa fa-quote-right fa-fw"></i></span>
+                            <input id="firstname" type="text" class="form-control" placeholder="Firstname" value="{{user['firstname']}}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3">
+                        Surname
+                    </div>
+
+                    <div class="col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group input-group">
+                            <span class="input-group-addon"><i class="fa fa-quote-right fa-fw"></i></span>
+                            <input id="lastname" type="text" class="form-control" placeholder="Surname" value="{{user['lastname']}}">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-3">
+                        Organisation
+                    </div>
+
+                    <div class="col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-home fa-fw"></i></span>
+                                <input id="organisation" type="text" class="form-control" placeholder="Organisation" value="{{user['organisation']}}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3">
+                        E-mail
+                    </div>
+
+                    <div class="col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group input-group">
+                                <span class="input-group-addon">@</span>
+                                <input id="email" type="text" class="form-control" placeholder="E-mail Address" value="{{user['email']}}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3">
+                        Password
+                    </div>
+
+                    <div class="col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group input-group">
+                            <span class="input-group-addon">X</span>
+                            <input id="pwd" type="password" class="form-control" placeholder="Password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3">
+                        Password confirmation
+                    </div>
+
+                    <div class="col-sm-9 col-md-9 col-lg-9">
+                        <div class="form-group input-group">
+                            <span class="input-group-addon">X</span>
+                            <input id="cpwd" type="password" class="form-control" placeholder="Confirm Password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button style="width:100%" type="button" class="btn btn-outline btn-primary" onclick="completeAccount();">Confirm information</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Avatar
+            </div>
+            <div class="panel-body">
+                <img src="{{user['avatar']}}">
             </div>
         </div>
     </div>
 </div>
+
+
 {% endblock %}

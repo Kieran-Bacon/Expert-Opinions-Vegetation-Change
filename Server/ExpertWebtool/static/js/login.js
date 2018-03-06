@@ -12,6 +12,7 @@ function resetPassword(){
 		"success": function(data, status){
 
             console.log(data);
+            console.log(status);
             new PNotify({
                 title: data.title,
                 text: data.text,

@@ -32,12 +32,10 @@ def manageUsers(request):
 def inviteUser(request):
 	Helper.permissions(request)
 
-	# Collect the address passed
-
 	try:
 		title = request.params["title"]
 		firstname = request.params["firstname"]
-		surname = request.params["surname"]
+		lastname = request.params["lastname"]
 		organisation = request.params["organisation"]
 		email = request.params["email"]
 	except:
@@ -49,15 +47,43 @@ def inviteUser(request):
 	link = Helper.HiddenPages.newAddress("/create_user/")
 	link = os.path.join(request.host, link[1:]) # TODO: when the location is stable swap this line out.
 
-	db.execute("addUser")
-	Helper.email("Invitation to Expert Climate model webtool",email,"invite.email",[link])
+	tempUsername = link[-10:]
 
-@view_config(route_name='createUser', renderer="templates/settings_createUser.html")
+	db.execute("User_addTemp",[tempUsername,email,None,None,0,title,firstname,lastname,organisation])
+	Helper.email("Invitation to Expert Climate model webtool",email,"invite.email",[title, firstname, lastname, link])
+
+@view_config(route_name='createUser',request_method='GET', renderer="templates/settings_createUser.html")
 def createUser(request):
 
-	if not Helper.HiddenPages.validate(request.current_route_path()):
-		# Not a vaid link 
-		# TODO: make the system sleep before responding as to reduce effectiveness of brute forcing.
+	if not Helper.HiddenPages.validate(request.path):
 		return exc.HTTPNotFound()
 
-	return {"title":"Create an account"}
+	user = db.executeOne("User_Info",[request.path[-10:]])
+
+	return {"title":"Create an account", "user":user}
+
+@view_config(route_name='createUser',request_method='POST', renderer="json")
+def confirmUser(request):
+
+	if not Helper.HiddenPages.validate(request.path):
+		return exc.HTTPNotFound() 
+
+	try:
+		username = request.params["username"]
+		title = request.params["title"]
+		firstname = request.params["firstname"]
+		lastname = request.params["lastname"]
+		organisation = request.params["organisation"]
+		email = request.params["email"]
+		password = request.params["password"]
+	except:
+		raise exc.HTTPBadRequest("Invalid request")
+
+	# Check if username already exists
+	if len(db.execute("User_Info",[username])):
+		raise exc.HTTPBadRequest("Username Exists")
+
+	salt, hashedPassword = Helper.hashPassword(password)
+	db.execute("User_confirmTemp",[username,email,salt,hashedPassword,title,firstname,lastname,organisation,request.path[-10:]])
+
+	Helper.HiddenPages.remove(request.path)
