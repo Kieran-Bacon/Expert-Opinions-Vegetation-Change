@@ -60,6 +60,11 @@ salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
 cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 0, 'Nick', 'Higgins', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
+#       - Hugo's
+salt = uuid.uuid4().hex
+hashedPassword = hashlib.sha512((salt + "climate4life").encode("UTF-8")).hexdigest()
+cursor.execute("INSERT INTO users VALUES ('hugo', ?, ?, 0, 'Hugo', 'Lambert', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+
 # Commit the changes close the connection to the database
 database.commit()
 database.close()
