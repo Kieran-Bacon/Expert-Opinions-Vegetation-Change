@@ -18,7 +18,7 @@ $(document).ready(function() {
 	var destination_proj = 'EPSG:4326';	// World Geodetic System
 
 	// Default map settings
-	var defaultZoom = 2.31,
+	var defaultZoom = 2.01,
 		defaultLon = 0,
 		defaultLat = 0;
 
