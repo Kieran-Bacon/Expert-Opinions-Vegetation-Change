@@ -51,12 +51,12 @@ cursor.execute("INSERT INTO users VALUES ('bammins','kieran.bacon.working@gmail.
 #	- Ben's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('ben','example@exeter.ac.uk', ?, ?, 0,'Mrs', 'Ben', 'Townsend', 'University of Exeter', '/imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('ben','example@exeter.ac.uk', ?, ?, 0,'Mr', 'Ben', 'Townsend', 'University of Exeter', '/imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
 
 #	- Paul's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('paul','example@exeter.ac.uk', ?, ?, 0,'Miss', 'Paul', 'Kim', 'University of Exeter', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('paul','example@exeter.ac.uk', ?, ?, 0,'Mr', 'Paul', 'Kim', 'University of Exeter', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 #	- Nick's
 salt = uuid.uuid4().hex
@@ -66,7 +66,7 @@ cursor.execute("INSERT INTO users VALUES ('nick','nh312@exeter.ac.uk', ?, ?, 0,'
 #       - Hugo's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "climate4life").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('hugo', ?, ?, 0, 'Hugo', 'Lambert', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('hugo','F.H.Lambert@exeter.ac.uk' ?, ?, 0,'Dr', 'Hugo', 'Lambert','University of Exeter, '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 # Commit the changes close the connection to the database
 database.commit()
