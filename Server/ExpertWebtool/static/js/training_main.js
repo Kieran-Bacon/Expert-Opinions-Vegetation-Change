@@ -15,24 +15,21 @@ $(document).ready(function() {
 		setSwitchery(switchery, false);
 	});
 
-	// Drawing the map
-	var mapZoom = 2.25
-	var centerLon = 5.921332  // x
-	var centerLat = 44.791232 // y
-	var extentDegrees = 23
-	var mapCenter = ol.proj.transform([centerLon, centerLat], 'EPSG:4326', 'EPSG:3857');
-	// Can pan +- extentDegrees North or South
-	var extent = ol.proj.transform([centerLon, centerLat + extentDegrees], 'EPSG:4326', 'EPSG:3857');
-	var extentY = extent[1] - mapCenter[1]
+	var destination_proj = 'EPSG:4326';	// World Geodetic System
 
-	var myView = new ol.View({center: mapCenter,
-							  zoom: mapZoom,
+	// Default map settings
+	var defaultZoom = 2.31,
+		defaultLon = 0,
+		defaultLat = 0;
+
+	var myView = new ol.View({center: [defaultLon, defaultLat],
+							  zoom: defaultZoom,
 							  enableRotation: false,
 							  enableZoom: false,
 							  // [minx, miny, maxx, maxy]
-							  extent: [mapCenter[0], mapCenter[1] - extentY,
-									   mapCenter[0], mapCenter[1] + extentY],
-							  projection:'EPSG:3857'});
+							  extent: [defaultLon, defaultLat,
+									   defaultLon, defaultLat],
+							  projection: destination_proj});
 
 	var vector = new ol.layer.Heatmap({
 		source: new ol.source.OSM()
@@ -47,34 +44,34 @@ $(document).ready(function() {
 		layers: [raster, vector],
 		target: 'map',
 		controls: [], // Remove default controls (e.g. zoom buttons)
-		interactions: [new ol.interaction.DragPan()]// new ol.interaction.MouseWheelZoom()] // Only enable panning
+		interactions: [new ol.interaction.DragPan()] // Enable panning only
 	});
-	map.setSize([1276,561])
+
+	//map.setSize([1276,561]) // Restricting map height
+
 	$('#map').data('map', map);
 
 	// Set up listeners
 	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-check-change'));
 	elems.forEach(function(elem) {
 		elem.onchange = function() {
-			var lid = elem.id.split("-");
-			var lcode = lid[0];
-			var lindex = lid[1];
-			if (!elem.checked) { // If element is not CURRENTLY checked
+			var lid = elem.id.split("-"),
+				lcode = lid[0],
+				lindex = lid[1];
+
+			// If element is not CURRENTLY checked, show last tab
+			if (!elem.checked) {
 				$('#'+lcode).remove();
-				// Show last tab
 				$('#tabs a:last').tab('show');
 			} else {
 				// Create the tab
 				$('<li id="'+lcode+'"><a href="#map-content" data-toggle="tab">'+lcode+'</a></li>').appendTo('#tabs');
 				// On tab change listener
 				$('#'+lcode).on('shown.bs.tab', function (e) {
-					// Update map
-					console.log(lcode);
 					// Update map source
 					var map = $('#map').data('map');
 
 					kmlLocation = "http://" + window.location.hostname + ":" + window.location.port + "/collect_model_kml/" + $("#mid").val() + "/" + lindex;
-					console.log(kmlLocation);
 
 					sourceVector = new ol.source.Vector({
 						url: kmlLocation,
@@ -85,24 +82,13 @@ $(document).ready(function() {
 
 					var vector = new ol.layer.Heatmap({
 						source: sourceVector,
-						blur: 3,
-						radius: 5
+						blur: 10,
+						radius: 6
 					});
 
-					var max = -1
-					var min = 1
 					vector.getSource().on('addfeature', function(event) {
 						var name = event.feature.get('name');
 						var weight = parseFloat(name.substr(1,name.length-2));
-
-						if (weight > max) {
-							max = weight
-							console.log("Max:", max)
-						}
-						if (weight < min) {
-							min = weight
-							console.log("Min:", min)
-						}
 
 						event.feature.set('weight', weight);
 					});
