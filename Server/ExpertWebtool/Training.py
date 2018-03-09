@@ -68,11 +68,6 @@ def scoreCMO(request):
     # TODO: decide upon score range and values
     score = float(int(score))*0.05 # Reduce score to between 0-5
 
-    # Add datapoint to the users current batch
-    Trainer.addDatapoint(request.session["username"], qid, mid, score)
-
-    print(Trainer._USERBATCHS)
-
     # Record the users opinion
     db.execute('labelModel', [request.session["username"], qid, mid, score])
 
@@ -87,7 +82,25 @@ def submitBatch(request):
     except KeyError as e:
         raise exc.HTTPBadRequest("Question ID not passed")
 
-    Trainer.learnBatch(request.session["username"], qid)
+    username = request.session["username"]
+
+    # Collect Expert information
+    expert = db.executeOne("collectEMIdentifier",[username,qid])
+    batch = db.execute("collectBatch", [username, qid])
+
+    # Prepare batch information
+    CMOs, scores = [], []
+    for CMOid, score in batch:
+        CMOs.append(ClimateModelOutput.load(os.path.join(CMOSTORAGE+str(CMOid))))
+        scores.append(score)
+    
+    # Train the expert model
+    try:
+        ExpertModelAPI().partial_fit(model_id=expert["identifier"], data=CMOs, targets=scores)
+        db.execute("submitBatch",[username, qid]) # Update batch assignment
+    except Exception as e:
+        # An error has occured within the ML backend
+        raise exc.HTTPBadRequest("Error on learning batch")
 
     return {}
 
@@ -100,51 +113,6 @@ def removeBatch(request):
     except KeyError as e:
         raise exc.HTTPBadRequest("Question ID not passed")
 
-    Trainer.deleteBatch(request.session["username"], qid)
+    db.execute("deleteBatch",[request.session["username"], qid])
 
     return {}
-
-class Trainer():
-    """ Record a users batch information such that when it time for training, it can be done quickly
-    and easily """
-
-    _USERBATCHS = {}
-
-    def info(username: str):
-        return Trainer._USERBATCHS.get(username, {})
-
-    def learnBatch(username: str, questionID: int):
-
-        # Collect Expert information
-        expert = db.executeOne("collectEMIdentifier",[username,questionID])
-
-        # Prepare batch information
-        CMOs, scores = [], []
-        for modelID, score in Trainer._USERBATCHS[username][questionID].items():
-            CMOs.append(ClimateModelOutput.load(os.path.join(CMOSTORAGE + str(modelID))))
-            scores.append(score)
-
-        # Train the expert model
-        try:
-            ExpertModelAPI().partial_fit(model_id=expert["identifier"], data=CMOs, targets=scores)
-            del Trainer._USERBATCHS[username][questionID] # remove batch information
-        except Exception as e:
-            # An error has occured within the ML backend
-            print("Error when batch learning: "+str(e))
-    
-    def deleteBatch(username: str, questionID: int):
-        """ Remove the batch information from the database and the current store """
-
-        for modelID in Trainer._USERBATCHS[username][questionID].keys():
-            db.execute("deleteLabel", [username, questionID, modelID])
-
-        del Trainer._USERBATCHS[username][questionID]
-
-
-    def addDatapoint(username: str, questionID: int, modelID: int, score: int):
-
-        collection = Trainer._USERBATCHS.get(username, {})
-        questionBatch = collection.get(questionID, {})
-        questionBatch[modelID] = score
-        collection[questionID] = questionBatch
-        Trainer._USERBATCHS[username] = collection

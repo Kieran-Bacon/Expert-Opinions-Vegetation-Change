@@ -1,16 +1,49 @@
-import os, uuid
-import re
+import os, re, uuid, threading
+
+from datetime import datetime, timedelta
+
+import smtplib
+from email.message import EmailMessage
 
 import pyramid.httpexceptions as exc
 
-from . import TEMPSTORAGE
+from . import TEMPSTORAGE, TEMPLATES
 
 # Regular expressions for cross site things
 EMAIL_REGEX = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
+def email(subject: str, to: str, template: str, formatting: [str]):
+
+	# Create email information
+	email = EmailMessage()
+	email["Subject"] = subject
+	email["To"] = to
+	email["From"] = "ExpertClimateWebtool@gmail.com"
+
+	# Set e-mail contents
+	with open(os.path.join(TEMPLATES, template)) as filehandler:
+		email.set_content(filehandler.read().format(*formatting))
+
+	# Send the message via our own SMTP server.
+	s = smtplib.SMTP(host='smtp.gmail.com', port=587)  
+	s.starttls()
+	s.login("ExpertClimateWebtool@gmail.com", "Exeter1!")
+	s.send_message(email)
+	s.quit()
+
+class Warehouse:
+	# TODO :: Make this a thing 
+	vault = {}
+	pass
+
 class HiddenPages:
 
-	pages = set()
+	threadLock = threading.Lock()
+	pages = {}
+
+	def all():
+		for content in HiddenPages.pages.items():
+			yield content 
 
 	def newAddress(leading: str, following="") -> str:
 		""" Generate a random address at some point of the tree
@@ -27,15 +60,19 @@ class HiddenPages:
 		while location in HiddenPages.pages:
 			location = leading + uuid.uuid4().hex.upper() + following
 
-		HiddenPages.pages.add(location)
+		HiddenPages.threadLock.acquire()
+		HiddenPages.pages[location] = datetime.now() + timedelta(days=1)
+		HiddenPages.threadLock.release()
 
 		return location
 
 	def validate(address: str) -> bool:
-		return address in HiddenPages.pages
+		return address in HiddenPages.pages.keys()
 
 	def remove(address: str) -> None:
-		HiddenPages.pages.remove(address)
+		HiddenPages.threadLock.acquire()
+		del HiddenPages.pages[address]
+		HiddenPages.threadLock.release()
 
 def pageVariables(request, additional=None) -> dict:
 

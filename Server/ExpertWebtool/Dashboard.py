@@ -3,7 +3,6 @@ from pyramid.view import view_config
 import pyramid.httpexceptions as exc
 
 from . import Helper
-from .Training import Trainer
 from .DatabaseHandler import DatabaseHandler as db
 
 @view_config(route_name="index", renderer="templates/dashboard_main.html")
@@ -20,8 +19,14 @@ def userProfile(request):
     for q in qDBINFO:
         questions[q["qid"]] = q["text"]
 
+    batches = {}
+    for qid in questions.keys():
+        batchSize = len(db.execute("collectBatch", [request.session["username"],qid]))
+        if batchSize:
+            batches[qid] = batchSize
+
 
     return Helper.pageVariables(request,\
-        {"title":"Profile","questions":questions, "batches":Trainer.info(request.session["username"])}\
+        {"title":"Profile","questions":questions, "batches":batches}\
     )
     

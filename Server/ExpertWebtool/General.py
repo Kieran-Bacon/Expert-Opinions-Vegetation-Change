@@ -8,6 +8,7 @@ import os, hashlib, uuid, sqlite3
 # Solution modules
 from ExpertRep import ClimateModelOutput
 from . import Helper
+from .Helper import Warehouse
 from .DatabaseHandler import DatabaseHandler as db
 
 from . import CMOSTORAGE
@@ -62,6 +63,7 @@ class LoginHandler:
 			self.request.session["lastname"] = user["lastname"]
 			self.request.session["avatar"] = user["avatar"]
 			self.request.session["alerts"] = []
+			self.request.session["email"] = user["email"]
 
 			# Redirect the client to the new page
 			raise exc.HTTPFound(self.request.route_url("index"))
@@ -102,3 +104,59 @@ def modelFileUploader(request):
 	model.save(os.path.join(CMOSTORAGE, str(modelID)))
 
 	return {}
+
+@view_config(route_name='beginPasswordReset', renderer="json")	
+def beginPasswordReset(request):
+
+	invalidAlert = {"title":"Ow no, unable to find user!",\
+			"text":"The information provided is invalid.",\
+			"type":"error"}
+
+	# Collect the address passed
+	username = request.params.get("username", None)
+
+	# Validate the address is valid
+	if username is None: return exc.HTTPBadRequest(body="Address not provided")
+	
+	# Validate if user already exists
+	try:
+		address = db.executeOne("User_Email", [username])
+	except:
+		return invalidAlert
+
+	# Create psuedo link
+	link = Helper.HiddenPages.newAddress("/password_reset/"+username+"/")
+	link = os.path.join(request.host, link[1:]) # TODO: when the location is stable swap this line out.
+
+	Helper.email("Reset Password",address,"resetPassword.email",[link])
+	
+	return {"title":"An e-mail to reset has been sent",\
+			"text":"We have just sent an e-mail to the account linked with your username.",\
+			"type":"success"}
+		
+@view_config(route_name='passwordReset', renderer="templates/general_resetPassword.html")	
+def passwordReset(request):
+
+	if Helper.HiddenPages.validate(request.path):
+		Warehouse.vault[request.matchdict["privatekey"]] = request.matchdict["username"]
+		return {"privatekey":request.matchdict["privatekey"]}
+	
+	raise exc.HTTPNotFound()
+
+@view_config(route_name='assignmentPasswordReset')	
+def assignmentPasswordReset(request):
+
+	try:
+		user = Warehouse.vault[request.params["privatekey"]]
+		password = request.params["password"]
+	except KeyError as e:
+		raise exc.HTTPBadRequest("What you doing fool")
+
+	salt = uuid.uuid4().hex
+	hashedPassword = hashlib.sha512((salt + password).encode("UTF-8")).hexdigest()
+			
+	db.execute('updatePassword', [salt,hashedPassword,user])
+		
+	Helper.HiddenPages.remove("/password_reset/"+user+"/"+request.params["privatekey"])
+	request.session["alerts"] = [{"title":"Password has been reset", "text":"", "type":"success"}]
+	raise exc.HTTPFound(request.route_url("login"))

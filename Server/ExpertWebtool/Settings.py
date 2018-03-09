@@ -33,32 +33,24 @@ def inviteUser(request):
 	Helper.permissions(request)
 
 	# Collect the address passed
-	userAddress = request.params.get("address", None)
 
-	# Validate the address is valid
-	if userAddress is None: return exc.HTTPBadRequest(body="Address not provided")
-	if EMAIL_REGEX.match(userAddress) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
+	try:
+		title = request.params["title"]
+		firstname = request.params["firstname"]
+		surname = request.params["surname"]
+		organisation = request.params["organisation"]
+		email = request.params["email"]
+	except:
+		raise exc.HTTPBadRequest("Invalid request")
+
+	if EMAIL_REGEX.match(email) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
 
 	# Create psuedo link
 	link = Helper.HiddenPages.newAddress("/create_user/")
 	link = os.path.join(request.host, link[1:]) # TODO: when the location is stable swap this line out.
 
-	# Create email information
-	email = EmailMessage()
-	email["Subject"] = "Invitation to Expert Climate model webtool"
-	email["To"] = userAddress
-	email["From"] = "noreply@expert.com"
-
-	# Set e-mail contents
-	with open( os.path.join(TEMPLATES, "invite.email")) as template:
-		email.set_content(template.read().format(link))
-
-	# Send the message via our own SMTP server.
-	s = smtplib.SMTP(host='smtp.gmail.com', port=587)  
-	s.starttls()
-	s.login("kieran.bacon.personal@gmail.com", "***")
-	s.send_message(email)
-	s.quit()
+	db.execute("addUser")
+	Helper.email("Invitation to Expert Climate model webtool",email,"invite.email",[link])
 
 @view_config(route_name='createUser', renderer="templates/settings_createUser.html")
 def createUser(request):

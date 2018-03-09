@@ -14,16 +14,19 @@ for table in tables:
 
 cursor.execute("CREATE TABLE users (\
 	username TEXT PRIMARY KEY,\
+	email Text,\
 	salt TEXT,\
 	password TEXT,\
 	permission INTEGER,\
+	title TEXT,\
 	firstname TEXT,\
 	lastname TEXT,\
+	organisation TEXT,\
 	avatar TEXT)")
 cursor.execute("CREATE TABLE expertModels (identifier TEXT PRIMARY KEY, username TEXT, qid INTEGER)")
 cursor.execute("CREATE TABLE climateOutputs (cmoid INTEGER PRIMARY KEY, username TEXT)")
 cursor.execute("CREATE TABLE questions (qid INTEGER PRIMARY KEY, text TEXT)")
-cursor.execute("CREATE TABLE labels (username TEXT, qid INT, cmoid INT, score INT)")
+cursor.execute("CREATE TABLE labels (username TEXT, qid INT, cmoid INT, isTrainedOn INT, score INT)")
 cursor.execute("CREATE TABLE permissions (pid INTEGER PRIMARY KEY, uploading INTEGER, question INTEGER, invitation INTEGER)")
 
 # Database contents creation
@@ -43,22 +46,22 @@ for i, combination in enumerate(permissions):
 #	- Kieran's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "admin1").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('bammins', ?, ?, 0, 'Kieran', 'Bacon', '/imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('bammins','kieran.bacon.working@gmail.com', ?, ?, 0,'Mr', 'Kieran', 'Bacon', 'University of Exeter', '/imgs/avatars/avatar-ninja.png')", (salt, hashedPassword))
 
 #	- Ben's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('ben', ?, ?, 0, 'Ben', 'Townsend', '/imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('ben','example@exeter.ac.uk', ?, ?, 0,'Mrs', 'Ben', 'Townsend', 'University of Exeter', '/imgs/avatars/avatar-professional-m.png')", (salt, hashedPassword))
 
 #	- Paul's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('paul', ?, ?, 0, 'Paul', 'Kim', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('paul','example@exeter.ac.uk', ?, ?, 0,'Miss', 'Paul', 'Kim', 'University of Exeter', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 #	- Nick's
 salt = uuid.uuid4().hex
 hashedPassword = hashlib.sha512((salt + "password").encode("UTF-8")).hexdigest()
-cursor.execute("INSERT INTO users VALUES ('nick', ?, ?, 0, 'Nick', 'Higgins', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
+cursor.execute("INSERT INTO users VALUES ('nick','nh312@exeter.ac.uk', ?, ?, 0,'Mr', 'Nick', 'Higgins', 'University of Exeter', '/imgs/avatars/avatar-professional-f.png')", (salt, hashedPassword))
 
 #       - Hugo's
 salt = uuid.uuid4().hex

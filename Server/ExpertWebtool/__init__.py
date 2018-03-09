@@ -3,12 +3,12 @@ from os.path import abspath
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
 
-from .DatabaseHandler import DatabaseHandler
-
-
 TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
 CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
 TEMPLATES = abspath("./ExpertWebtool/templates") + "/"
+
+from . import Process
+from .DatabaseHandler import DatabaseHandler
 
 def main(global_config, **settings):
 
@@ -35,6 +35,10 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_route('createQuestion', '/createQuestion')
     config.add_route('deleteQuestion', '/deleteQuestion')
+
+    config.add_route('beginPasswordReset', '/password_reset')
+    config.add_route('passwordReset', '/password_reset/{username}/{privatekey}')
+    config.add_route('assignmentPasswordReset', '/password_reset/assign')
 
     config.add_route('training', '/training.html')
     config.add_route('collectCMO','/training/collectCMO')
@@ -63,6 +67,10 @@ def main(global_config, **settings):
 
     # Load database information
     DatabaseHandler.load()
+
+    # Begin supporting processes
+    Process.GarbageCollector().start()
+    #Process.Backup().start()
 
     # Return the WSGI application object
     return config.make_wsgi_app()
