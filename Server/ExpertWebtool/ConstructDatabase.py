@@ -1,6 +1,8 @@
 import sqlite3, hashlib, uuid
 
-database = sqlite3.connect("./data/site.db")
+from . import ROOT
+
+database = sqlite3.connect(os.path.join(ROOT,"data","site.db"))
 cursor = database.cursor()
 
 # Drop previous tables if database already exists

@@ -1,11 +1,13 @@
+import os
 from os.path import abspath
 
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
 
-TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
-CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
-TEMPLATES = abspath("./ExpertWebtool/templates") + "/"
+ROOT = os.path.dirname(os.path.realpath(__file__))
+TEMPSTORAGE = os.path.join(ROOT, "temp") + "/"
+CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
+TEMPLATES = os.path.join(ROOT,"templates") + "/"
 
 from . import Process
 from .DatabaseHandler import DatabaseHandler

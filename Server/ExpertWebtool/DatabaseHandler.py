@@ -2,14 +2,16 @@ from os import listdir
 from os.path import abspath, isfile, join
 import sqlite3
 
+from . import ROOT
+
 class QueryError(Exception):
 	"""Exception when attempting the use a query incorrectly"""
 	pass
 
 class DatabaseHandler:
 
-	_DatabaseLocation = abspath("./ExpertWebtool/data/site.db")
-	_QueryLocation = abspath("./ExpertWebtool/queries/")
+	_DatabaseLocation = join(ROOT,"data","site.db")
+	_QueryLocation = join(ROOT,"queries") + "/"
 	_SQLStore = {}
 
 	def load() -> None:
