@@ -66,7 +66,8 @@ class LoginHandler:
 			self.request.session["email"] = user["email"]
 
 			# Redirect the client to the new page
-			raise exc.HTTPFound(self.request.route_url("index"))
+			location = self.request.session.get("intended_route",self.request.route_url("index"))
+			raise exc.HTTPFound(location)
 
 		self.request.session["username"] = username
 		self.request.session["alerts"] = invalidAlert

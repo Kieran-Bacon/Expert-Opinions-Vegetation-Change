@@ -100,7 +100,9 @@ def permissions(request) -> None:
 
 	# Determine fate based on status
 	if status == 1: return None
-	if status is None: raise exc.HTTPFound(request.route_url("login"))
+	if status is None:
+		request.session["intended_route"] = request.path
+		raise exc.HTTPFound(request.route_url("login"))
 	raise exc.HTTPFound(request.route_url("locked"))
 
 def tempStorage(fileContents):
