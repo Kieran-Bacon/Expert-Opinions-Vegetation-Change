@@ -46,8 +46,12 @@ drive = GoogleDrive(GoogleAuth())
 #time.sleep(60*60*24)
 now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
-zipdir('/root',date+'.zip')
 
+cwd = os.getcwd()
+print(cwd)
+print('zipping')
+zipdir('/root/code',date+'.zip')
+print('uploading')
 file1 = drive.CreateFile()
 file1.SetContentFile(date+'.zip')
 file1['title'] = date+'.zip'

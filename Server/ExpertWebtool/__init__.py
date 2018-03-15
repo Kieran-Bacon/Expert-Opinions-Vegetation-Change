@@ -1,3 +1,4 @@
+import os
 from os.path import abspath
 
 from pyramid.config import Configurator
@@ -70,7 +71,10 @@ def main(global_config, **settings):
 
     # Begin supporting processes
     Process.GarbageCollector().start()
-    #Process.Backup().start()
+    cwd = os.getcwd()
+    print(cwd)
+    Process.Backup().start()
+
 
     # Return the WSGI application object
     return config.make_wsgi_app()
