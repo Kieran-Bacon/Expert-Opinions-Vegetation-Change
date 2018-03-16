@@ -122,3 +122,21 @@ def hashPassword(pwd):
 	salt = uuid.uuid4().hex
 	hashedPassword = hashlib.sha512((salt + pwd).encode("UTF-8")).hexdigest()
 	return salt, hashedPassword
+
+def emptyDirectory(directory: str) -> None:
+
+	if os.path.isdir(directory):
+		# Collect the contents of the directory
+		contents = os.listdir(directory)
+		for item in contents:
+			path = os.path.join(directory,item)
+			if os.path.isdir(path):
+				# Recursively delete contents of sub-directory
+				emptyDirectory(path)
+				os.rmdir(path)
+			else:
+				# Remove file
+				os.remove(path)
+	
+
+		
