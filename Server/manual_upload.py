@@ -1,10 +1,8 @@
-import time, threading, os, zipfile
-from datetime import datetime, timedelta
+import time, threading, os, zipfile, datetime
 
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
-from .Helper import HiddenPages
 
 def zipdir(dirPath=None, zipFilePath=None, includeDirInZip=True):
 
@@ -40,49 +38,27 @@ def zipdir(dirPath=None, zipFilePath=None, includeDirInZip=True):
 			#Here to allow for inserting an empty directory.  Still TBD/TODO.
 			outFile.writestr(zipInfo, "")
 	outFile.close()
-
-
-class GarbageCollector(threading.Thread):
-	""" Remove hidden pages when they time out """
-
-	def run(self):
-		while True:
-			now = datetime.now()
-			invalidAddress = []
-			for address, genTime in HiddenPages.all():
-				if genTime < now:
-					print("addredd removed", address)
-					invalidAddress.append(address)
-				[HiddenPages.remove(addr) for addr in invalidAddress]
-				time.sleep(60*60) # Sleep for an hour
-
-class Backup(threading.Thread):
-	""" Move site information into a long term versioning solution """
-
 	
 	
-	
-	def run(self):
+drive = GoogleDrive(GoogleAuth())
 
-		drive = GoogleDrive(GoogleAuth())
+# Create the file on the target and push
+#time.sleep(60*60*24)
+now = datetime.datetime.now()
+date = now.strftime("%Y-%m-%d")
 
-
-
-		while True:
-			# Create the file on the target and push
-			
-			now = datetime.now()
-			date = now.strftime("%Y-%m-%d")
-			zipdir('/root/code',date+'.zip')
-
-			file1 = drive.CreateFile()
-			file1.SetContentFile(date+'.zip')
-			file1['title'] = date+'.zip'
+cwd = os.getcwd()
+print(cwd)
+print('zipping')
+zipdir('/root/code',date+'.zip')
+print('uploading')
+file1 = drive.CreateFile()
+file1.SetContentFile(date+'.zip')
+file1['title'] = date+'.zip'
 
 
 
-			file1.Upload()
+file1.Upload()
 
-			print('Created file %s with mimeType %s' % (file1['title'],
-			file1['mimeType']))
-			time.sleep(60*60*24)
+print('Created file %s with mimeType %s' % (file1['title'],
+file1['mimeType']))
