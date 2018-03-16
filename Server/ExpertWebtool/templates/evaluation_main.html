@@ -1,17 +1,189 @@
 {% extends "base.html" %}
-{% block css %}{% endblock %}
-{% block js %}{% endblock %}
+{% block css %}
+<link href="css/dropzone.css" rel="stylesheet"></link>
+<link href="css/switchery.min.css" rel="stylesheet">
+{% endblock %}
+{% block js %}
+<script src="js/dropzone.js"></script>
+<script src="/js/switchery.min.js"></script>
+<script type="text/javascript" src="/js/evaluation_main.js"></script>
+{% endblock %}
+
+
+
 
 {% block content %}
 <div class="row">
     <div class="col-lg-12">
-        <br>
         <div class="panel panel-default">
-            <div class="panel-heading">Evaluation screen</div>
+            <!-- /.panel-heading -->
             <div class="panel-body">
-                <p>This is the evaluation screen</p>
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills">
+                    <li class="active" style="width:24%";><a class="setup_tabs" href="#expert-pills" data-toggle="tab" aria-expanded="false">Select experts</a>
+                    </li>
+                    <li class="" style="width:24%";><a class="setup_tabs" href="#question-pills" data-toggle="tab" aria-expanded="false">Select questions</a>
+                    </li>
+                    <li class="" style="width:24%";><a class="setup_tabs" href="#models-pills" data-toggle="tab" aria-expanded="false">Upload models</a>
+                    </li>
+                    <li class="" style="width:24%";><a id="evalTab" href="#evaluation-pills" data-toggle="tab" aria-expanded="true">Evaluation</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="expert-pills">
+                        <h4>Select the experts that will evaluate the climate model output</h4>
+                        <div class="col-lg-6" >
+                            {% for expert in lexperts %}
+                                <div class="row" style="margin-bottom: 5px; background-color:cyan;">
+                                    <div class="col-lg-1">
+                                        <img style="width: 50px; height: auto;"src="{{expert['avatar']}}">
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">{{expert["title"]}} {{expert["firstname"]}} {{expert["lastname"]}}, {{expert["organisation"]}}</p></div>
+                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">Model accuracy 87%</p></div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input id="user-{{expert['username']}}-switch" type="checkbox" class="js-switch js-check-change"/>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-lg-6">
+                            {% for expert in rexperts %}
+                                <div class="row" style="margin-bottom: 5px; background-color:cyan;">
+                                    <div class="col-lg-1">
+                                        <img style="width: 50px; height: auto;"src="{{expert['avatar']}}">
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">{{expert["title"]}} {{expert["firstname"]}} {{expert["lastname"]}}, {{expert["organisation"]}}</p></div>
+                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">Model accuracy 87%</p></div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input id="user-{{expert['username']}}-switch" type="checkbox" class="js-switch js-check-change"/>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="question-pills">
+                        <h4>Question Tab</h4>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        {% for q in questions %}
+                                        <tr>
+                                            <td style="width: 50px;">{{q["qid"]}}</td>
+                                            <td>{{q["text"]}}</td>
+                                            <td style="width: 50px;"><input id="question-{{q['qid']}}-switch" type="checkbox" class="js-switch js-check-change"/></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="models-pills">
+                        <h4>Models Tab</h4>
+
+                        <form action="/evaluate_model" class="dropzone" 
+                        id="modelDropzone" style="height: 300px; width: 100%;">
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="evaluation-pills">
+                        <h4>Results Tab</h4>
+
+                            <div id="EvaluationTables" class="table-responsive"></div>
+                        
+
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Username</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="success">
+                                                <td>1</td>
+                                                <td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>@mdo</td>
+                                            </tr>
+                                            <tr class="info">
+                                                <td>2</td>
+                                                <td>Jacob</td>
+                                                <td>Thornton</td>
+                                                <td>@fat</td>
+                                            </tr>
+                                            <tr class="warning">
+                                                <td>3</td>
+                                                <td>Larry</td>
+                                                <td>the Bird</td>
+                                                <td>@twitter</td>
+                                            </tr>
+                                            <tr class="danger">
+                                                <td>4</td>
+                                                <td>John</td>
+                                                <td>Smith</td>
+                                                <td>@jsmith</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.table-responsive -->
+
+                                <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Username</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="success">
+                                                    <td>1</td>
+                                                    <td>Mark</td>
+                                                    <td>Otto</td>
+                                                    <td>@mdo</td>
+                                                </tr>
+                                                <tr class="info">
+                                                    <td>2</td>
+                                                    <td>Jacob</td>
+                                                    <td>Thornton</td>
+                                                    <td>@fat</td>
+                                                </tr>
+                                                <tr class="warning">
+                                                    <td>3</td>
+                                                    <td>Larry</td>
+                                                    <td>the Bird</td>
+                                                    <td>@twitter</td>
+                                                </tr>
+                                                <tr class="danger">
+                                                    <td>4</td>
+                                                    <td>John</td>
+                                                    <td>Smith</td>
+                                                    <td>@jsmith</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                    </div>
+                </div>
             </div>
+            <!-- /.panel-body -->
         </div>
+        <!-- /.panel -->
     </div>
 </div>
 {% endblock %}

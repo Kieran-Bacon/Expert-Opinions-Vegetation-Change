@@ -53,6 +53,8 @@ def main(global_config, **settings):
     config.add_route('modelFileUploader', '/model_upload')
 
     config.add_route('evaluation', '/evaluation.html')
+    config.add_route('evalModels', '/evaluation')
+    config.add_route('uploadEvalModel', "/evaluate_model")
 
     config.add_route('personalSettings', '/settings/personal.html')
     config.add_route('createUser', '/create_user/{accountLink}')
