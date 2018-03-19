@@ -74,8 +74,6 @@ def main(global_config, **settings):
 
     # Begin supporting processes
     Process.GarbageCollector().start()
-    cwd = os.getcwd()
-    print(cwd)
     Process.Backup().start()
 
     # Return the WSGI application object
