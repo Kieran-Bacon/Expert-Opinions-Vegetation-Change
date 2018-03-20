@@ -16,7 +16,6 @@ class GarbageCollector(threading.Thread):
 			invalidAddress = []
 			for address, genTime in HiddenPages.all():
 				if genTime < now:
-					print("addredd removed", address)
 					invalidAddress.append(address)
 				[HiddenPages.remove(addr) for addr in invalidAddress]
 				time.sleep(60*60) # Sleep for an hour

@@ -28,8 +28,6 @@ def userProfile(request):
         if batchSize:
             batches[qid] = batchSize
 
-    
-
     return Helper.pageVariables(request,\
         {"title":"Profile","questions":questions, "models":expertModels, "batches":batches}\
     )
