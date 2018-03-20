@@ -14,6 +14,9 @@ def dashboardMain(request):
 @view_config(route_name="userProfile", renderer="templates/dashboard_profile.html")
 def userProfile(request):
     Helper.permissions(request)
+
+    expertModels = db.execute_literal("SELECT * FROM expertModels WHERE username = ?", [request.session["username"]])
+
     qDBINFO = db.execute("collectQuestions", [])
     questions = {}
     for q in qDBINFO:
@@ -25,8 +28,9 @@ def userProfile(request):
         if batchSize:
             batches[qid] = batchSize
 
+    
 
     return Helper.pageVariables(request,\
-        {"title":"Profile","questions":questions, "batches":batches}\
+        {"title":"Profile","questions":questions, "models":expertModels, "batches":batches}\
     )
     

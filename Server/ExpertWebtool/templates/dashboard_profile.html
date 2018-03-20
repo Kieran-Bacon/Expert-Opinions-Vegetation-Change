@@ -12,6 +12,29 @@
             <div class="panel-heading">Profile dashboard</div>
             <div class="panel-body">
                 <p>Personal information goes here</p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Precision</th>
+                            <th>Accuracy</th>
+                            <th>R2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for model in models %}
+                            <tr>
+                                <td>{{model["qid"]}}</td>
+                                <td>{{model["precision"]}}</td>
+                                <td>{{model["accuracy"]}}</td>
+                                <td>{{model["R2"]}}</td>
+                            </tr>
+        
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -28,6 +51,12 @@
                         submitting them for training. If you are dillegent enough to annotate well over 40
                         models for a particular question we will break down them down into batches of 40 for you.
                     </p>
+
+                    <p>
+
+
+                    </p>
+
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
