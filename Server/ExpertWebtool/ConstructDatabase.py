@@ -1,6 +1,6 @@
-import sqlite3, hashlib, uuid
+import os, sqlite3, hashlib, uuid
 
-from . import ROOT
+ROOT = os.path.dirname(os.path.realpath(__file__))
 
 database = sqlite3.connect(os.path.join(ROOT,"data","site.db"))
 cursor = database.cursor()
@@ -73,3 +73,5 @@ cursor.execute("INSERT INTO users VALUES ('hugo','F.H.Lambert@exeter.ac.uk', ?, 
 # Commit the changes close the connection to the database
 database.commit()
 database.close()
+
+os.system("python3 DB_changes.py")
