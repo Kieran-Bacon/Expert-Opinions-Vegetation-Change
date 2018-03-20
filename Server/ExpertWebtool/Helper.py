@@ -7,10 +7,27 @@ from email.message import EmailMessage
 
 import pyramid.httpexceptions as exc
 
-from . import TEMPSTORAGE, TEMPLATES
+from . import CMOSTORAGE, TEMPSTORAGE, TEMPLATES
+from .DatabaseHandler import DatabaseHandler as db
+
+from ExpertRep import ClimateModelOutput
 
 # Regular expressions for cross site things
 EMAIL_REGEX = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+
+class CMOStore():
+
+	_model_store = []
+
+	def models():
+
+		if not CMOStore._model_store:
+			for modelName in os.listdir(CMOSTORAGE):
+				if modelName == "Placeholder.ignore": continue
+				model = ClimateModelOutput.load(os.path.join(CMOSTORAGE,modelName))
+				CMOStore._model_store.append(model)
+
+		return CMOStore._model_store
 
 def email(subject: str, to: str, template: str, formatting: [str]):
 
@@ -137,6 +154,23 @@ def emptyDirectory(directory: str) -> None:
 			else:
 				# Remove file
 				os.remove(path)
-	
 
-		
+def recordModelMetrics(identifier: str, metrics = None) -> None:
+	""" Handle the model output that comes from the expert repr """
+
+	try:
+		precision = metrics.precision
+	except:
+		precision = None
+
+	try:
+		accuracy = metrics.accuracy
+	except:
+		accuracy = None
+
+	try:
+		R2 = metrics.R2
+	except:
+		R2 = None
+
+	db.execute("eModel_recordMetrics", [precision, accuracy, R2, identifier]) # Record the model metrics

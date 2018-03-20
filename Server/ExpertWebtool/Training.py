@@ -96,9 +96,13 @@ def submitBatch(request):
     
     # Train the expert model
     try:
-        ExpertModelAPI().partial_fit(model_id=expert["identifier"], data=CMOs, targets=scores)
-        db.execute("submitBatch",[username, qid]) # Update batch assignment
+        ExpertModelAPI().fit_unsupervised(model_id=expert["identifier"], data=Helper.CMOStore.models())
+        metrics = ExpertModelAPI().partial_fit(model_id=expert["identifier"], data=CMOs, targets=scores)
+
+        Helper.recordModelMetrics(identifier=expert["identifier"], metrics=metrics)
+        db.execute("submitBatch",[username, qid])                       # Update batch assignment
     except Exception as e:
+        print(str(e))
         # An error has occured within the ML backend
         raise exc.HTTPBadRequest("Error on learning batch")
 

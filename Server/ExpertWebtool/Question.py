@@ -35,7 +35,7 @@ def createQuestion(request):
     usernames = db.execute_literal("SELECT username FROM users", [])
     for row in usernames:
         identifier = ExpertModelAPI().create_model(model_type="KNN_regress")
-        db.execute_literal("INSERT INTO expertModels VALUES(?, ?, ?)", [identifier, row["username"], qid])
+        db.execute_literal("INSERT INTO expertModels VALUES(?, ?, ?, null, null, null)", [identifier, row["username"], qid])
 
     return {"qid": qid}
 
