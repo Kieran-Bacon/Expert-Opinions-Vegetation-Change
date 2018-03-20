@@ -13,6 +13,11 @@ class NotASubclassException(Exception):
     pass
 
 
+def available_models():
+    """Returns a list of the available models by their string keys."""
+    return _MODELS.keys()
+
+
 class Registry:
     """
     This registry allows for registering machine learning models for use with the API. To use it, decorate with
