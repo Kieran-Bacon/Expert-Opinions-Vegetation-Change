@@ -1,0 +1,2 @@
+SELECT identifier FROM expertModels
+WHERE username = ? AND qid = ?

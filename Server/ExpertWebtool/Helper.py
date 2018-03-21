@@ -122,10 +122,13 @@ def permissions(request) -> None:
 		raise exc.HTTPFound(request.route_url("login"))
 	raise exc.HTTPFound(request.route_url("locked"))
 
-def tempStorage(fileContents):
+def tempStorage(fileContents, filename=None):
 
-    filename = uuid.uuid4().hex.upper()
+    if filename is None:
+        filename = uuid.uuid4().hex.upper()
+
     while os.path.exists(os.path.join(TEMPSTORAGE, filename)):
+	    # Ensure that the file is not overwritting another
         filename = uuid.uuid4().hex.upper()
 
     path = os.path.join(TEMPSTORAGE, filename)

@@ -76,10 +76,19 @@ function evaluateModels(){
 		"data": {"experts": expertList, "questions": questionList},
 		"success": function(data, status){
 
-			$.each(data.questions, function(i, value){
+			console.log(data);
+
+			$.each(data.questions, function(i, quest){
+
+				// Assign the name of the table of results
+				var tableTitle = document.createElement("h4");
+				tableTitle.innerHTML = quest.text;
+
+				// Create the table object
 				var table = document.createElement("table");
 				table.setAttribute("class","table");
 
+				// Generate the header information for the table
 				var header = document.createElement("thead");
 				var tr = document.createElement("tr");
 				var th = document.createElement("th");
@@ -88,27 +97,29 @@ function evaluateModels(){
 				th.appendChild(rowHeader);
 				tr.appendChild(th);
 
-				$.each(data.experts, function(index, value){
+				$.each(data.experts, function(index, name){
 					var th = document.createElement("th");
-					var expertTextNode = document.createTextNode(value);
+					var expertTextNode = document.createTextNode(name);
 					th.appendChild(expertTextNode);
 					tr.appendChild(th);
 				});
+
 				header.appendChild(tr);
 				table.appendChild(header);
 
+				// Generate the body of the table
 				var body = document.createElement("tbody");
-				$.each(Object.entries(value.models), function(j, results){
+				$.each(quest.models, function(j, model){
 
 					var bodyRow = document.createElement("tr");
-					var td = document.createElement("td");
-					var tdQuestText = document.createTextNode(results[0])
-					td.appendChild(tdQuestText);
-					bodyRow.appendChild(td);
+					var modelName = document.createElement("td");
+					var nameNode = document.createTextNode(model.name)
+					modelName.appendChild(nameNode);
+					bodyRow.appendChild(modelName);
 
-					$.each(results[1], function(k, modelValue){
+					$.each(model.values, function(k, prediction){
 						var td = document.createElement("td");
-						var tdContent = document.createTextNode(modelValue);
+						var tdContent = document.createTextNode(prediction);
 						td.appendChild(tdContent);
 						bodyRow.appendChild(td);
 					});
@@ -116,8 +127,11 @@ function evaluateModels(){
 					body.appendChild(bodyRow);
 				});
 
+				// Add the body to the table
 				table.appendChild(body);
 
+				// Add the new table to the page
+				$("#EvaluationTables").append(tableTitle);
 				$("#EvaluationTables").append(table);
 			});
         },

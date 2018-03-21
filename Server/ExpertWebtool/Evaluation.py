@@ -33,6 +33,9 @@ def evalModels(request):
     except Exception as e:
         raise exc.HTTPBadRequest()
 
+    # Collect Expert information
+    expertNames = [" ".join([i["title"], i["firstname"], i["lastname"]]) for e in experts for i in db.execute("User_Info", [e])]
+
     # Collect uploaded models to evaluate
     modelDirectory = os.path.join(TEMPSTORAGE,request.session["username"])
     CMOnames = os.listdir(modelDirectory)
@@ -40,26 +43,28 @@ def evalModels(request):
     CMOs = [ClimateModelOutput.load(path) for path in CMOpaths]
 
     # Data type to return to the page
-    data = {"experts": [], "questions": []}
+    data = {"experts": expertNames, "questions": []}
 
     for question in questions:
-        model = {name: [] for name in CMOnames}
+
+        questionContents = {"text": db.executeOne("questionName", [question])["text"], "models": []}
+
+        predictions = []
         for expert in experts:
-            # Collect the experts name
-            expertInfo = db.executeOne("User_Info",[expert])
-            data["experts"].append(" ".join([expertInfo["title"], expertInfo["firstname"], expertInfo["lastname"]]))
 
             # Collect the experts model identifier
-            identifier = db.execute_literal("SELECT identifier FROM expertModels WHERE username = ? AND qid = ?", [expert, question])[0]["identifier"]
+            identifier = db.executeOne("collectEModel", [expert, question])["identifier"]
 
             # Predict on the CMO's and storage the results
-            predictions = ExpertModelAPI().predict(model_id=identifier, data=CMOs)
-            for i in range(len(predictions)):
-                model[CMOnames[i]].append(round(predictions[i],3))
+            predictions.append(ExpertModelAPI().predict(model_id=identifier, data=CMOs))
 
-        questionText = db.execute_literal("SELECT text FROM questions WHERE qid = ?", [question])[0]["text"]
-        data["questions"].append({"text":questionText, "models":model})
+        for i in range(len(CMOs)):
+            modelInfo = {"name": CMOnames[i], "values": [round(opinion[i]*20,5) for opinion in predictions]}
+            questionContents["models"].append(modelInfo)
 
+        data["questions"].append(questionContents)
+
+    # Remove uploaded models that have not been evaluated.
     Helper.emptyDirectory(modelDirectory)
 
     return data
@@ -68,7 +73,7 @@ def evalModels(request):
 def uploadEvalModel(request):
     Helper.permissions(request)
 
-    tempLocation = Helper.tempStorage(request.POST['file'].file) # Store the file temporarily 
+    tempLocation = Helper.tempStorage(request.POST['file'].file)  # Store the file temporarily 
     try:
         # Produce a climate model output object
         model = ClimateModelOutput(tempLocation)
@@ -83,8 +88,11 @@ def uploadEvalModel(request):
     directory = os.path.join(TEMPSTORAGE, request.session["username"])
     try:
         if not os.path.isdir(directory):
+            # Ensure tempory space for the models
             os.mkdir(directory)
-        model.save(os.path.join(directory, str(hash(model))[:10]))  # TODO: Not use the model hash function
+
+        # Save the model in the tempory space.
+        model.save(os.path.join(directory, request.POST["file"].filename[:20]))
     except Exception as e:
         raise exc.HTTPBadRequest(str(e))
 
