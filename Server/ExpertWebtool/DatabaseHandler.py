@@ -2,7 +2,11 @@ from os import listdir
 from os.path import abspath, isfile, join
 import sqlite3
 
-from . import ROOT
+if __name__ == "DatabaseHandler":
+    import os
+    ROOT = os.path.dirname(os.path.realpath(__file__))
+else:
+    from . import ROOT
 
 class QueryError(Exception):
 	"""Exception when attempting the use a query incorrectly"""
