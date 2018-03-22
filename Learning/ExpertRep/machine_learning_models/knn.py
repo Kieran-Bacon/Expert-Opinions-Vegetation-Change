@@ -19,6 +19,9 @@ class KNNClassify(SKBase):
     def __init__(self, config):
         super().__init__(KNeighborsClassifier(n_neighbors=config.get("k", 2)))
 
+    def __str__():
+        return "KNN classifier"
+
     @property
     def model_info(self) -> ModelInfo:
         """ See superclass docstring """
@@ -34,6 +37,9 @@ class KNNRegress(SKBase):
     def __init__(self, config):
         super().__init__(KNeighborsRegressor(n_neighbors=config.get("k", 2)))
 
+    def __str__():
+        return "KNN regressor"
+
     @property
     def model_info(self) -> ModelInfo:
         """ See superclass docstring """
@@ -48,3 +54,6 @@ class KNNWithPCA(SemiSupervisedModel):
 
     def __init__(self, config):
         super().__init__(supervised=KNNRegress, unsupervised=PCA, config=config)
+
+    def __str__():
+        return "KNN with principal component analysis"

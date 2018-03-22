@@ -15,7 +15,7 @@ class NotASubclassException(Exception):
 
 def available_models():
     """Returns a list of the available models by their string keys."""
-    return _MODELS.keys()
+    return {title: model.__str__() for title, model in _MODELS.items()}
 
 
 class Registry:
