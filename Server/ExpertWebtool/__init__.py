@@ -57,6 +57,7 @@ def main(global_config, **settings):
     config.add_route('uploadEvalModel', "/evaluate_model")
 
     config.add_route('personalSettings', '/settings/personal.html')
+    config.add_route('updatePersonal', '/settings/update_personal')
     config.add_route('createUser', '/create_user/{accountLink}')
     config.add_route('manageUsers', '/settings/manage_users.html')
     config.add_route('inviteUser', '/settings/invite_user')

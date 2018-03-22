@@ -1,0 +1,2 @@
+SELECT username, modelSpec
+FROM users

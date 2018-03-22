@@ -5,19 +5,69 @@ import pyramid.httpexceptions as exc
 
 # Python libraries
 import os
-import smtplib
-from email.message import EmailMessage
 
 # Package modules
-from . import TEMPLATES
+from . import TEMPLATES, CMOSTORAGE
 from . import Helper
-from .Helper import EMAIL_REGEX
 from .DatabaseHandler import DatabaseHandler as db
+
+import ExpertRep
+from ExpertRep import ExpertModelAPI, ClimateModelOutput
+
 
 @view_config(route_name='personalSettings', renderer="templates/settings_personal.html")
 def personalSettings(request):
 	Helper.permissions(request)
-	return Helper.pageVariables(request, {"title":"Personal Settings"})
+
+	UserModelSpec = db.execute_literal(
+	    "SELECT modelSpec FROM users WHERE username = ?", [request.session["username"]])[0]["modelSpec"]
+	models = ExpertRep.available_models()  # Get a list of available models
+
+	return Helper.pageVariables(request, {"title": "Personal Settings", "selectedModel": UserModelSpec, "models": models})
+
+
+@view_config(route_name='updatePersonal', renderer="json")
+def updatePersonal(request):
+    Helper.permissions(request)
+
+    try:
+        modelSpec = request.params["model_spec"]
+    except:
+        raise exc.HTTPBadRequest("Information missing")
+
+    user = db.executeOne("User_Info", [request.session["username"]])
+
+    if user["modelSpec"] != modelSpec:
+        # Change all the models currently implemented and re train
+        expertsModels = db.execute_literal(
+            "SELECT * FROM expertModels WHERE username = ?", [user["username"]])
+
+        # Update users Model Specification
+        db.execute_literal("UPDATE users SET modelSpec = ? WHERE username = ?", [modelSpec, user["username"]])
+
+        for model in expertsModels:
+            # Replace the old model with the new model in the database
+            identifier = ExpertModelAPI().create_model(model_type=modelSpec)
+            db.execute_literal("UPDATE expertModels SET identifier = ? WHERE identifier = ?", [
+                                identifier, model["identifier"]])
+
+            # Train the unsupervised section of the model
+            ExpertModelAPI().fit_unsupervised(
+                model_id=identifier, data=Helper.CMOStore.models())
+
+            # Collect all the data used to train the original model
+            trainingData = db.execute("collectModelLabels", [user["username"], model["qid"]])
+            CMOs, scores = [], []
+            for datapoint in trainingData:
+                CMOs.append(ClimateModelOutput.load(os.path.join(CMOSTORAGE, str(datapoint["cmoid"]))))
+                scores.append(datapoint["score"])
+
+            # Train the model
+            metrics = ExpertModelAPI().partial_fit(model_id=identifier, data=CMOs, targets=scores)
+            Helper.recordModelMetrics(identifier, metrics)
+
+            # Delete old model
+            ExpertModelAPI().delete_model(model_id=model["identifier"])
 
 @view_config(route_name='manageUsers', renderer="templates/settings_manageUsers.html")
 def manageUsers(request):
@@ -41,7 +91,7 @@ def inviteUser(request):
 	except:
 		raise exc.HTTPBadRequest("Invalid request")
 
-	if EMAIL_REGEX.match(email) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
+	if Helper.EMAIL_REGEX.match(email) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
 
 	# Create psuedo link
 	link = Helper.HiddenPages.newAddress("/create_user/")
