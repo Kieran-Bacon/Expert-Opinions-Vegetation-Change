@@ -32,10 +32,10 @@ def createQuestion(request):
 
     # For every user create a new expert model to represent this question.
     # TODO: Move this functionality to be operated on after returning qid.
-    usernames = db.execute_literal("SELECT username FROM users", [])
-    for row in usernames:
-        identifier = ExpertModelAPI().create_model(model_type="KNN_regress")
-        db.execute_literal("INSERT INTO expertModels VALUES(?, ?, ?, null, null, null)", [identifier, row["username"], qid])
+
+    for user in db.execute("collectUserModelSpec",[]):
+        identifier = ExpertModelAPI().create_model(model_type=user["modelSpec"])
+        db.execute("eModel_insertModel", [identifier, user["username"], qid])
 
     return {"qid": qid}
 
