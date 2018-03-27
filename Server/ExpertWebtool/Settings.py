@@ -5,6 +5,7 @@ import pyramid.httpexceptions as exc
 
 # Python libraries
 import os
+import concurrent.futures
 
 # Package modules
 from . import TEMPLATES, CMOSTORAGE
@@ -37,7 +38,7 @@ def updatePersonal(request):
 
     user = db.executeOne("User_Info", [request.session["username"]])
 
-    if user["modelSpec"] != modelSpec:
+    if True:
         # Change all the models currently implemented and re train
         expertsModels = db.execute_literal(
             "SELECT * FROM expertModels WHERE username = ?", [user["username"]])
@@ -63,7 +64,13 @@ def updatePersonal(request):
                 scores.append(datapoint["score"])
 
             # Train the model
-            metrics = ExpertModelAPI().partial_fit(model_id=identifier, data=CMOs, targets=scores)
+            with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(ExpertModelAPI().partial_fit, model_id=identifier, data=CMOs, targets=scores)
+                metrics = future.result()
+                import sys
+                print("Batch returned with metrics: {}".format(metrics))
+                sys.stdout.flush()
+
             Helper.recordModelMetrics(identifier, metrics)
 
             # Delete old model

@@ -1,7 +1,8 @@
 from pyramid.response import Response
 from pyramid.view import view_config
 import pyramid.httpexceptions as exc
-
+import concurrent.futures
+import sys
 import random
 
 from ExpertRep import ExpertModelAPI, ClimateModelOutput
@@ -91,13 +92,18 @@ def submitBatch(request):
     # Prepare batch information
     CMOs, scores = [], []
     for CMOid, score in batch:
+        print("{},{}".format(CMOid,score))
+        sys.stdout.flush()
         CMOs.append(ClimateModelOutput.load(os.path.join(CMOSTORAGE+str(CMOid))))
         scores.append(score)
     
     # Train the expert model
     try:
         ExpertModelAPI().fit_unsupervised(model_id=expert["identifier"], data=Helper.CMOStore.models())
-        metrics = ExpertModelAPI().partial_fit(model_id=expert["identifier"], data=CMOs, targets=scores)
+
+        with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(ExpertModelAPI().partial_fit, model_id=expert["identifier"], data=CMOs, targets=scores)
+            metrics = future.result()
 
         Helper.recordModelMetrics(identifier=expert["identifier"], metrics=metrics)
         db.execute("submitBatch",[username, qid])                       # Update batch assignment

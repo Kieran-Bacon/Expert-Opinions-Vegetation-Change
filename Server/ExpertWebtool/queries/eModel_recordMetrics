@@ -1,3 +1,3 @@
 UPDATE expertModels 
-SET precision = ?, accuracy = ?, R2 = ?
+SET precision = ?, accuracy = ?, R2 = ?, L1 = ?
 WHERE identifier = ?

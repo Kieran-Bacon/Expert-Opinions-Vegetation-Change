@@ -119,6 +119,11 @@ class ModelOutputs(metaclass=ABCMeta):
     """
     pass
 
+class ModelOutputsGeneric(namedtuple("ModelOutputsClassify", ["accuracy", "precision", "L1_loss"]), ModelOutputs):
+    """
+    Model Outputs for classification
+    """
+    pass
 
 class ModelOutputsClassify(namedtuple("ModelOutputsClassify", ["accuracy", "precision"]), ModelOutputs):
     """

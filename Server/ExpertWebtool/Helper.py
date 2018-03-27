@@ -176,4 +176,9 @@ def recordModelMetrics(identifier: str, metrics = None) -> None:
 	except:
 		R2 = None
 
-	db.execute("eModel_recordMetrics", [precision, accuracy, R2, identifier]) # Record the model metrics
+	try:
+		L1 = metrics.L1_loss
+	except:
+		L1 = None
+
+	db.execute("eModel_recordMetrics", [precision, accuracy, R2, L1, identifier]) # Record the model metrics

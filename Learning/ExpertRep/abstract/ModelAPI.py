@@ -83,8 +83,13 @@ class MachineLearningModel(metaclass=ABCMeta):
         Returns:
             the full set of data to train upon.
         """
-        self._mock_partial_fit_buffer[0] += data
-        self._mock_partial_fit_buffer[1] += targets
+        for d, t in zip(data, targets):
+            if d not in self._mock_partial_fit_buffer[0]:
+                self._mock_partial_fit_buffer[0].append(d)
+                self._mock_partial_fit_buffer[1].append(t)
+
+#        self._mock_partial_fit_buffer[0] += data
+#        self._mock_partial_fit_buffer[1] += targets
         return self._mock_partial_fit_buffer
 
     @property

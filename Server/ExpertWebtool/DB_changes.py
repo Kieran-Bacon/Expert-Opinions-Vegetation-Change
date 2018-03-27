@@ -14,10 +14,14 @@ except:
 
 try:
     cursor.execute("ALTER TABLE users ADD COLUMN modelSpec TEXT")
+    cursor.execute("UPDATE users SET modelSpec = 'KNN_regress'")
 except:
     pass
 
-cursor.execute("UPDATE users SET modelSpec = 'KNN_regress'")
+try:
+    cursor.execute("ALTER TABLE expertModels ADD COLUMN L1 REAL")
+except:
+    pass
 
 database.commit()
 

@@ -27,6 +27,15 @@ class KNNClassify(SKBase):
         """ See superclass docstring """
         return ModelInfo(ModelType.KNN, None)
 
+@Registry.register_model("KNN_classify_binary")
+class KNNClassifyBinary(KNNClassify):
+    
+    def __str__():
+        return "Binary KNN"
+
+    def num_buckets(self):
+        return 2
+
 
 @Registry.register_model("KNN_regress")
 class KNNRegress(SKBase):
@@ -44,6 +53,19 @@ class KNNRegress(SKBase):
     def model_info(self) -> ModelInfo:
         """ See superclass docstring """
         return ModelInfo(ModelType.KNN, None)
+
+
+@Registry.register_model("BINARY_KNN_PCA")
+class BinaryKNNWithPCA(SemiSupervisedModel):
+    """                                                                                                                                                                              
+    An implementation of KNN regression with an added PCA feature learning step.                                                                                                     
+    """
+
+    def __init__(self, config):
+        super().__init__(supervised=KNNClassifyBinary, unsupervised=PCA, config=config)
+
+    def __str__():
+        return "Binary KNN with PCA"
 
 
 @Registry.register_model("KNN_PCA")
