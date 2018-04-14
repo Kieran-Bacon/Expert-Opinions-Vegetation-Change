@@ -6,6 +6,11 @@ database = sqlite3.connect(os.path.join(ROOT,"data","site.db"))
 cursor = database.cursor()
 
 # Drop previous tables if database already exists
+confirmation = input("YOU ARE ABOUT TO DROP THE DATABASE, IF YOURE SURE YOU WANT TO DO THIS TYPE THE ALPHABET IN LOWERCASE:")
+if confirmation != "abcdefghijklmnopqrstuvwxyz":
+	print("Phew, well that was close")
+	exit(1)
+
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 tables = cursor.fetchall()
 for table in tables:
