@@ -58,8 +58,6 @@ class Registry:
                 raise NotASubclassException(
                     "The class {} is not a subclass of MachineLearningModel".format(veg_ml_model.__class__))
             model_name = name or veg_ml_model.__class__
-            if model_name in _MODELS:
-                raise LookupError("Model %s already registered." % model_name)
             _MODELS[model_name] = veg_ml_model
             return veg_ml_model
 

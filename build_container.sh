@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build . -t group_proj_main:latest
+docker build . -t group_proj_main_exp:latest

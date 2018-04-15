@@ -3,11 +3,20 @@ Tools required to perform leave one out cross validation to achieve accurate app
 """
 import numpy as np
 import logging
+
 _LOG = logging.getLogger(__name__)
+
 
 def mean_model_outputs(list_of_model_outs: list):
     """
     Calculates the means of a list of model outputs and returns it in the same format it was received.
+    >>> from ExpertRep.abstract.ClimateEvalAPI import ModelOutputsGeneric
+    >>> mean_model_outputs([])
+    Traceback (most recent call last):
+        ...
+    ArithmeticError: Mean of empty array is undefined
+    >>> mean_model_outputs([ModelOutputsGeneric(accuracy=1, precision=0.1, L1_loss=0.5)])
+    ModelOutputsGeneric(accuracy=1.0, precision=0.10000000000000001, L1_loss=0.5)
 
     Args:
         list_of_model_outs:
