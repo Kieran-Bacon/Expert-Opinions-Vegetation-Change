@@ -16,6 +16,6 @@ cd Server
 
 ENV PYTHONPATH=/root/code/Learning:/root/code/Server
 ENV PYTHONUNBUFFERED=Truex
-EXPOSE 6543:6543
-EXPOSE 22
-CMD ["bash /root/code/docker_run_on_start.sh"]
+
+VOLUME ["/root/code/Server/ExpertWebtool/data"]
+CMD ["pserve", "root/code/Webtool.ini"]
