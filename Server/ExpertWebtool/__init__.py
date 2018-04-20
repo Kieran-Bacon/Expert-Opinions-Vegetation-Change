@@ -9,7 +9,7 @@ TEMPSTORAGE = os.path.join(ROOT, "temp") + "/"
 CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
 TEMPLATES = os.path.join(ROOT,"templates") + "/"
 
-from . import Process
+from . import Processes
 from .DatabaseHandler import DatabaseHandler
 
 def main(global_config, **settings):
@@ -74,8 +74,7 @@ def main(global_config, **settings):
     DatabaseHandler.load()
 
     # Begin supporting processes
-    Process.GarbageCollector().start()
-    #Process.Backup().start()
+    Processes.run()
 
     # Return the WSGI application object
     return config.make_wsgi_app()
