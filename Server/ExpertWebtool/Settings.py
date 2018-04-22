@@ -17,13 +17,13 @@ from ExpertRep import ExpertModelAPI, ClimateModelOutput
 
 @view_config(route_name='personalSettings', renderer="templates/settings_personal.html")
 def personalSettings(request):
-	Helper.permissions(request)
+    Helper.permissions(request)
 
-	UserModelSpec = db.execute_literal(
-	    "SELECT modelSpec FROM users WHERE username = ?", [request.session["username"]])[0]["modelSpec"]
-	models = ExpertRep.available_models()  # Get a list of available models
+    UserModelSpec = db.execute_literal(
+        "SELECT modelSpec FROM users WHERE username = ?", [request.session["username"]])[0]["modelSpec"]
+    models = ExpertRep.available_models()  # Get a list of available models
 
-	return Helper.pageVariables(request, {"title": "Personal Settings", "selectedModel": UserModelSpec, "models": models})
+    return Helper.pageVariables(request, {"title": "Personal Settings", "selectedModel": UserModelSpec, "models": models})
 
 
 @view_config(route_name='updatePersonal', renderer="json")
@@ -71,69 +71,70 @@ def updatePersonal(request):
 
 @view_config(route_name='manageUsers', renderer="templates/settings_manageUsers.html")
 def manageUsers(request):
-	Helper.permissions(request)
+    Helper.permissions(request)
 
-	# Collect user information
-	users_information = db.execute("Users&Permissions",[])
+    # Collect user information
+    users_information = db.execute("Users&Permissions",[])
 
-	return Helper.pageVariables(request, {"title":"Manage Users", "users_information": users_information})
+    return Helper.pageVariables(request, {"title": "Manage Users", "authorities": Helper.AUTHORITY, "users_information": users_information})
 
 @view_config(route_name='inviteUser', request_method='POST', renderer="json")
 def inviteUser(request):
-	Helper.permissions(request)
+    Helper.permissions(request)
 
-	try:
-		title = request.params["title"]
-		firstname = request.params["firstname"]
-		lastname = request.params["lastname"]
-		organisation = request.params["organisation"]
-		email = request.params["email"]
-	except:
-		raise exc.HTTPBadRequest("Invalid request")
+    try:
+        title = request.params["title"]
+        firstname = request.params["firstname"]
+        lastname = request.params["lastname"]
+        organisation = request.params["organisation"]
+        email = request.params["email"]
+        permission = request.params["permission"]
+    except:
+        raise exc.HTTPBadRequest("Invalid request")
 
-	if Helper.EMAIL_REGEX.match(email) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
+    if Helper.EMAIL_REGEX.match(email) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
 
-	# Create psuedo link
-	link = Helper.HiddenPages.newAddress("/create_user/")
-	link = os.path.join(request.host, link[1:]) # TODO: when the location is stable swap this line out.
+    # Create psuedo link
+    link = Helper.HiddenPages.newAddress("/create_user/")
+    link = os.path.join(request.host, link[1:]) # TODO: when the location is stable swap this line out.
 
-	tempUsername = link[-10:]
+    tempUsername = link[-10:]
 
-	db.execute("User_addTemp",[tempUsername,email,None,None,0,title,firstname,lastname,organisation])
-	Helper.email("Invitation to Expert Climate model webtool",email,"invite.email",[title, firstname, lastname, link])
+    db.execute("User_addTemp",[tempUsername,email,None,None,permission,title,firstname,lastname,organisation])
+    Helper.email("Invitation to Expert Climate model webtool",email,"invite.email",[title, firstname, lastname, link])
 
 @view_config(route_name='createUser',request_method='GET', renderer="templates/settings_createUser.html")
 def createUser(request):
 
-	if not Helper.HiddenPages.validate(request.path):
-		return exc.HTTPNotFound()
+    if not Helper.HiddenPages.validate(request.path):
+        return exc.HTTPNotFound()
 
-	user = db.executeOne("User_Info",[request.path[-10:]])
+    user = db.executeOne("User_Info",[request.path[-10:]])
 
-	return {"title":"Create an account", "user":user}
+    return {"title":"Create an account", "user":user}
 
 @view_config(route_name='createUser',request_method='POST', renderer="json")
 def confirmUser(request):
 
-	if not Helper.HiddenPages.validate(request.path):
-		return exc.HTTPNotFound() 
+    if not Helper.HiddenPages.validate(request.path):
+        return exc.HTTPNotFound() 
 
-	try:
-		username = request.params["username"]
-		title = request.params["title"]
-		firstname = request.params["firstname"]
-		lastname = request.params["lastname"]
-		organisation = request.params["organisation"]
-		email = request.params["email"]
-		password = request.params["password"]
-	except:
-		raise exc.HTTPBadRequest("Invalid request")
+    try:
+        username = request.params["username"]
+        title = request.params["title"]
+        firstname = request.params["firstname"]
+        lastname = request.params["lastname"]
+        organisation = request.params["organisation"]
+        email = request.params["email"]
+        password = request.params["password"]
+    except:
+        raise exc.HTTPBadRequest("Invalid request")
 
-	# Check if username already exists
-	if len(db.execute("User_Info",[username])):
-		raise exc.HTTPBadRequest("Username Exists")
+    # Check if username already exists
+    if len(db.execute("User_Info",[username])):
+        raise exc.HTTPBadRequest("Username Exists")
 
-	salt, hashedPassword = Helper.hashPassword(password)
-	db.execute("User_confirmTemp",[username,email,salt,hashedPassword,title,firstname,lastname,organisation,request.path[-10:]])
+    salt, hashedPassword = Helper.hashPassword(password)
+    db.execute("User_confirmTemp",[username,email,salt,hashedPassword,title,firstname,lastname,organisation,request.path[-10:]])
 
-	Helper.HiddenPages.remove(request.path)
+    Helper.HiddenPages.remove(request.path)

@@ -1,20 +1,48 @@
 import pyramid.httpexceptions as exc
 
-def permissions(request) -> None:
-	"""
-	Takes a request object for an arbitary page and redirects the user if they
-	do not have the correct permissions to access this page.
+AUTHORITY = {
+    0: "Evaluate Only",
+    1: "Annotate",
+    2: "Upload CMOs",
+    3: "Content Uploader",
+    4: "User inviter",
+    5: "Admin"
+}
 
-	Params:
-		Request: Pyramid request object
-	"""
+def permissions(request, authority = 0) -> None:
+    """
+    Validate the users request redirecting them if necessary. Handle the locking mechanism and
+    record intended distination for login 
 
-	# Collect the status of the user from the sessions.
-	status = request.session.get("status", None)
+    Params:
+        request (Pyramid request object) - The request object of the user, containing session info
+        authority (int) - The authority needed for the request to be fulfilled
+    """
 
-	# Determine fate based on status
-	if status == 1: return None
-	if status is None:
-		request.session["intended_route"] = request.path
-		raise exc.HTTPFound(request.route_url("login"))
-	raise exc.HTTPFound(request.route_url("locked"))
+    # Collect the status of the user from the sessions.
+    status = request.session.get("status", None)
+
+    if status is None:
+        # User is not logged in, save intended destinate for redirect after login
+        if not authority: return  # No authority needed, allow access
+        request.session["intended_route"] = request.path
+        raise exc.HTTPFound(request.route_url("login"))
+
+    if status:
+        if request.session["authority"] >= authority:
+            # Permission granted
+            return None
+        else:
+            # Permission denied
+            alert = {
+                "title":"Permission denied",
+                "text":"You currently do not have the permission to complete this action.\
+ If you believe that you should, then please get in touch with a system admin.",
+                "type":"error"
+            }
+            request.session["alerts"].append(alert)
+            raise exc.HTTPFound(request.route_url("index"))
+
+    else:
+        # User has locked their current session
+        raise exc.HTTPFound(request.route_url("locked"))

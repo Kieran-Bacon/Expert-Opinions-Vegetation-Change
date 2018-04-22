@@ -18,7 +18,6 @@ def evaluation(request):
     questions = db.execute("collectQuestions",[])
 
     split = int((len(expertInfo)/2)+0.5)
-    print(split)
 
     return Helper.pageVariables(request, {"title":"Evaluation", "lexperts": expertInfo[:split], "rexperts":expertInfo[split:], "questions":questions})
 

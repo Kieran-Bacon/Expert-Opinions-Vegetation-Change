@@ -13,7 +13,7 @@ from .DatabaseHandler import DatabaseHandler as db
 
 @view_config(route_name="training", renderer="templates/training_main.html")
 def training(request):
-    permissions(request)
+    permissions(request, authority=1)
 
     # Collect all question ids
     allQuestions = db.execute("collectQuestions", [])
