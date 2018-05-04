@@ -156,6 +156,9 @@ function updateMap() {
 			}
 		});
 		if (found == false) {
+			layer.getSource().forEachFeature(function(feature) {
+				console.log(feature.weight)
+			});
 			layersToRemove.push(layer);
 		}
 	});
@@ -220,7 +223,7 @@ $(document).ready(function() {
 			} else {
 				// Update map source
 				kmlLocation = "http://" + window.location.hostname + ":" + window.location.port + "/collect_model_kml/" + $("#mid").val() + "/" + lindex;
-
+				
 				sourceVector = new ol.source.Vector({
 					url: kmlLocation,
 					format: new ol.format.KML({
