@@ -29,7 +29,7 @@ def training(request):
 @view_config(route_name="collectModelKML", renderer="string")
 def collectModelKML(request):
     cmo = ClimateModelOutput.load(os.path.join(CMOSTORAGE + request.matchdict['cmoid']))
-    return cmo.get_kml(int(request.matchdict["layer"]))
+    return cmo.get_geojson(int(request.matchdict["layer"]))
 
 @view_config(route_name="collectCMO", renderer="json")
 def collectCMO(request):

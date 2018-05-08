@@ -1,28 +1,373 @@
-var SWITCHES = [],
-	TABDATA = {},
-	TABCOUNTER = 0;
+/**
+ * The training page browser side functionality.
+ * 
+ * @author Paul Kim
+ */
 
-// Keep tab of active tab history
+// ---------------------------------------------------------------------
+
+// LAYER SWITCHES
+var SWITCHES = [];
+
+/**
+ * Set a switch to on/off if it is not already in the correct state.
+ * 
+ * @param {Object}  switchElement The HTML switch element.
+ * @param {Boolean} checked       The desired state of the switch.
+ */
+function setSwitchery(switchElement, checked) {
+    if((checked && !switchElement.isChecked()) || (!checked && switchElement.isChecked())) {
+        switchElement.setPosition(true);
+    }
+}
+
+/**
+ * Initialise layer switches by creating Switchery elements and setting
+ * up switch listeners.
+ */
+function initialiseSwitches() {
+	// Get switch HTML elements
+	var elements = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+	elements.forEach(function(element) {
+		var switchery = new Switchery(element);
+		SWITCHES.push(switchery);
+		// Toggle switches off by default
+		setSwitchery(switchery, false);
+	});
+
+	// Set up listeners for switches
+	elements = Array.prototype.slice.call(document.querySelectorAll('.js-check-change'));
+	elements.forEach(function(element) {
+		element.onchange = function() {
+			var switchID = element.id.split("-"),
+				layerCode = switchID[0],
+				layerIndex = switchID[1];
+
+			console.log("Switch toggled: ", layerCode);
+
+			// If checked is true then switch is now on i.e. has been turned on
+			activeTabID = ACTIVE.getActiveTab();
+			LAYER_STORAGE.getLayerAndUpdate(activeTabID, layerIndex, element.checked);
+			TAB_DATA.updateLayerCodes(activeTabID, layerCode, element.checked);
+		}
+	});
+}
+
+/**
+ * Update layer switches according to given layer codes. Ensure
+ * codes given are turned on and all others are turned off.
+ * 
+ * @param {Array} layerCodes Which layer switches should be on.
+ */
+function updateSwitches(layerCodes) {
+	console.log("Updating switches: " + layerCodes)
+
+	// For each switch, check it is in layerCodes
+	SWITCHES.forEach(function (html) {
+		var switchCode = html.element.id.split("-")[0],
+			turnOn = false;
+		layerCodes.forEach(function(layerCode) {
+			if (layerCode == switchCode) {
+				turnOn = true;
+			}
+		});
+		setSwitchery(html, turnOn);
+	})
+}
+
+// ---------------------------------------------------------------------
+
+// ACTIVE TAB TRACKING
 var ACTIVE = {};
+// Use a stack system to keep track of tab history
 ACTIVE.tabs = [];
-ACTIVE.add = function (item) {
-	var index = this.tabs.indexOf(item);
-	// Remove item if it already exists
-	if (index > -1) {
-		this.tabs.splice(index, 1);
-	}
-	this.tabs.push(item);
-};
-ACTIVE.last = function () {
+
+/**
+ * Return the ID of the currently active tab without removing it from
+ * the stack.
+ * 
+ * @return The ID of the currently active tab.
+ */
+ACTIVE.getActiveTab = function () {
 	return this.tabs[this.tabs.length - 1];
 };
 
+/**
+ * Set the active tab. If the tab already exists in the stack, remove it
+ * and push it to the top of the stack.
+ * 
+ * @param {String} activeTab The active tab ID.
+ */
+ACTIVE.setActiveTab = function (activeTab) {
+	var index = this.tabs.indexOf(activeTab);
+	// Remove tab ID if it already exists in stack
+	if (index > -1) {
+		this.tabs.splice(index, 1);
+	}
+	this.tabs.push(activeTab);
+};
+
+/**
+ * Delete the currently active tab (top of the stack) from the DOM. Show
+ * the new active tab.
+ */
+ACTIVE.removeActiveTab = function () {
+	$('#'+ACTIVE.tabs.pop()).remove();
+	$('#'+ACTIVE.getActiveTab()).tab('show');
+}
+
+// ---------------------------------------------------------------------
+
+// MODEL LAYER CACHING
+var LAYER_STORAGE = {};
+
+/**
+ * Fetch a layer from storage and call map update functions. If the
+ * layer is not in storage, it is loaded from the server.
+ * 
+ * @param {String} tabID      The ID of the active tab.
+ * @param {String} layerIndex The index of the layer to get.
+ * @param {Boolean} toAdd     A flag whether to add/remove the layer.
+ */
+LAYER_STORAGE.getLayerAndUpdate = function (tabID, layerIndex, toAdd) {
+	console.log("Getting layer '" + layerIndex + "' for: " + tabID);
+
+	// If layer is not in storage, load it
+	if (!(layerIndex in LAYER_STORAGE)) {
+		// Model layer data location
+		url = "http://" + window.location.hostname + ":" + window.location.port;
+		url += "/collect_model_kml/" + $("#mid").val() + "/" + layerIndex;
+		console.log("Fetching model layer from: " + url);
+
+		LAYER_STORAGE[layerIndex] = {};
+		$.getJSON(url).done(function(data) {
+			// Expecting a GeoJSON feature collection
+			data.features.forEach(function(feature){
+				var lat = feature.geometry.coordinates[0],
+					lon = feature.geometry.coordinates[1],
+					featureKey = lat.toString() + "#" + lon.toString();
+
+				// Store each point weight using the lat/lon as a key
+				LAYER_STORAGE[layerIndex][featureKey] = feature.properties.weight;
+			});
+			// Add this to callback so that it is done only after layer is stored
+			TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd)
+		});
+	} else {
+		TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd)
+	}
+}
+
+// ---------------------------------------------------------------------
+
+// MAP VECTOR SOURCE CACHING
+var VECTOR_SOURCE_STORAGE = {};
+
+/**
+ * Generate a vector layer for a given tab.
+ * 
+ * @param {String} tabID  The id of the active tab.
+ * @param {Boolean} write Whether to generate or load a cached layer.
+ */
+function generateVectorSource(tabID, write=true) {
+	console.log("Generating vector source for: " + tabID);
+
+	var map = $('#map').data('map');
+
+	if (write) {
+		var vectorSource = new ol.source.Vector({});
+
+		vectorSource.on("addfeature", function (event) {
+			event.feature.set('weight', event.feature.P.weight)
+		});
+
+		Object.keys(TAB_DATA.mapData[tabID]).forEach(function (key) {
+			var keySplit = key.split("#"),
+				lat = keySplit[0],
+				lon = keySplit[1];
+
+			var	pointGeometry = new ol.geom.Point([lat,lon]);
+
+			var pointFeature = new ol.Feature({
+				geometry: pointGeometry,
+				weight: TAB_DATA.mapData[tabID][key]
+			});
+
+			vectorSource.addFeature(pointFeature);
+		});
+
+		var modelLayer = new ol.layer.Heatmap({
+			source: vectorSource,
+			blur: 10,
+			radius: 6
+		});
+
+		map.getLayers().getArray()[1].setSource(vectorSource);
+		VECTOR_SOURCE_STORAGE[tabID] = vectorSource;
+	} else {
+		console.log("Using cached source vector.")
+		map.getLayers().getArray()[1].setSource(VECTOR_SOURCE_STORAGE[tabID]);
+	}
+	console.log("Map updated.")
+}
+
+// ---------------------------------------------------------------------
+
+// TAB DATA MANAGEMENT
+var TAB_DATA = {};
+TAB_DATA.id_counter = 0;
+TAB_DATA.n_tabs = 0;
+TAB_DATA.layerCodes = {}; // Layer codes for each tab
+TAB_DATA.mapData = {};    // Map layer data for each tab
+
+/**
+ * Generate a new and unique tab ID.
+ * 
+ * @return A new tab ID of the form "tab_n" where n is an integer.
+ * @private
+ */
+TAB_DATA.newTabID = function () {
+	TAB_DATA.id_counter += 1;
+	return "tab_" + TAB_DATA.id_counter;
+}
+
+/**
+ * Remove data of a given tab and update the state of TAB_DATA.
+ * 
+ * @param {String} tabID The ID of the tab data to remove
+ * @private
+ */
+TAB_DATA.removeTabData = function (tabID) {
+	delete TAB_DATA.layerCodes[tabID];
+	delete TAB_DATA.mapData[tabID];
+	TAB_DATA.n_tabs -= 1;
+}
+
+/**
+ * The callback function fired when a tab is shown.
+ * 
+ * @param {Object} event The event fired, expects on shown.
+ */
+function tabShownListener(event) {
+	console.log("Tab show: " + event.target.id);
+
+	var tabID = event.target.id;
+	// Update active tab list
+	ACTIVE.setActiveTab(tabID);
+	// Get layer codes for active tab
+	updateSwitches(TAB_DATA.layerCodes[tabID]);
+	generateVectorSource(tabID, write=false);
+}
+
+/**
+ * The callback function fired when the remove tab 'button' is pressed.
+ * 
+ * @param {Object} event The event fired, expects on shown.
+ */
+function removeTabListener(event) {
+	console.log("Removing tab: " + ACTIVE.getActiveTab());
+
+	TAB_DATA.removeTabData(ACTIVE.getActiveTab());
+	ACTIVE.removeActiveTab();
+	// Delete 'remove' tab if only one tab left
+	if (TAB_DATA.n_tabs == 1) {
+		$('#removetab').remove();
+	}
+}
+
+/**
+ * Generate HTML to create and remove new tabs interactively.
+ */
+TAB_DATA.newTab = function () {
+	var tabID = this.newTabID();
+
+	console.log("Creating new tab: " + tabID)
+
+	this.n_tabs += 1;
+	// Create tab data storage
+	this.layerCodes[tabID] = [];
+	this.mapData[tabID] = {};
+
+	// Create HTML tab
+	$('<li><a id="'+tabID+'" href="#map-content" data-toggle="tab">New tab</a></li>').appendTo('#tabs');
+	$('#'+tabID).on('shown.bs.tab', tabShownListener);
+	$('#'+tabID).tab('show'); // Make the new tab active
+
+	// Create remove tab if it isn't already created and more than one map tab is present
+	if ($('#removetab').length == 0 && this.n_tabs != 1) {
+		// Create HTML
+		$('<li id="removetab" class="pull-right"><a href="#map-content" data-toggle="tab" aria-expanded="false">Remove tab</a></li>').appendTo('#tabs');
+		$('#removetab').on('shown.bs.tab', removeTabListener);
+	}
+}
+
+/**
+ * Update a tab name in the DOM.
+ * 
+ * @param {String} tabID     The ID of the tab to update.
+ * @param {String} layerCode The code to add/remove.
+ * @param {Boolean} add      A flag to determine whether to add/remove.
+ */
+TAB_DATA.updateLayerCodes = function (tabID, layerCode, add) {
+	console.log("Updating tab layer codes for : " + tabID);
+
+	// Update tab layer code data
+	if (add) {
+		this.layerCodes[tabID].push(layerCode);
+	} else {
+		var index = this.layerCodes[tabID].indexOf(layerCode);
+		if (index > -1) {
+  			this.layerCodes[tabID].splice(index, 1);
+		}
+	}
+	// Update DOM
+	if (TAB_DATA.layerCodes[tabID].length == 0) {
+		document.getElementById(tabID).innerHTML = "New tab";
+	} else {
+		document.getElementById(tabID).innerHTML = TAB_DATA.layerCodes[tabID];
+	}
+}
+
+/**
+ * Update the map layer data for the given tab.
+ * 
+ * @param {String} tabID The ID of the active tab.
+ * @param {Object} layer The layer data for updating.
+ * @param {Boolean} add  A flag whether to add/remove the layer.
+ */
+TAB_DATA.updateMapData = function (tabID, layer, add) {
+	console.log("Updating map data for: " + tabID);
+
+	Object.keys(layer).forEach(function (key) {
+		if (add) {
+			if (key in TAB_DATA.mapData[tabID]) {
+				// If key already exists in map data, add it to existing value
+				TAB_DATA.mapData[tabID][key] = TAB_DATA.mapData[tabID][key] + layer[key];
+			} else {
+				// Else create new entry in map data
+				TAB_DATA.mapData[tabID][key] = layer[key];
+			}
+		} else {
+			if (key in TAB_DATA.mapData[tabID]) {
+				TAB_DATA.mapData[tabID][key] = TAB_DATA.mapData[tabID][key] - layer[key];
+			}
+		}
+	});
+	generateVectorSource(tabID);
+}
+
+// ---------------------------------------------------------------------
+
+// MAP MANAGEMENT
 // Default map settings
 var PROJECTION = 'EPSG:4326', // World Geodetic System
 	ZOOM = 2.2,
 	LON = 0,
 	LAT = 0;
 
+/**
+ * Initialise an OpenLayers map and assign it to the map DOM element.
+ */
 function initialiseMap() {
 	console.log("Initialising map...")
 	var myView = new ol.View({
@@ -39,9 +384,14 @@ function initialiseMap() {
 		source: new ol.source.OSM()
 	});
 
+	var modelLayer = new ol.layer.Heatmap({
+		blur: 10,
+		radius: 6
+	});
+
 	var map = new ol.Map({
 		view: myView,
-		layers: [raster],
+		layers: [raster, modelLayer],
 		target: 'map',
 		controls: [], // Remove default controls (e.g. zoom buttons)
 		interactions: [new ol.interaction.DragPan()] // Enable panning only
@@ -52,202 +402,25 @@ function initialiseMap() {
 	$('#map').data('map', map);
 }
 
-function newTab() {
-	// Create new tab ID
-	TABCOUNTER += 1;
-	var id = "tab_" + TABCOUNTER;
+// ---------------------------------------------------------------------
 
-	console.log("Creating new tab: " + id)
+// PAGE MANAGEMENT
 
-	// Create tab layer storage
-	TABDATA[id] = {};
-
-	// Create HTML tab
-	$('<li><a id="'+id+'" href="#map-content" data-toggle="tab">New tab</a></li>').appendTo('#tabs');
-	// Add listener
-	$('#'+id).on('shown.bs.tab', function (e) {
-		console.log("Tab show: " + e.target.id)
-		// Update active tab list
-		ACTIVE.add(e.target.id);
-		// Get active vector layers for this tab
-		layerCodes = Object.keys(TABDATA[e.target.id]);
-		updateSwitches(layerCodes);
-		updateMap();
-	});
-	// Make the new tab active
-	$('#'+id).tab('show');
-
-	// Create remove tab if it isn't already created and more than one map tab is present
-	if ($('#removetab').length == 0 && Object.keys(TABDATA).length != 1) {
-		// Create HTML
-		$('<li id="removetab" class="pull-right"><a href="#map-content" data-toggle="tab" aria-expanded="false">Remove tab</a></li>').appendTo('#tabs');
-		// Add listener
-		$('#removetab').on('shown.bs.tab', function(e) {
-			console.log("Removing tab: " + ACTIVE.last())
-			delete TABDATA[ACTIVE.last()];
-			$('#'+ACTIVE.tabs.pop()).remove();
-			$('#'+ACTIVE.last()).tab('show');
-
-			// Delete 'remove' tab if only one tab left
-			if (Object.keys(TABDATA).length == 1) {
-				$('#removetab').remove();
-			}
-		})
-	}
-}
-
-function updateSwitches(layerCodes) {
-	console.log("Updating switches: " + layerCodes)
-	SWITCHES.forEach(function(html) {
-		// Get ID code of switch
-		var lcode = html.element.id.split("-")[0],
-			isOn = false;
-		layerCodes.forEach(function(code) {
-			if (code == lcode) {
-				isOn = true;
-			}
-		});
-
-		setSwitchery(html, isOn);
-	})
-}
-
-// Check or un-check a switch
-function setSwitchery(switchElement, checked) {
-    if((checked && !switchElement.isChecked()) || (!checked && switchElement.isChecked())) {
-        switchElement.setPosition(true);
-    }
-}
-
-function updateMap() {
-	var map = $('#map').data('map'),
-		layers = map.getLayers().getArray(),
-		tab = ACTIVE.last();
-
-	console.log("Updating map: " + Object.keys(TABDATA[tab]))
-
-	// Add layers from TABDATA which aren't already on the map
-	Object.keys(TABDATA[tab]).forEach(function(key) {
-		var found = false;
-		layers.forEach(function(layer) {
-			if (TABDATA[tab][key] == layer) {
-				found = true;
-			}
-		});
-		if (found == false) {
-			map.addLayer(TABDATA[tab][key]);
-		}
-	});
-
-	// Remove layers which aren't in TABDATA
-	var baseLayer = true, // Protect map layer
-		layersToRemove = [];
-
-	layers.forEach(function(layer) {
-		if (baseLayer) {
-			baseLayer = false;
-			return;
-		}
-
-		var found = false;
-		Object.keys(TABDATA[tab]).forEach(function(key) {
-			if (TABDATA[tab][key] == layer) {
-				found = true;
-			}
-		});
-		if (found == false) {
-			layer.getSource().forEachFeature(function(feature) {
-				console.log(feature.weight)
-			});
-			layersToRemove.push(layer);
-		}
-	});
-
-	// This is done after so that size of array is affect while looping
-	layersToRemove.forEach(function(layer) {
-		map.removeLayer(layer);
-	});
-}
-
-function updateTabData(lcode, layer=null) {
-	// Get active tab id
-	var tab = ACTIVE.last();
-	console.log("Updating tab data: " + tab)
-	if (layer == null) { // Null layer: delete layer
-		delete TABDATA[tab][lcode];
-		// Avoid empty tab names
-		if (Object.keys(TABDATA[tab]).length == 0) {
-			document.getElementById(tab).innerHTML = "New tab";
-			return;
-		}
-	} else {
-		// Save new layer, keyed by layer code and current tab ID
-		TABDATA[tab][lcode] = layer;
-	}
-	// Update tab name
-	document.getElementById(tab).innerHTML = Object.keys(TABDATA[tab]);
-}
-
-$(document).ready(function() {
+/**
+ * The document on ready function.
+ */
+function documentReady() {
 	// Select the element and convert it to a ion slider
 	$("#modelScore").ionRangeSlider({
 		"start":50,
 		"min":0
 	});
 
-	// Find all switches and make them js fun time switchs
-	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-	elems.forEach(function(html) {
-		var switchery = new Switchery(html);
-		SWITCHES.push(switchery); // Save reference to switches so they can be manipulated later
-		setSwitchery(switchery, false);
-	});
+	initialiseSwitches();
 
 	// Set up listeners for tab creation/removal
 	$('#newtab').on('shown.bs.tab', function (e) {
-		newTab();
-	});
-
-	// Set up listeners for layer togglers
-	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-check-change'));
-	elems.forEach(function(elem) {
-		elem.onchange = function() {
-			console.log("Switch toggled...")
-			var lid = elem.id.split("-"),
-				lcode = lid[0],
-				lindex = lid[1];
-
-			if (!elem.checked) { // Element is selected (counterintuitive)
-				updateTabData(lcode);
-				updateMap();
-			} else {
-				// Update map source
-				kmlLocation = "http://" + window.location.hostname + ":" + window.location.port + "/collect_model_kml/" + $("#mid").val() + "/" + lindex;
-				
-				sourceVector = new ol.source.Vector({
-					url: kmlLocation,
-					format: new ol.format.KML({
-						extractStyles: false
-					})
-				});
-
-				var vector = new ol.layer.Heatmap({
-					source: sourceVector,
-					blur: 10,
-					radius: 6
-				});
-
-				vector.getSource().on('addfeature', function(event) {
-					var name = event.feature.get('name');
-					var weight = parseFloat(name.substr(1,name.length-2));
-
-					event.feature.set('weight', weight);
-				});
-
-				updateTabData(lcode, vector);
-				updateMap();
-			}
-		};
+		TAB_DATA.newTab();
 	});
 
 	// Add colorbar
@@ -265,10 +438,10 @@ $(document).ready(function() {
 	$('#colorbar').offset().top;
 
 	initialiseMap();
-	newTab();
+	TAB_DATA.newTab();
 	collectModel();
 	$("#questionSelect").change(collectModel);
-});
+}
 
 function collectModel(){
 	var qid = $("#questionSelect option:selected").val();
@@ -290,6 +463,7 @@ function collectModel(){
 			$("#mid").val(data.mid);
 
 			// Load new climate model
+			console.log("Load new model now")
 		},
 		"error": function(data, status){
 			new PNotify({
@@ -326,3 +500,7 @@ function scoreModel(){
 		}
 	});
 }
+
+// ---------------------------------------------------------------------
+
+$(document).ready(documentReady);
