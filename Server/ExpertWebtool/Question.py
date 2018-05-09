@@ -15,7 +15,7 @@ from .DatabaseHandler import DatabaseHandler as db
 def createQuestion(request):
     """ Add a parsed question text into the database if it is from a authorised
 	user """
-    Helper.permissions(request)
+    Helper.permissions(request, authority=3)
 
     try:
         questionText = request.params["text"]

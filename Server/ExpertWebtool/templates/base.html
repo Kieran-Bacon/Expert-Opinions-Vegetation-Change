@@ -80,6 +80,8 @@
                         <li><a href="/settings/personal.html"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
+                        <li><a href="/lock"><i class="fa fa-lock fa-fw"></i> Lock Session</a>
+                        </li>
                         <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
@@ -114,8 +116,8 @@
                         </li>
                         {% endif %}
                         <li><a href="/dashboard.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-                        {% if status %}<li><a href="/model_uploader.html"><i class="fa fa-upload fa-fw"></i> Content Uploader</a></li>{% endif %}
-                        <li><a href="/training.html"><i class="fa fa-language fa-fw"></i> Model Annotator</a></li>
+                        {% if status and authority >= 2 %}<li><a href="/model_uploader.html"><i class="fa fa-upload fa-fw"></i> Content Uploader</a></li>{% endif %}
+                        {% if status and authority >= 1 %}<li><a href="/training.html"><i class="fa fa-language fa-fw"></i> Model Annotator</a></li>{% endif %}
                         <li><a href="/evaluation.html"><i class="fa fa-bar-chart-o fa-fw"></i> Prediction Evaluation</a></li>
                         <li>
                             <a href="#"><i class="fa fa-cog fa-fw"></i> Settings</a>
@@ -123,7 +125,7 @@
                                 <li>
                                     <a href="/settings/personal.html">Personal Settings</a>
                                 </li>
-                                {% if status %}<li>
+                                {% if status and authority >= 4 %}<li>
                                     <a href="/settings/manage_users.html">Manage Users</a>
                                 </li>{% endif %}
                             </ul>
@@ -166,6 +168,14 @@
     <script>
         $(document).ready(function() {
             PNotify.prototype.options.styling = "fontawesome";
+            {% for alert in alerts %}
+                new PNotify({
+                    title: "{{alert['title']}}",
+                    text: "{{alert['text']}}",
+                    type: "{{alert['type']}}",
+                    styling: 'fontawesome'
+                });
+            {% endfor %}
         });
     </script>
 

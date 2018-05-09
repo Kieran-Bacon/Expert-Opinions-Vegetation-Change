@@ -57,7 +57,8 @@ def updatePersonal(request):
             for datapoint in trainingData:
                 CMOs.append(ClimateModelOutput.load(os.path.join(CMOSTORAGE, str(datapoint["cmoid"]))))
                 scores.append(datapoint["score"])
-            ProcessRunner().add_process(fit_model_and_write_db, identifier, user["username"], model["qid"], CMOs, scores)
+            ProcessRunner().add_process(fit_model_and_write_db, identifier, user["username"], model["qid"], CMOs,
+                                        scores)
             # Delete old model
             ExpertModelAPI().delete_model(model_id=model["identifier"])
 
@@ -67,9 +68,9 @@ def manageUsers(request):
     Helper.permissions(request)
 
     # Collect user information
-    users_information = db.execute("Users&Permissions", [])
 
-    return Helper.pageVariables(request, {"title": "Manage Users", "users_information": users_information})
+    return Helper.pageVariables(request, {"title": "Manage Users", "authorities": Helper.AUTHORITY,
+                                          "users_information": users_information})
 
 
 @view_config(route_name='inviteUser', request_method='POST', renderer="json")
@@ -97,9 +98,34 @@ def inviteUser(request):
     Helper.email("Invitation to Expert Climate model webtool", email, "invite.email",
                  [title, firstname, lastname, link])
 
+    try:
+        title = request.params["title"]
+        firstname = request.params["firstname"]
+        lastname = request.params["lastname"]
+        organisation = request.params["organisation"]
+        email = request.params["email"]
+        permission = request.params["permission"]
+    except:
+        raise exc.HTTPBadRequest("Invalid request")
+
+    if Helper.EMAIL_REGEX.match(email) is None: return exc.HTTPBadRequest(body="Not a valid e-mail address")
+
+    # Create psuedo link
+    link = Helper.HiddenPages.newAddress("/create_user/")
+    link = os.path.join(request.host, link[1:])  # TODO: when the location is stable swap this line out.
+
+    tempUsername = link[-10:]
+
+    db.execute("User_addTemp", [tempUsername, email, None, None, permission, title, firstname, lastname, organisation])
+    Helper.email("Invitation to Expert Climate model webtool", email, "invite.email",
+                 [title, firstname, lastname, link])
+
 
 @view_config(route_name='createUser', request_method='GET', renderer="templates/settings_createUser.html")
 def createUser(request):
+    if not Helper.HiddenPages.validate(request.path):
+        return exc.HTTPNotFound()
+
     if not Helper.HiddenPages.validate(request.path):
         return exc.HTTPNotFound()
 
@@ -110,6 +136,9 @@ def createUser(request):
 
 @view_config(route_name='createUser', request_method='POST', renderer="json")
 def confirmUser(request):
+    if not Helper.HiddenPages.validate(request.path):
+        return exc.HTTPNotFound()
+
     if not Helper.HiddenPages.validate(request.path):
         return exc.HTTPNotFound()
 
@@ -124,7 +153,8 @@ def confirmUser(request):
     except:
         raise exc.HTTPBadRequest("Invalid request")
 
-    # Check if username already exists
+        # Check if username already exists
+
     if len(db.execute("User_Info", [username])):
         raise exc.HTTPBadRequest("Username Exists")
 

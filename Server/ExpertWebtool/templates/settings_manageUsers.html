@@ -63,10 +63,20 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group input-group">
                             <span class="input-group-addon">@</span>
                             <input id="invite_email" type="text" class="form-control" placeholder="E-mail Address">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <select id="invite_permission" class="form-control">
+                                {% for value, desc in authorities.items() %}
+                                    <option value="{{value}}">{{desc}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -94,9 +104,7 @@
                             <th>Username</th>
                             <th>Full name</th>
                             <th>Disipline</th>
-                            <th>CMO uploading</th>
-                            <th>Question Generation</th>
-                            <th>Expert invitation</th>
+                            <th>Authority</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,9 +114,7 @@
                                 <td>{{user["username"]}}</td>
                                 <td>{{user["title"]}} {{user["firstname"]}} {{user["lastname"]}}</td>
                                 <td>Computer Science</td>
-                                <td>{{user["uploading"]}}</td>
-                                <td>{{user["question"]}}</td>
-                                <td>{{user["invitation"]}}</td>
+                                <td>{{authorities[user["permission"]]}}</td>
                             </tr>
                         {% endfor %}
 

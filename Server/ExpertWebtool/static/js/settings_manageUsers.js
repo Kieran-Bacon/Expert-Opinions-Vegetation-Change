@@ -11,6 +11,7 @@ function inviteUser(){
     lastname = $("#invite_lastname").val();
     organisation = $("#invite_organisation").val();
     email = $("#invite_email").val();
+    permission = $("#invite_permission option:selected").val();
 
     if(email == ""){
         // Inform the user they have not entered the e-mail address yet
@@ -24,18 +25,18 @@ function inviteUser(){
     }
 
     // Send address to the server
-	$.ajax({
-		"url": "/settings/invite_user",
-		"type": "POST",
-		"contentType": "application/x-www-form-urlencoded",
-		"data": {"title":title,"firstname":firstname,"lastname":lastname,"organisation":organisation,"email":email},
-		"success": function(data, status){
+    $.ajax({
+        "url": "/settings/invite_user",
+        "type": "POST",
+        "contentType": "application/x-www-form-urlencoded",
+        "data": {"title":title,"firstname":firstname,"lastname":lastname,"organisation":organisation,"email":email, "permission":permission},
+        "success": function(data, status){
 
-            title = $("#invite_title").val("");
-            firstname = $("#invite_firstname").val("");
-            lastname = $("#invite_lastname").val("");
-            organisation = $("#invite_organisation").val("");
-            email = $("#invite_email").val("");
+            $("#invite_title").val("");
+            $("#invite_firstname").val("");
+            $("#invite_lastname").val("");
+            $("#invite_organisation").val("");
+            $("#invite_email").val("");
 
             new PNotify({
                 title: 'User invite sent!',
@@ -52,6 +53,6 @@ function inviteUser(){
                 styling: 'fontawesome'
             });
         }
-	});
+    });
 
 };

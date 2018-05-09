@@ -9,7 +9,7 @@ TEMPSTORAGE = os.path.join(ROOT, "temp") + "/"
 CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
 TEMPLATES = os.path.join(ROOT,"templates") + "/"
 
-from . import Process
+from . import Processes
 from .DatabaseHandler import DatabaseHandler
 
 def main(global_config, **settings):
@@ -35,6 +35,8 @@ def main(global_config, **settings):
     config.add_route('login', '/login.html')
     config.add_route('loggingIn','/login')
     config.add_route('logout', '/logout')
+    config.add_route('lock', '/lock')
+    config.add_route('unlock', '/unlock')
     config.add_route('createQuestion', '/createQuestion')
     config.add_route('deleteQuestion', '/deleteQuestion')
 
@@ -63,19 +65,19 @@ def main(global_config, **settings):
     config.add_route('inviteUser', '/settings/invite_user')
 
     # Link views
-    config.scan(".General")    # General server functions
+    config.scan(".Authentication")  # Handles authentication functionality
     config.scan(".Dashboard")  # Handles landing pages
     config.scan(".Training")   # Handles the training interactions
     config.scan(".Question")   # Handlers for question manipulation
     config.scan(".Evaluation") # Handles the prediction aspects of the tool
     config.scan(".Settings")   # Contains webtool settings functions
+    config.scan(".Upload")
 
     # Load database information
     DatabaseHandler.load()
 
     # Begin supporting processes
-    Process.GarbageCollector().start()
-    #Process.Backup().start()
+    Processes.run()
 
     # Return the WSGI application object
     return config.make_wsgi_app()

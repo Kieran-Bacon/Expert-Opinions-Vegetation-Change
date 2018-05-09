@@ -1,24 +1,9 @@
-import time, threading, os, zipfile
-from datetime import datetime, timedelta
+import os, time, threading, zipfile
 
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
-from . import ROOT
-from .Helper import HiddenPages
-
-class GarbageCollector(threading.Thread):
-	""" Remove hidden pages when they time out """
-
-	def run(self):
-		while True:
-			now = datetime.now()
-			invalidAddress = []
-			for address, genTime in HiddenPages.all():
-				if genTime < now:
-					invalidAddress.append(address)
-				[HiddenPages.remove(addr) for addr in invalidAddress]
-				time.sleep(60*60) # Sleep for an hour
+from ExpertWebtool import ROOT
 
 class Backup(threading.Thread):
 	""" Move site information into a long term versioning solution """
