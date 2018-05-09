@@ -4,8 +4,12 @@ from os.path import abspath
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
 
+import ExpertRep
+
 ROOT = os.path.dirname(os.path.realpath(__file__))
 TEMPSTORAGE = os.path.join(ROOT, "temp") + "/"
+DATASTORAGE = os.path.join(ROOT, "data") + "/"
+EXPERTSTORAGE = os.path.join(ROOT, "data", "ExpertRep") + "/"
 CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
 TEMPLATES = os.path.join(ROOT,"templates") + "/"
 
@@ -72,6 +76,9 @@ def main(global_config, **settings):
     config.scan(".Evaluation") # Handles the prediction aspects of the tool
     config.scan(".Settings")   # Contains webtool settings functions
     config.scan(".Upload")
+
+    # Set Expert Rep location
+    ExpertRep.savedir(EXPERTSTORAGE)
 
     # Load database information
     DatabaseHandler.load()

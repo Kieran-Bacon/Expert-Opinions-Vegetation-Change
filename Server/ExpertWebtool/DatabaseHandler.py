@@ -61,8 +61,7 @@ class DatabaseHandler:
         database.commit()
         database.close()
 
-        print("Database has been constructed.")
-        print("\tAdmin password :: {}".format(password))
+        print("Database has been constructed. Admin account :: admin - {}".format(password))
 
     @classmethod
     def load(cls) -> None:

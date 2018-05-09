@@ -11,11 +11,18 @@ from ExpertRep.abstract.ModelAPI import MachineLearningModel
 from ExpertRep.registry.model_registry import Registry
 import ExpertRep.machine_learning_models  # pylint disable=unused-import
 
+
+
 # This previous line is required for the registry.
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
-_VEG_ML_DIR = "./ExpertWebtool/data/ExpertRep"
+_veg_ml_dir = "./"
 _MODEL_REGISTRY = "model_registry.nlsv"
+
+def savedir(location: str) -> None:
+    """ Set the location where the ML models to be saved """
+    os.makedirs(location, exist_ok=True)
+    _veg_ml_dir = location
 
 _LOG = logging.getLogger(__name__)
 
@@ -25,7 +32,7 @@ class Backend(VegetationMachineLearningAPI):
     MODEL_TYPE_TO_CLASS = Registry()
 
     def __init__(self):
-        self.registry_file = LockedFile(os.path.join(_VEG_ML_DIR, _MODEL_REGISTRY), is_binary=False)
+        self.registry_file = LockedFile(os.path.join(_veg_ml_dir, _MODEL_REGISTRY), is_binary=False)
         try:
             self.models_that_exist = self.registry_file.read().split()
         except FileNotFoundError:
@@ -46,13 +53,13 @@ class Backend(VegetationMachineLearningAPI):
     def _save_model(self, *, model_id: str):
         if model_id not in self.open_models:
             return  # why would we save a model that isn't open and therefore hasn't been modified
-        file_name = os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id))
+        file_name = os.path.join(_veg_ml_dir, _MODEL_FILE_NAME.format(model_id))
         locked_file = LockedFile(filename=file_name, is_binary=True)
         serialised_model = self.open_models[model_id].serialize()
         locked_file.write(serialised_model)
 
     def _load_model(self, *, model_id: str):
-        file_name = os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id))
+        file_name = os.path.join(_veg_ml_dir, _MODEL_FILE_NAME.format(model_id))
         locked_file = LockedFile(filename=file_name, is_binary=True)
         serialised_model = locked_file.read()
         self.open_models[model_id] = MachineLearningModel.deserialize(serialised_model)
@@ -108,7 +115,7 @@ class Backend(VegetationMachineLearningAPI):
         self.models_that_exist.remove(model_id)
 
         self.registry_file.read_and_write(remove_from_registry)
-        os.remove(os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id)))
+        os.remove(os.path.join(_veg_ml_dir, _MODEL_FILE_NAME.format(model_id)))
 
     def partial_fit(self, *, model_id: str, data: list, targets: list) -> ModelOutputs:
         """
