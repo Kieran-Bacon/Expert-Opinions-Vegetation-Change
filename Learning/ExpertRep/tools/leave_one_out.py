@@ -1,8 +1,8 @@
 """
 Tools required to perform leave one out cross validation to achieve accurate approximations of evaluation metrics.
 """
-import numpy as np
 import logging
+import numpy as np
 
 _LOG = logging.getLogger(__name__)
 

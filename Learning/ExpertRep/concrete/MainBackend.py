@@ -14,16 +14,14 @@ import ExpertRep.machine_learning_models  # pylint disable=unused-import
 # This previous line is required for the registry.
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
-_VEG_ML_DIR = "./ExpertWebtool/data/ExpertRep"  # TODO (Ben) Not good, but works for now.
+_VEG_ML_DIR = "./ExpertWebtool/data/ExpertRep"
 _MODEL_REGISTRY = "model_registry.nlsv"
 
 _LOG = logging.getLogger(__name__)
 
 
 class Backend(VegetationMachineLearningAPI):
-    """
-    A simple backend implementation for training and evaluating Machine Learning models.
-    """
+    """ A simple backend implementation for training and evaluating Machine Learning models. """
     MODEL_TYPE_TO_CLASS = Registry()
 
     def __init__(self):
@@ -102,6 +100,7 @@ class Backend(VegetationMachineLearningAPI):
         self._check_and_load_if_not_loaded(model_id=model_id)
 
         def remove_from_registry(model_ids: str):
+            """ Removes an item from the local models """
             mid = model_ids.split("\n")
             mid.remove(model_id)
             return "\n".join(mid)
@@ -170,7 +169,7 @@ class Backend(VegetationMachineLearningAPI):
         if not self._check_and_load_if_not_loaded(model_id=model_id):
             raise ModelDoesNotExistException("The model with id: {} does not exist!!".format(model_id))
 
-        raise NotImplemented("This functionality is currently not implemented")
+        return self.open_models[model_id].model_info()
 
     def close_model(self, *, model_id: str) -> None:
         """
@@ -186,6 +185,7 @@ class Backend(VegetationMachineLearningAPI):
 
     def fit_unsupervised(self, *, model_id: str, data: list) -> None:
         """
+        # TODO(BEN)
         Raises:
             ModelDoesNotExistException
         """

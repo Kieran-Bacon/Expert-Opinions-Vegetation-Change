@@ -7,7 +7,9 @@ from ExpertRep import ClimateModelOutput
 from ExpertRep import ExpertModelAPI
 from ExpertRep.abstract.ClimateEvalAPI import ModelOutputs
 from ExpertRep.abstract.ClimateEvalAPI import ModelDoesNotExistException
+from ExpertRep.abstract.ModelAPI import MachineLearningModel
 from ExpertRep.tests.constants import TEST_NC
+from ExpertRep.registry.model_registry import Registry
 
 
 def permute_cmo(model: ClimateModelOutput):
@@ -16,7 +18,7 @@ def permute_cmo(model: ClimateModelOutput):
     return model
 
 
-class TestAPI(unittest.TestCase):
+class TestAPIRealModel(unittest.TestCase):
     def test_initialise_create_and_train(self):
         model = ExpertModelAPI()
         model_id = model.create_model(model_type="KNN_classify")
@@ -87,6 +89,38 @@ class TestAPI(unittest.TestCase):
         prediction = model.predict(model_id=model_id, data=train)[0]
         self.assertIsInstance(prediction, float)
 
+@Registry.register_model("MockModel")
+class MockModel(MachineLearningModel):
+    def __init__(self, config):
+        self._mock_partial_fit_buffer = [list(), list()]
+
+    def fit_unsupervised(self, data: list):
+        assert type(data) == list
+
+    def partial_fit(self, data: list, targets: list, *args, **kwargs):
+        assert type(data) == list
+        assert type(targets) == list
+        return ModelOutputs()
+
+    def fit(self, data: list, targets: list, *args, **kwargs):
+        assert type(data) == list
+        assert type(targets) == list
+
+    def evaluate_and_fit(self, data: list, targets: list, *args, **kwargs):
+        assert type(data) == list
+        assert type(targets) == list
+
+    def predict(self, data: list) -> list:
+        assert type(data) == list
+        return [0]*len(data)
+
+    def score(self, test_data: list, test_targets: list) -> ModelOutputs:
+        assert type(test_data) == list
+        assert type(test_targets) == list
+        return ModelOutputs()
+
+    def model_info(self):
+        return None
 
 if __name__ == '__main__':
     unittest.main()

@@ -11,7 +11,7 @@ from ExpertRep.tools.kml_gen import dict_to_kml
 
 
 class NetCDFFile(ModelFile):
-    def __init__(self, netcdf_file: str, initialise=True):
+    def __init__(self, netcdf_file: str, initialise: bool = True):
         super(NetCDFFile, self).__init__(netcdf_file=netcdf_file)
         if initialise:
             dataset = Dataset(netcdf_file, "r", format="NETCDF4")
@@ -25,7 +25,7 @@ class NetCDFFile(ModelFile):
             self.lon = None
         self.sparse = None
 
-    def get_numpy_arrays(self, layer: int = -1, resize_to: tuple = None, remove_nan=True) -> np.array:
+    def get_numpy_arrays(self, layer: int = -1, resize_to: tuple = None, remove_nan: bool = True) -> np.array:
         if resize_to is not None:
             raise NotImplementedError("Not yet implemented")
         if layer == -1:
@@ -44,14 +44,13 @@ class NetCDFFile(ModelFile):
         raise NotImplementedError("Not yet implemented")
 
     def get_kml(self, layer_id: int) -> str:
-        if True: #TODO(BEN) WTF this caching thing is broken. shuld be self.sparse is None
-            self.sparse = [dict() for _ in range(self.numpy_arrays.shape[0])]
-            with warnings.catch_warnings():
-                # The warning produced by undefined behaviour on self.numpy_arrays > 1e-5
-                # for NAN values is dealt with by the previous clause.
-                warnings.filterwarnings("ignore", category=RuntimeWarning)
+        self.sparse = [dict() for _ in range(self.numpy_arrays.shape[0])]
+        with warnings.catch_warnings():
+            # The warning produced by undefined behaviour on self.numpy_arrays > 1e-5
+            # for NAN values is dealt with by the previous clause.
+            warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-                vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
+            vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
             for layer, i, j in zip(*vals):
                 self.sparse[layer][(self.lat[i], self.lon[j])] = self.numpy_arrays[layer, i, j]
         return list(map(dict_to_kml, self.sparse))[layer_id]

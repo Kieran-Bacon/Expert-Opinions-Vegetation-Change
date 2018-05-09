@@ -119,11 +119,13 @@ class ModelOutputs(metaclass=ABCMeta):
     """
     pass
 
+
 class ModelOutputsGeneric(namedtuple("ModelOutputsClassify", ["accuracy", "precision", "L1_loss"]), ModelOutputs):
     """
     Model Outputs for classification
     """
     pass
+
 
 class ModelOutputsClassify(namedtuple("ModelOutputsClassify", ["accuracy", "precision"]), ModelOutputs):
     """
@@ -143,11 +145,14 @@ class ModelInfo(namedtuple("ModelInfo", ["model_type", "model_outputs_from_last_
     """
     Model Information class.
     """
-    # TODO(Ben) Requires modification pending discussion with front end devs.
     pass
 
 
 class VegetationMachineLearningAPI(metaclass=ABCMeta):
+    """
+    An abstract class for the main API for interacting with the rest of this system
+    """
+
     @abstractmethod
     def create_model(self, *, model_type: ModelType, config: dict = None) -> str:
         """

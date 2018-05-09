@@ -1,3 +1,7 @@
+"""
+This file contains the interface and low level functionality of all machine learning model implementations,
+higher level abstractions are available, see SKBase.
+"""
 import logging
 
 from abc import ABCMeta, abstractmethod
@@ -15,7 +19,7 @@ class MachineLearningModel(metaclass=ABCMeta):
     The base class of any machine learning model to be used with this system.
     """
 
-    def __init__(self):
+    def __init__(self, config=None):
         self._mock_partial_fit_buffer = [list(), list()]
 
     def fit_unsupervised(self, data: list):
@@ -88,24 +92,25 @@ class MachineLearningModel(metaclass=ABCMeta):
                 self._mock_partial_fit_buffer[0].append(d)
                 self._mock_partial_fit_buffer[1].append(t)
 
-#        self._mock_partial_fit_buffer[0] += data
-#        self._mock_partial_fit_buffer[1] += targets
         return self._mock_partial_fit_buffer
 
     @property
     @abstractmethod
     def model_info(self) -> ModelInfo:
         """
+        Returns info about the model int he form of a ModelInfo object.
         """
 
     @abstractmethod
     def predict(self, data: list) -> list:
         """
+        Returns predicted targets for the data.
         """
 
     @abstractmethod
     def score(self, test_data: list, test_targets: list) -> ModelOutputs:
         """
+        Returns the ModelOutputs object populated with the metric results of the algorithm.
         """
 
     def serialize(self) -> bytes:
@@ -116,7 +121,6 @@ class MachineLearningModel(metaclass=ABCMeta):
             the current model in bytes form.
 
         """
-        # TODO (Ben) Add a registry system that allows models to define their own serialization mechanism??
         return pkl.dumps(self)
 
     @classmethod
@@ -132,3 +136,8 @@ class MachineLearningModel(metaclass=ABCMeta):
 
         """
         return pkl.loads(serialized)
+
+    @classmethod
+    def desc(cls) -> str:
+        """Gets a description of the model, or by default its class name."""
+        return cls.__name__

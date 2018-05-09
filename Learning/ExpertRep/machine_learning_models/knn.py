@@ -12,14 +12,13 @@ from ExpertRep.tools.skbase_model import SKBase
 
 @Registry.register_model("KNN_classify")
 class KNNClassify(SKBase):
-    """
-    A KNN classification implementation.
-    """
+    """ A KNN classification implementation.  """
 
     def __init__(self, config):
         super().__init__(KNeighborsClassifier(n_neighbors=config.get("k", 2)))
 
-    def __str__():
+    @classmethod
+    def desc(cls):
         return "KNN classifier"
 
     @property
@@ -27,10 +26,13 @@ class KNNClassify(SKBase):
         """ See superclass docstring """
         return ModelInfo(ModelType.KNN, None)
 
+
 @Registry.register_model("KNN_classify_binary")
 class KNNClassifyBinary(KNNClassify):
-    
-    def __str__():
+    """ A binary bucketed KNN """
+
+    @classmethod
+    def desc(cls):
         return "Binary KNN"
 
     def num_buckets(self):
@@ -46,7 +48,8 @@ class KNNRegress(SKBase):
     def __init__(self, config):
         super().__init__(KNeighborsRegressor(n_neighbors=config.get("k", 2)))
 
-    def __str__():
+    @classmethod
+    def desc(cls):
         return "KNN regressor"
 
     @property
@@ -64,7 +67,8 @@ class BinaryKNNWithPCA(SemiSupervisedModel):
     def __init__(self, config):
         super().__init__(supervised=KNNClassifyBinary, unsupervised=PCA, config=config)
 
-    def __str__():
+    @classmethod
+    def desc(cls):
         return "Binary KNN with PCA"
 
 
@@ -77,5 +81,6 @@ class KNNWithPCA(SemiSupervisedModel):
     def __init__(self, config):
         super().__init__(supervised=KNNRegress, unsupervised=PCA, config=config)
 
-    def __str__():
+    @classmethod
+    def desc(cls):
         return "KNN with principal component analysis"

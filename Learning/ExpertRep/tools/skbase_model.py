@@ -1,15 +1,15 @@
 """
 Contains a nice wrapper for plug and play use of SKlearn Models with the ClimateLearning API.
 """
+import logging
+
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
-import logging
 
-from sklearn.base import is_classifier, is_regressor
+from sklearn.base import is_classifier
 
 from ExpertRep.abstract.ModelAPI import MachineLearningModel
-from sklearn.metrics import precision_score as calculate_precision
 from ExpertRep.abstract.ClimateEvalAPI import ModelOutputsGeneric
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,9 +38,11 @@ class SKBase(MachineLearningModel, metaclass=ABCMeta):
 
     @abstractmethod
     def model_info(self):
-        """ """
+        """ get model info """
 
-    def num_buckets(self):
+    @staticmethod
+    def num_buckets():
+        """ The number of buckets to bucket into """
         return 6
 
     def predict(self, data: list) -> list:
