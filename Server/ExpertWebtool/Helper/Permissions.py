@@ -9,7 +9,7 @@ AUTHORITY = {
     5: "Admin"
 }
 
-def permissions(request, authority = 0) -> None:
+def permissions(request, authority = 0, loggedOn = False) -> None:
     """
     Validate the users request redirecting them if necessary. Handle the locking mechanism and
     record intended distination for login 
@@ -24,7 +24,7 @@ def permissions(request, authority = 0) -> None:
 
     if status is None:
         # User is not logged in, save intended destinate for redirect after login
-        if not authority: return  # No authority needed, allow access
+        if not loggedOn and not authority: return  # No authority needed, allow access
         request.session["intended_route"] = request.path
         raise exc.HTTPFound(request.route_url("login"))
 

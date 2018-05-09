@@ -1,0 +1,2 @@
+CREATE TABLE questions (qid INTEGER PRIMARY KEY,
+                        text TEXT)

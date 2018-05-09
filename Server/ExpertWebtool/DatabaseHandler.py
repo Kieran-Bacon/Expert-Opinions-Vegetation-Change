@@ -1,133 +1,183 @@
+import uuid
 from os import listdir
-from os.path import abspath, isfile, join
+from os.path import abspath, exists, isfile, join
 import sqlite3
 
 if __name__ == "DatabaseHandler":
     import os
+    import Helper
     ROOT = os.path.dirname(os.path.realpath(__file__))
 else:
     from . import ROOT
+    from . import Helper
 
 class QueryError(Exception):
-	"""Exception when attempting the use a query incorrectly"""
-	pass
+    """Exception when attempting the use a query incorrectly"""
+    pass
 
 class DatabaseHandler:
 
-	_DatabaseLocation = join(ROOT,"data","site.db")
-	_QueryLocation = join(ROOT,"queries") + "/"
-	_SQLStore = {}
+    _DatabaseLocation = join(ROOT,"data","site.db")
+    _TableDefinitions = join(ROOT, "SQL", "tables") + "/"
+    _QueryLocation = join(ROOT,"SQL", "queries") + "/"
+    _SQLStore = {}
 
-	def load() -> None:
-		"""
-		Load in sql query information into the static store.
+    @classmethod
+    def build(cls, rebuild=False):
+        """
+        Ensure the construction of the database by checking the database location.
+        Build the database from scratch if not found
 
-		Returns:
-			None
-		"""
-		
-		for sqlFilename in listdir(DatabaseHandler._QueryLocation):
+        Params:
+            rebuild - Toggle to rebuild the site if found
+        """
+        
+        if exists(cls._DatabaseLocation) and not rebuild: return
 
-			SQLPath = join(DatabaseHandler._QueryLocation, sqlFilename)
+        database = sqlite3.connect(join(ROOT,"data","site.db"))
+        cursor = database.cursor()
 
-			# Unrecognised item found
-			if not isfile(SQLPath): 
-				raise ValueError("Non sql file found in location:" + SQLPath)
+        if exists(cls._DatabaseLocation) and rebuild:
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+            for table in tables:
+                name = table[0]
+                cursor.execute("DROP TABLE {}".format(name))
 
-			# Read in query content
-			with open(SQLPath) as fileHandler:
-				DatabaseHandler._SQLStore[sqlFilename] = fileHandler.read()
+        for table in listdir(cls._TableDefinitions):
+            with open(join(cls._TableDefinitions, table)) as filehandler:
+                cursor.execute(filehandler.read())
 
-	def executeOne(queryTitle: str, queryVariables: list):
-		"""
-		Returns the first row from the execution of the query
-		"""
-		# Run the command
-		rows = DatabaseHandler.execute(queryTitle, queryVariables)
+        # Create admin account
+        password = uuid.uuid4().hex
+        hashed = Helper.hashPassword(password)
+        cursor.execute("INSERT INTO users VALUES\
+            ('admin','null',?,?,5,'','Admin','User','','/imgs/avatars/avatar-ninja.png', 'KNN_regress')", hashed)
 
-		# Validate the response
-		if len(rows) == 0: raise QueryError("No rows returned")
+        # TODO - REMOVE
+        hashed = Helper.hashPassword("admin1")
+        cursor.execute("INSERT INTO users VALUES ('bammins','kieran.bacon.working@gmail.com', ?, ?, 5,'Mr', 'Kieran', 'Bacon', 'University of Exeter', '/imgs/avatars/avatar-ninja.png', 'KNN_regress')", hashed)
 
-		return rows[0]
+        database.commit()
+        database.close()
 
-	def execute(queryTitle: str, queryVariables: list):
-		"""
-		Locates and executes the query content that is stored under the query title.
+        print("Database has been constructed.")
+        print("\tAdmin password :: {}".format(password))
 
-		Params:
-			queryTitle - The name of the query, the key to the _SQLStore
-			queryVariables - Values that are to be entered into the query before execution
+    @classmethod
+    def load(cls) -> None:
+        """
+        Load in sql query information into the static store.
 
-		Returns:
-			sqlite3.Row - A collection of row objects from the database, Zero or more rows
-		"""
-		return DatabaseHandler.execute_literal(DatabaseHandler._SQLStore[queryTitle], queryVariables)
+        Returns:
+            None
+        """
 
-	def execute_literal(queryContent: str, queryVariables: list):
-		"""
-		Runs the query content provided against the query variables. Acts as a convience function
-		such that one can write sql in place for speed.
+        # Ensure that the database has been constructed
+        cls.build()
+        
+        for sqlFilename in listdir(cls._QueryLocation):
 
-		Params:
-			queryContent - The SQL command to be run
-			queryVariables - List of variables to dynamically change the sql command
+            SQLPath = join(cls._QueryLocation, sqlFilename)
 
-		Returns:
-			sqlite3.Row - A collection of row objects
-		"""
+            # Unrecognised item found
+            if not isfile(SQLPath): 
+                raise ValueError("Non sql file found in location:" + SQLPath)
 
-		# Open connection to the database
-		database = sqlite3.connect(DatabaseHandler._DatabaseLocation)
-		database.row_factory = sqlite3.Row
-		cursor = database.cursor()
+            # Read in query content
+            with open(SQLPath) as fileHandler:
+                cls._SQLStore[sqlFilename] = fileHandler.read()
 
-		# Execute the query command and retrieve response from the database
-		cursor.execute(queryContent, queryVariables)
-		response = cursor.fetchall()
+    def executeOne(queryTitle: str, queryVariables: list):
+        """
+        Returns the first row from the execution of the query
+        """
+        # Run the command
+        rows = DatabaseHandler.execute(queryTitle, queryVariables)
 
-		# Commit any changes made by the action and close connection
-		database.commit()
-		database.close()
-		return response
+        # Validate the response
+        if len(rows) == 0: raise QueryError("No rows returned")
 
-	def executeID(queryTitle: str, queryVariables: list) -> int:
-		"""
-		Executes SQL command and return the ID of the last row that was accessed or generated.
-		Used to retrieve the Primary key of a new inserted row element
+        return rows[0]
 
-		Params:
-			queryTitle - The name of the query, the key to the _SQLStore
-			queryVariables - Values that are to be entered into the query before execution
+    def execute(queryTitle: str, queryVariables: list):
+        """
+        Locates and executes the query content that is stored under the query title.
 
-		Returns:
-			int - Row id of the last accessed row (the primary key for the row)
-		"""
+        Params:
+            queryTitle - The name of the query, the key to the _SQLStore
+            queryVariables - Values that are to be entered into the query before execution
 
-		return DatabaseHandler.execute_literalID(DatabaseHandler._SQLStore[queryTitle], queryVariables)
+        Returns:
+            sqlite3.Row - A collection of row objects from the database, Zero or more rows
+        """
+        return DatabaseHandler.execute_literal(DatabaseHandler._SQLStore[queryTitle], queryVariables)
 
-	def execute_literalID(queryContent: str, queryVariables: list):
-		"""
-		Executes SQL command and return the ID of the last row that was accessed or generated.
-		Used to retrieve the Primary key of a new inserted row element
+    def execute_literal(queryContent: str, queryVariables: list):
+        """
+        Runs the query content provided against the query variables. Acts as a convience function
+        such that one can write sql in place for speed.
 
-		Params:
-			queryContent - The SQL command to be run
-			queryVariables - Values that are to be entered into the query before execution
+        Params:
+            queryContent - The SQL command to be run
+            queryVariables - List of variables to dynamically change the sql command
 
-		Returns:
-			int - Row id of the last accessed row (the primary key for the row)
-		"""
+        Returns:
+            sqlite3.Row - A collection of row objects
+        """
 
-		# Open connection to the database
-		database = sqlite3.connect(DatabaseHandler._DatabaseLocation)
-		database.row_factory = sqlite3.Row
-		cursor = database.cursor()
+        # Open connection to the database
+        database = sqlite3.connect(DatabaseHandler._DatabaseLocation)
+        database.row_factory = sqlite3.Row
+        cursor = database.cursor()
 
-		# Execute the query command and retrieve response from the database
-		cursor.execute(queryContent, queryVariables)
-		rowID = cursor.lastrowid
+        # Execute the query command and retrieve response from the database
+        cursor.execute(queryContent, queryVariables)
+        response = cursor.fetchall()
 
-		# Commit any changes made by the action and close connection
-		database.commit()
-		database.close()
-		return rowID
+        # Commit any changes made by the action and close connection
+        database.commit()
+        database.close()
+        return response
+
+    def executeID(queryTitle: str, queryVariables: list) -> int:
+        """
+        Executes SQL command and return the ID of the last row that was accessed or generated.
+        Used to retrieve the Primary key of a new inserted row element
+
+        Params:
+            queryTitle - The name of the query, the key to the _SQLStore
+            queryVariables - Values that are to be entered into the query before execution
+
+        Returns:
+            int - Row id of the last accessed row (the primary key for the row)
+        """
+
+        return DatabaseHandler.execute_literalID(DatabaseHandler._SQLStore[queryTitle], queryVariables)
+
+    def execute_literalID(queryContent: str, queryVariables: list):
+        """
+        Executes SQL command and return the ID of the last row that was accessed or generated.
+        Used to retrieve the Primary key of a new inserted row element
+
+        Params:
+            queryContent - The SQL command to be run
+            queryVariables - Values that are to be entered into the query before execution
+
+        Returns:
+            int - Row id of the last accessed row (the primary key for the row)
+        """
+
+        # Open connection to the database
+        database = sqlite3.connect(DatabaseHandler._DatabaseLocation)
+        database.row_factory = sqlite3.Row
+        cursor = database.cursor()
+
+        # Execute the query command and retrieve response from the database
+        cursor.execute(queryContent, queryVariables)
+        rowID = cursor.lastrowid
+
+        # Commit any changes made by the action and close connection
+        database.commit()
+        database.close()
+        return rowID

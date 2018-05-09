@@ -18,7 +18,7 @@ from ExpertRep import ExpertModelAPI, ClimateModelOutput
 
 @view_config(route_name='personalSettings', renderer="templates/settings_personal.html")
 def personalSettings(request):
-    Helper.permissions(request)
+    Helper.permissions(request, loggedOn=True)
 
     UserModelSpec = db.execute_literal(
         "SELECT modelSpec FROM users WHERE username = ?", [request.session["username"]])[0]["modelSpec"]

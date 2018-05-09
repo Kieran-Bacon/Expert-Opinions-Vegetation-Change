@@ -1,0 +1,5 @@
+CREATE TABLE labels (username TEXT,
+                     qid INT,
+                     cmoid INT,
+                     isTrainedOn INT,
+                     score INT)
