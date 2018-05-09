@@ -64,14 +64,14 @@ class ModelFile:
         """
 
     @abstractmethod
-    def get_kml(self, layer_id: int) -> str:
+    def get_geojson(self, layer_id: int) -> str:
         """
-        Returns a string in KML format containing the information from the netcdf file.
+        Returns a string in GeoJSON format containing the information from the netcdf file.
         Args:
             layer_id: The layer number of which to return
 
         Returns:
-            A string containing the kml file contents
+            A string containing the GeoJSON file contents
         """
 
     @abstractmethod
