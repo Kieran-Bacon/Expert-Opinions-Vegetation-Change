@@ -6,8 +6,11 @@ import smtplib
 from email.message import EmailMessage
 
 import pyramid.httpexceptions as exc
+from os.path import abspath
+TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
+CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/" #TODO(KIERAN) Find out why these wernt importing from __init__
+TEMPLATES = abspath("./ExpertWebtool/templates") + "/"
 
-from . import TEMPSTORAGE, TEMPLATES
 
 # Regular expressions for cross site things
 EMAIL_REGEX = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")

@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:xenial-20180123
 MAINTAINER Kieran Bacon, Ben Townsend
 
 ENV DEBIAN_FRONTEND noninteractive

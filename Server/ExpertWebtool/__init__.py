@@ -1,5 +1,7 @@
 import os
-import atexit
+
+from . import Process as ProcessManager
+
 from multiprocessing import Process
 from os.path import abspath
 
@@ -10,7 +12,6 @@ TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
 CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
 TEMPLATES = abspath("./ExpertWebtool/templates") + "/"
 
-from . import Process
 from .DatabaseHandler import DatabaseHandler
 
 def main(global_config, **settings):
@@ -72,13 +73,12 @@ def main(global_config, **settings):
     DatabaseHandler.load()
 
     # Begin supporting processes
-    Process.GarbageCollector().start()
+    ProcessManager.GarbageCollector().start()
     cwd = os.getcwd()
     print(cwd)
-    p = Process(target=Process.Backup, args())
+    p = Process(target=ProcessManager.Backup.run)
+    p.daemon = True
     p.start()
-    atexit.register(p.kill())
-
 
     # Return the WSGI application object
     return config.make_wsgi_app()

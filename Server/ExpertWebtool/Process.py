@@ -61,10 +61,13 @@ class Backup(threading.Thread):
 
 	
 	
-	
-	def run(self):
+	@staticmethod
+	def run():
+
+		print("Trying to auth")
 
 		drive = GoogleDrive(GoogleAuth())
+		print("Auth complete")
 
 
 
@@ -74,15 +77,15 @@ class Backup(threading.Thread):
 			now = datetime.now()
 			date = now.strftime("%Y-%m-%d")
 			zipdir('/root/code',date+'.zip')
-
+			print("Zip complete")
 			file1 = drive.CreateFile()
 			file1.SetContentFile(date+'.zip')
 			file1['title'] = date+'.zip'
 
 
-
+			print("File Prepared")
 			file1.Upload()
-
+			print("File Uploaded")
 			print('Created file %s with mimeType %s' % (file1['title'],
 			file1['mimeType']))
 			time.sleep(60*60*24)
