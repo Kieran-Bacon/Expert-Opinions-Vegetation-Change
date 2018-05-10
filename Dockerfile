@@ -11,11 +11,12 @@ ADD . /root/code
 
 RUN cd /root/code ; \
 python3 Server/setup.py install ; \
-python3 Learning/setup.py install ;\
-cd Server
+python3 Learning/setup.py install ;
 
 ENV PYTHONPATH=/root/code/Learning:/root/code/Server
 ENV PYTHONUNBUFFERED=Truex
 ENV EXPERTLOCATION=/root/code/Server/ExpertWebtool/data/ExpertRep/
 
-CMD ["pserve", "root/code/Webtool.ini"]
+WORKDIR /root/code/Server
+
+CMD ["pserve", "Webtool.ini"]
