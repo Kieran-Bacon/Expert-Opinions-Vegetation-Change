@@ -16,6 +16,9 @@ EXPERTSTORAGE = os.path.join(ROOT, "data", "ExpertRep") + "/"
 CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
 TEMPLATES = os.path.join(ROOT,"templates") + "/"
 
+#Set default machine learning technique
+DEFAULT_TECH = "GBT_regress_PCA"
+
 from . import Processes as ProcessManager
 from .DatabaseHandler import DatabaseHandler
 
@@ -85,9 +88,6 @@ def main(global_config, **settings):
 
     # Begin supporting processes
     ProcessManager.run()
-
-    #Set default machine learning technique
-    DEFAULT_TECH = "GBT_regress_PCA"
 
     # Return the WSGI application object
     return config.make_wsgi_app()
