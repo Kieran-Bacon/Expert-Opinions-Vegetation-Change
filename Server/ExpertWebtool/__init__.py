@@ -1,6 +1,6 @@
 import os
 
-from . import Process as ProcessManager
+
 
 from os.path import abspath
 
@@ -16,6 +16,7 @@ EXPERTSTORAGE = os.path.join(ROOT, "data", "ExpertRep") + "/"
 CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
 TEMPLATES = os.path.join(ROOT,"templates") + "/"
 
+from . import Processes as ProcessManager
 from .DatabaseHandler import DatabaseHandler
 
 def main(global_config, **settings):
