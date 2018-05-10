@@ -15,6 +15,7 @@ class TestModelFiles(unittest.TestCase):
 
     def test_initialise_save_and_load(self):
         f1 = ClimateModelOutput(TEST_NC)
+        print(f1.numpy_arrays.shape)
         f1.save(TEST_FILE)
         f2 = ClimateModelOutput.load(TEST_FILE)
         self.assertEqual(f1, f2)

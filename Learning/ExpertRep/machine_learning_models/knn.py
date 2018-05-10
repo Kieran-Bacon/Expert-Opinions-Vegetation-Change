@@ -15,7 +15,7 @@ class KNNClassify(SKBase):
     """ A KNN classification implementation.  """
 
     def __init__(self, config):
-        super().__init__(KNeighborsClassifier(n_neighbors=config.get("k", 2)))
+        super().__init__(lambda: KNeighborsClassifier(n_neighbors=config.get("k", 2)))
 
     @classmethod
     def desc(cls):
@@ -35,7 +35,8 @@ class KNNClassifyBinary(KNNClassify):
     def desc(cls):
         return "Binary KNN"
 
-    def num_buckets(self):
+    @staticmethod
+    def num_buckets():
         return 2
 
 
@@ -46,7 +47,7 @@ class KNNRegress(SKBase):
     """
 
     def __init__(self, config):
-        super().__init__(KNeighborsRegressor(n_neighbors=config.get("k", 2)))
+        super().__init__(lambda: KNeighborsRegressor(n_neighbors=config.get("k", 2)))
 
     @classmethod
     def desc(cls):

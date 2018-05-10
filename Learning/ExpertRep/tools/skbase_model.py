@@ -23,7 +23,7 @@ class SKBase(MachineLearningModel, metaclass=ABCMeta):
 
     def __init__(self, model):
         super().__init__()
-        self.model = model
+        self.model = model()
         self.buckets = None
 
     def fit(self, data: list, targets: list, *args, **kwargs):
