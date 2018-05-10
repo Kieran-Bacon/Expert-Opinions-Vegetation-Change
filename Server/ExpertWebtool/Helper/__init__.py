@@ -11,11 +11,6 @@ from ExpertWebtool.DatabaseHandler import DatabaseHandler as db
 # Regular expressions for cross site things
 EMAIL_REGEX = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
-class Warehouse:
-    # TODO :: Make this a thing 
-    vault = {}
-    pass
-
 def pageVariables(request, additional=None) -> dict:
 
     alerts = request.session.get("alerts", [])
@@ -32,21 +27,26 @@ def hashPassword(pwd, salt=None):
     return salt, hashedPassword
 
 def recordModelMetrics(identifier: str, metrics = None) -> None:
-    """ Handle the model output that comes from the expert repr """
+	""" Handle the model output that comes from the expert repr """
 
-    try:
-        precision = metrics.precision
-    except:
-        precision = None
+	try:
+		precision = metrics.precision
+	except:
+		precision = None
 
-    try:
-        accuracy = metrics.accuracy
-    except:
-        accuracy = None
+	try:
+		accuracy = metrics.accuracy
+	except:
+		accuracy = None
 
-    try:
-        R2 = metrics.R2
-    except:
-        R2 = None
+	try:
+		R2 = metrics.R2
+	except:
+		R2 = None
 
-    db.execute("eModel_recordMetrics", [precision, accuracy, R2, identifier]) # Record the model metrics
+	try:
+		L1 = metrics.L1_loss
+	except:
+		L1 = None
+
+	db.execute("eModel_recordMetrics", [precision, accuracy, R2, L1, identifier]) # Record the model metrics
