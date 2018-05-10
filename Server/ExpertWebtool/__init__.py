@@ -86,5 +86,8 @@ def main(global_config, **settings):
     # Begin supporting processes
     ProcessManager.run()
 
+    #Set default machine learning technique
+    DEFAULT_TECH = "GBT_regress_PCA"
+
     # Return the WSGI application object
     return config.make_wsgi_app()

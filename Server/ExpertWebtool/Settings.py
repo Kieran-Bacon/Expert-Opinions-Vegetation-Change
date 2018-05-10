@@ -11,6 +11,7 @@ from . import TEMPLATES, CMOSTORAGE
 from . import Helper
 from .DatabaseHandler import DatabaseHandler as db
 from .Training import ProcessRunner, fit_model_and_write_db
+from . import DEFAULT_TECH
 
 import ExpertRep
 from ExpertRep import ExpertModelAPI, ClimateModelOutput
@@ -94,7 +95,7 @@ def inviteUser(request):
 
     tempUsername = link[-10:]
 
-    db.execute("User_addTemp", [tempUsername, email, None, None, 0, title, firstname, lastname, organisation])
+    db.execute("User_addTemp", [tempUsername, email, None, None, 0, title, firstname, lastname, organisation,DEFAULT_TECH])
     Helper.email("Invitation to Expert Climate model webtool", email, "invite.email",
                  [title, firstname, lastname, link])
 
