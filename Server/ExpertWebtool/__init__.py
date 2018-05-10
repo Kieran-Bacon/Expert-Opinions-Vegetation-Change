@@ -1,4 +1,6 @@
 import os
+import atexit
+from multiprocessing import Process
 from os.path import abspath
 
 from pyramid.config import Configurator
@@ -73,7 +75,9 @@ def main(global_config, **settings):
     Process.GarbageCollector().start()
     cwd = os.getcwd()
     print(cwd)
-    Process.Backup().start()
+    p = Process(target=Process.Backup, args())
+    p.start()
+    atexit.register(p.kill())
 
 
     # Return the WSGI application object
