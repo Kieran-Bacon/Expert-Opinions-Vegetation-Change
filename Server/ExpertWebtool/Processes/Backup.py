@@ -51,4 +51,8 @@ class Backup(threading.Thread):
             # well you should know what this is...
             file1.Upload()
 
+            # Remove local file after upload
+            os.remove(filename)
+
+            # Sleep process
             time.sleep(60*60*24)
