@@ -29,4 +29,4 @@ echo $port
 echo $volume
 
 docker build . -t "$name":latest
-docker run -p "$port":6543 -v \"$volume\":/root/code/Server/ExpertWebtool/data "$name"
+docker run -p "$port":6543 -v "$volume":/root/code/Server/ExpertWebtool/data "$name"

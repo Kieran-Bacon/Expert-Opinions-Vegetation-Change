@@ -1,8 +1,10 @@
 from setuptools import setup
 
 requires = [
+    'google',
     'pyramid',
-    'pyramid_jinja2'
+    'pyramid_jinja2',
+    'pydrive'
 ]
 
 setup(name='ExpertWebtool',
