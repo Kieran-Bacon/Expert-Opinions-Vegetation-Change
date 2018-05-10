@@ -1,5 +1,5 @@
-import os, time, threading, zipfile
-
+import os, time, threading, zipfile, warnings
+import logging
 from datetime import datetime
 
 from pydrive.auth import GoogleAuth
@@ -12,17 +12,10 @@ class Backup(threading.Thread):
 
     @staticmethod
     def run():
-
-        """
-
-        while True:
-            backup_process = "/".join(ROOT.split("/")[:-1]) + "/backup.py"
-            os.system("python3 {}".format(backup_process))
-            time.sleep(60*60*24)
-        """
+        # Hide Google's incorrect requirement error
+        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 
         # Create representation of google drive
-        GoogleAuth.DEFAULT_SETTINGS['client_config_file'] = os.path.join(ROOT,"Processes","client_secrets.json")
         drive = GoogleDrive(GoogleAuth())
 
         def zipdata(filename: str) -> None:
