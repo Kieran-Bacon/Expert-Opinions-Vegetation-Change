@@ -8,13 +8,16 @@ from ExpertWebtool import ROOT
 class Backup(threading.Thread):
 	""" Move site information into a long term versioning solution """
 
-	def run(self):
+	@staticmethod
+	def run():
+
+		"""
 
 		while True:
 			backup_process = "/".join(ROOT.split("/")[:-1]) + "/backup.py"
 			os.system("python3 {}".format(backup_process))
 			time.sleep(60*60*24)
-
+		"""
 
 		# Create representation of google drive
 		drive = GoogleDrive(GoogleAuth())

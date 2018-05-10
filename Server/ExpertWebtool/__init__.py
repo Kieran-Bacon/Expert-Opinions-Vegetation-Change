@@ -1,4 +1,7 @@
 import os
+
+from . import Process as ProcessManager
+
 from os.path import abspath
 
 from pyramid.config import Configurator
@@ -13,7 +16,6 @@ EXPERTSTORAGE = os.path.join(ROOT, "data", "ExpertRep") + "/"
 CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
 TEMPLATES = os.path.join(ROOT,"templates") + "/"
 
-from . import Processes
 from .DatabaseHandler import DatabaseHandler
 
 def main(global_config, **settings):
@@ -81,7 +83,7 @@ def main(global_config, **settings):
     DatabaseHandler.load()
 
     # Begin supporting processes
-    Processes.run()
+    ProcessManager.run()
 
     # Return the WSGI application object
     return config.make_wsgi_app()
