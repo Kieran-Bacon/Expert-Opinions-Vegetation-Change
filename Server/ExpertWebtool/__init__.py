@@ -77,11 +77,9 @@ def main(global_config, **settings):
     config.scan(".Settings")   # Contains webtool settings functions
     config.scan(".Upload")
 
-    # Set Expert Rep location
-    ExpertRep.savedir(EXPERTSTORAGE)
-
     # Load database information
-    DatabaseHandler.load()
+    # TODO remove rebuild
+    DatabaseHandler.load(rebuild=True)
 
     # Begin supporting processes
     Processes.run()

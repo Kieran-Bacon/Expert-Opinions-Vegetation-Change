@@ -17,5 +17,4 @@ cd Server
 ENV PYTHONPATH=/root/code/Learning:/root/code/Server
 ENV PYTHONUNBUFFERED=Truex
 
-VOLUME ["/root/code/Server/ExpertWebtool/data"]
 CMD ["pserve", "root/code/Webtool.ini"]

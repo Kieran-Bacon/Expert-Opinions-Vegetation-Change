@@ -16,13 +16,15 @@ import ExpertRep.machine_learning_models  # pylint disable=unused-import
 # This previous line is required for the registry.
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
-_veg_ml_dir = "./"
-_MODEL_REGISTRY = "model_registry.nlsv"
 
-def savedir(location: str) -> None:
-    """ Set the location where the ML models to be saved """
-    os.makedirs(location, exist_ok=True)
-    _veg_ml_dir = location
+try:
+    _veg_ml_dir = os.environ["EXPERTLOCATION"]
+except:
+    _veg_ml_dir = "~/.ExpertClimateSystem/"
+
+os.makedirs(_veg_ml_dir, exist_ok=True)
+
+_MODEL_REGISTRY = "model_registry.nlsv"
 
 _LOG = logging.getLogger(__name__)
 
