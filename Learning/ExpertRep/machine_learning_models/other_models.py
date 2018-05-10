@@ -11,6 +11,7 @@ from ExpertRep.tools.unsupervised_helper import SemiSupervisedModel
 from ExpertRep.machine_learning_models.unsupervised import PCA, PCANPickle
 from ExpertRep.tools.skbase_model import SKBase
 from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.linear_model import HuberRegressor
 
 
 @Registry.register_model("MLP_regress")
@@ -66,11 +67,11 @@ class RFRegressWithPCA(SemiSupervisedModel):
 @Registry.register_model("GBT_regress")
 class GBTRegress(SKBase):
     """
-    A gradient boosted treest regression implementation.
+    A gradient boosted tress regression implementation.
     """
 
     def __init__(self, config):
-        super().__init__(GradientBoostingRegressor)
+        super().__init__(lambda: GradientBoostingRegressor(loss="lad"))
 
     @property
     def model_info(self) -> ModelInfo:
@@ -135,3 +136,28 @@ class MeanBaseline(SKBase):
 class DummyModelSavePC(SemiSupervisedModel):
     def __init__(self, config):
         super().__init__(supervised=MeanBaseline, unsupervised=PCANPickle, config=config)
+
+
+@Registry.register_model("Huber_regress")
+class HuberRegress(SKBase):
+    """
+    A gradient boosted treest regression implementation.
+    """
+
+    def __init__(self, config):
+        super().__init__(HuberRegressor)
+
+    @property
+    def model_info(self) -> ModelInfo:
+        """ See superclass docstring """
+        return ModelInfo(ModelType.KNN, None)
+
+
+@Registry.register_model("Huber_regress_PCA")
+class HuberRegressWithPCA(SemiSupervisedModel):
+    """
+    A implementation of gradient boosted trees regression with an added PCA feature learning step.
+    """
+
+    def __init__(self, config):
+        super().__init__(supervised=HuberRegress, unsupervised=PCA, config=config)
