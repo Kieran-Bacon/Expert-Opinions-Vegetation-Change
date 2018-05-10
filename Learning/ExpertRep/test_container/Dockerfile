@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:xenial-20180123
 MAINTAINER Cerbo IO <support@cerbo.io>
 
 ENV DEBIAN_FRONTEND noninteractive
