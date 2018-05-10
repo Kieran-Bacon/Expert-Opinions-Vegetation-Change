@@ -64,7 +64,7 @@ class DatabaseHandler:
         print("Database has been constructed. Admin account :: admin - {}".format(password))
 
     @classmethod
-    def load(cls) -> None:
+    def load(cls, rebuild=False) -> None:
         """
         Load in sql query information into the static store.
 
@@ -73,7 +73,7 @@ class DatabaseHandler:
         """
 
         # Ensure that the database has been constructed
-        cls.build()
+        cls.build(rebuild)
         
         for sqlFilename in listdir(cls._QueryLocation):
 

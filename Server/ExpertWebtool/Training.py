@@ -2,12 +2,14 @@ from pyramid.response import Response
 from pyramid.view import view_config
 import pyramid.httpexceptions as exc
 import concurrent.futures
+import os
 import sys
 import random
 import logging
 import atexit
 
-from ExpertRep import ExpertModelAPI, ClimateModelOutput
+from ExpertRep import ExpertModelAPI
+from ExpertRep import ClimateModelOutput
 
 from . import CMOSTORAGE
 from . import Helper

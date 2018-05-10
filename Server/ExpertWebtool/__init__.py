@@ -78,8 +78,7 @@ def main(global_config, **settings):
     config.scan(".Upload")
 
     # Load database information
-    # TODO remove rebuild
-    DatabaseHandler.load(rebuild=True)
+    DatabaseHandler.load()
 
     # Begin supporting processes
     Processes.run()

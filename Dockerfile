@@ -16,5 +16,6 @@ cd Server
 
 ENV PYTHONPATH=/root/code/Learning:/root/code/Server
 ENV PYTHONUNBUFFERED=Truex
+ENV EXPERTLOCATION=/root/code/Server/ExpertWebtool/data/ExpertRep/
 
 CMD ["pserve", "root/code/Webtool.ini"]

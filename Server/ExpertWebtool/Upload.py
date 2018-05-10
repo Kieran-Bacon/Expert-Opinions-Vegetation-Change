@@ -1,8 +1,12 @@
+import os
+
 from pyramid.view import view_config
 import pyramid.httpexceptions as exc
 
-from . import Helper
+from . import Helper, CMOSTORAGE
 from .DatabaseHandler import DatabaseHandler as db
+
+from ExpertRep import ClimateModelOutput
 
 @view_config(route_name="modelUploader", renderer="templates/training_modelUploader.html")
 def modelUploader(request):
@@ -21,6 +25,7 @@ def modelFileUploader(request):
         model = ClimateModelOutput(tempLocation)
     except Exception as e:
         # report the issue when trying to work on climate model output
+        print(str(e))
         raise exc.HTTPServerError(str(e))
     finally:
         # Delete the tempory file

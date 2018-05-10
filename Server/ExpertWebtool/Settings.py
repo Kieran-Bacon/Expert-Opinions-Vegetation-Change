@@ -39,7 +39,7 @@ def updatePersonal(request):
 
     user = db.executeOne("User_Info", [request.session["username"]])
 
-    if True:
+    if True: # TODO
         # Change all the models currently implemented and re train
         expertsModels = db.execute_literal(
             "SELECT * FROM expertModels WHERE username = ?", [user["username"]])

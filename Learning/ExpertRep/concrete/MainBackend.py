@@ -20,6 +20,9 @@ _MODEL_FILE_NAME = "Model_num_{}.vegml"
 try:
     _veg_ml_dir = os.environ["EXPERTLOCATION"]
 except:
+
+    logging.warning("Expert location has not been set, defaulting to home directory."
+    "Set EXPERTLOCATION environment variable.")
     _veg_ml_dir = "~/.ExpertClimateSystem/"
 
 os.makedirs(_veg_ml_dir, exist_ok=True)
