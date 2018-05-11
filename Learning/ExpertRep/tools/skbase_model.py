@@ -11,6 +11,7 @@ from sklearn.base import is_classifier
 
 from ExpertRep.abstract.ModelAPI import MachineLearningModel
 from ExpertRep.abstract.ClimateEvalAPI import ModelOutputsGeneric
+from ExpertRep.abstract import ModelNotTrainedException
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,9 +26,11 @@ class SKBase(MachineLearningModel, metaclass=ABCMeta):
         super().__init__()
         self.model = model()
         self.buckets = None
+        self.fitted = False
 
     def fit(self, data: list, targets: list, *args, **kwargs):
         """ See superclass docstring """
+        self.fitted = True
         data_arrays = self._reshape_to_2d(data)
         if is_classifier(self.model):
             targets = self._bucket_targets(targets, train=True)
@@ -46,6 +49,8 @@ class SKBase(MachineLearningModel, metaclass=ABCMeta):
         return 6
 
     def predict(self, data: list) -> list:
+        if not self.fitted:
+            raise ModelNotTrainedException("Model not fitted, call fit first.")
         """ See superclass docstring """
         data_arrays = self._reshape_to_2d(data)
         model_output = self.model.predict(data_arrays).tolist()
