@@ -176,10 +176,10 @@ function evaluateModels(){
 		"url": "/evaluation",
 		"type": "POST",
 		"contentType": "application/x-www-form-urlencoded",
-		"data": {"experts": expertList},
+		"data": JSON.stringify({"experts": expertList}),
 		"success": function(data, status){
 
-			console.log(data);
+			console.log("uploaded data", data);
 
 			$.each(data.questions, function(i, quest){
 
@@ -261,6 +261,9 @@ function validation(){
 	$.each(switches, function(i,v){
 		if(v.element.id.split("-")[0] == "user" && v.element.checked){
             var id = v.element.id.split("-");
+
+            console.log({"qid": id[3], "user":id[1]});
+
 			expertList.push({"qid": id[3], "user":id[1]});
 			experts++;
 		}
