@@ -11,7 +11,7 @@ from sklearn.base import is_classifier
 
 from ExpertRep.abstract.ModelAPI import MachineLearningModel
 from ExpertRep.abstract.ClimateEvalAPI import ModelOutputsGeneric
-from ExpertRep.abstract import ModelNotTrainedException
+from ExpertRep.abstract.ClimateEvalAPI import ModelNotTrainedException
 
 _LOGGER = logging.getLogger(__name__)
 
