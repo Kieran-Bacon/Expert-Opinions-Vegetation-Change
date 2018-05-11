@@ -89,7 +89,7 @@ def main(global_config, **settings):
     DatabaseHandler.load(rebuild=False)
 
     # Begin supporting processes
-    #ProcessManager.run()
+    ProcessManager.run()
 
     # Return the WSGI application object
     return config.make_wsgi_app()
