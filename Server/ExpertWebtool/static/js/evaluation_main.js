@@ -186,15 +186,15 @@ function evaluateModels(){
 		"type": "POST",
 		"contentType": "application/x-www-form-urlencoded",
 		"data": JSON.stringify({"experts": expertList}),
-		"success": function(data, status){
+		"success": function(quest, status){
 
-			console.log("uploaded data", data);
-
-			$.each(data.questions, function(i, quest){
+			$.each(quest, function(i, data){
+                
+                console.log("BEASDAS",data);
 
 				// Assign the name of the table of results
 				var tableTitle = document.createElement("h4");
-				tableTitle.innerHTML = quest.text;
+				tableTitle.innerHTML = data.text;
 
 				// Create the table object
 				var table = document.createElement("table");
@@ -221,7 +221,7 @@ function evaluateModels(){
 
 				// Generate the body of the table
 				var body = document.createElement("tbody");
-				$.each(quest.models, function(j, model){
+				$.each(data.models, function(j, model){
 
 					var bodyRow = document.createElement("tr");
 					var modelName = document.createElement("td");

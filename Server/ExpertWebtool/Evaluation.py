@@ -8,7 +8,7 @@ from . import TEMPSTORAGE
 from . import Helper
 from .DatabaseHandler import DatabaseHandler as db
 
-from ExpertRep import ExpertModelAPI, ClimateModelOutput
+from ExpertRep import ExpertModelAPI, ClimateModelOutput, ModelNotTrainedException
 
 @view_config(route_name="evaluation", renderer="templates/evaluation_main.html")
 def evaluation(request):
@@ -42,8 +42,6 @@ def evalModels(request):
 
     # Collect information to evaluate
 
-    print(request.json_body)
-
     try:
         data = request.json_body
     except:
@@ -72,26 +70,39 @@ def evalModels(request):
     CMOs = [ClimateModelOutput.load(path) for path in CMOpaths]
 
     # Data type to return to the page
-    data = {"experts": expertNames, "questions": []}
+    data = []
 
     for qid in questions.keys():
 
         questionContents = {"text": db.executeOne("questionName", [qid])["text"], "models": []}
 
         predictions = []
-        for expert in questions[qid]:
+        errored = []
+        for i, expert in enumerate(questions[qid]):
 
             # Collect the experts model identifier
             identifier = db.executeOne("collectEModel", [expert, qid])["identifier"]
 
             # Predict on the CMO's and storage the results
-            predictions.append(ExpertModelAPI().predict(model_id=identifier, data=CMOs))
+            try:
+                predictions.append(ExpertModelAPI().predict(model_id=identifier, data=CMOs))
+            except ModelNotTrainedException:
+                errored.append(i)
 
+
+        for i in errored:
+            del questions[qid][i]
+
+        questionContents["experts"] = [expertNames[u] for u in questions[qid]]
+
+        count = 0
         for i in range(len(CMOs)):
+            count += len(predictions)
             modelInfo = {"name": CMOnames[i], "values": [round(opinion[i]*20,5) for opinion in predictions]}
             questionContents["models"].append(modelInfo)
 
-        data["questions"].append(questionContents)
+        if count != 0:
+            data.append(questionContents)
 
     # Remove uploaded models that have not been evaluated.
     Helper.emptyDirectory(modelDirectory)
