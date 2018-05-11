@@ -31,12 +31,12 @@
 
                         {% for model in models %}
                             <tr>
-                                <td>{{model["qid"]}}</td>
+                                <td>{{questions[model["qid"]]}}</td>
                                 <td>{{model["precision"]}}</td>
                                 <td>{{model["accuracy"]}}</td>
                                 <td>{{model["R2"]}}</td>
                                 <td>{{model["L1"]}}</td>
-                                <td><input id="question-{{model['qid']}}" type="checkbox" class="js-switch js-check-change"/></td>
+                                <td><input id="question-{{model['qid']}}" type="checkbox" class="js-switch js-check-change" {% if model["published"] == 1 %} checked {% endif %}/></td>
                             </tr>
         
                         {% endfor %}

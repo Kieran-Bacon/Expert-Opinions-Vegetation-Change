@@ -35,6 +35,14 @@ function displayExperts(qid){
         "success": function(data, status){
             console.log(data);
 
+            var questionTitle = document.createElement("div");
+            questionTitle.id = qid +"-title";
+            var title = '<div class="col-lg-12"><div><h4>'+data.text+'</h4></div></div>';
+
+            questionTitle.innerHTML = title;
+
+            $("#ExpertContainter").append(questionTitle);
+
             var expert = document.createElement("div");
             expert.id = qid + "-container";
 
@@ -83,6 +91,7 @@ function displayExperts(qid){
 function removeExperts(qid){
 // Remove the experts that for that question
     $("#" + qid + "-container").remove();
+    $("#" + qid +"-title").remove();
 
     var newSwitches = [];
     $.each(switches, function(i,s){

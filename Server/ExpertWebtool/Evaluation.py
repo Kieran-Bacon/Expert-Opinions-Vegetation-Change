@@ -32,9 +32,9 @@ def evalQuestExpert(request):
     expertInfo = db.execute("eval_questExpert",[qid, qid, username])
 
     expertInfo = [dict(row) for row in expertInfo]
-
+    text = db.execute_literal("SELECT text FROM questions WHERE qid = ?", qid)[0]["text"]
     # Return expert information
-    return {"experts": expertInfo}
+    return {"experts": expertInfo, "text": text}
 
 @view_config(route_name="evalModels", renderer="json")
 def evalModels(request):

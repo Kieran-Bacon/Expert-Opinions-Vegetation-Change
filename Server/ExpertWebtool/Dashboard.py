@@ -42,4 +42,6 @@ def publishModels(request):
     except:
         raise exc.HTTPBadRequest()
 
+    toggle = 1 if toggle == "true" else 0
+
     db.execute("eModel_publish",[toggle, request.session["username"], qid])
