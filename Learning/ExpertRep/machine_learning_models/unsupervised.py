@@ -9,7 +9,7 @@ import pickle
 from sklearn.decomposition import PCA as SK_PCA
 
 from ExpertRep.tools.unsupervised_helper import UnsupervisedBase
-from ExpertRep.abstract import ModelNotTrainedException
+from ExpertRep.abstract.ClimateEvalAPI import ModelNotTrainedException
 
 
 class PCA(UnsupervisedBase):
