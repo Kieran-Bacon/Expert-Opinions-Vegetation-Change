@@ -54,10 +54,6 @@ class DatabaseHandler:
         cursor.execute("INSERT INTO users VALUES\
             ('admin','null',?,?,5,'','Admin','User','','/imgs/avatars/avatar-ninja.png', 'KNN_regress')", hashed)
 
-        # TODO - REMOVE
-        hashed = Helper.hashPassword("admin1")
-        cursor.execute("INSERT INTO users VALUES ('bammins','kieran.bacon.working@gmail.com', ?, ?, 5,'Mr', 'Kieran', 'Bacon', 'University of Exeter', '/imgs/avatars/avatar-ninja.png', 'KNN_regress')", hashed)
-
         database.commit()
         database.close()
 
