@@ -41,13 +41,29 @@ def evalModels(request):
     Helper.permissions(request)
 
     # Collect information to evaluate
+
+    print(request.json_body)
+
     try:
-        experts = request.params.getall("experts[]")
+        data = request.json_body
     except:
         raise exc.HTTPBadRequest()
 
+    questions = {}
+    experts = set()
+    for pair in data["experts"]:
+
+        experts.add(pair["user"])
+
+        if pair["qid"] in questions:
+            questions[pair["qid"]].append(pair["user"])
+        else:
+            questions[pair["qid"]] = [pair["user"]] 
+
+
     # Collect Expert information
-    expertNames = [" ".join([i["title"], i["firstname"], i["lastname"]]) for e in experts for i in db.execute("User_Info", [e])]
+
+    expertNames = {u: " ".join([i["title"], i["firstname"], i["lastname"]]) for u in experts for i in db.execute("User_Info", [u])}
 
     # Collect uploaded models to evaluate
     modelDirectory = os.path.join(TEMPSTORAGE,request.session["username"])
@@ -58,15 +74,15 @@ def evalModels(request):
     # Data type to return to the page
     data = {"experts": expertNames, "questions": []}
 
-    for question in questions:
+    for qid in questions.keys():
 
-        questionContents = {"text": db.executeOne("questionName", [question])["text"], "models": []}
+        questionContents = {"text": db.executeOne("questionName", [qid])["text"], "models": []}
 
         predictions = []
-        for expert in experts:
+        for expert in questions[qid]:
 
             # Collect the experts model identifier
-            identifier = db.executeOne("collectEModel", [expert, question])["identifier"]
+            identifier = db.executeOne("collectEModel", [expert, qid])["identifier"]
 
             # Predict on the CMO's and storage the results
             predictions.append(ExpertModelAPI().predict(model_id=identifier, data=CMOs))
