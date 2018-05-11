@@ -10,7 +10,7 @@ import concurrent.futures
 from . import TEMPLATES, CMOSTORAGE
 from . import Helper
 from .DatabaseHandler import DatabaseHandler as db
-from .Training import ProcessRunner, fit_model_and_write_db
+from .Helper import ProcessRunner
 from . import DEFAULT_TECH
 
 import ExpertRep
@@ -58,7 +58,7 @@ def updatePersonal(request):
             for datapoint in trainingData:
                 CMOs.append(ClimateModelOutput.load(os.path.join(CMOSTORAGE, str(datapoint["cmoid"]))))
                 scores.append(datapoint["score"])
-            ProcessRunner().add_process(fit_model_and_write_db, identifier, user["username"], model["qid"], CMOs,
+            ProcessRunner().add_process(user["username"], model["qid"], CMOs,
                                         scores)
             # Delete old model
             ExpertModelAPI().delete_model(model_id=model["identifier"])
