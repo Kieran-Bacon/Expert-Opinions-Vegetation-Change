@@ -142,4 +142,11 @@ def confirmUser(request):
     db.execute("User_confirmTemp",
                [username, email, salt, hashedPassword, title, firstname, lastname, organisation, request.path[-10:]])
 
+    questions = db.execute("collectQuestions", [])
+    api = ExpertModelAPI()
+    for rows in questions:
+        qid = rows["qid"]
+        model_id = api.create_model(model_type=DEFAULT_TECH)
+        db.execute("eModel_insertModel", [model_id, username, qid])
+
     Helper.HiddenPages.remove(request.path)
