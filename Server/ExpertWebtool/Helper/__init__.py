@@ -2,6 +2,7 @@ from .Email import email
 from .Storage import CMOStore, tempStorage, emptyDirectory
 from .HiddenPages import HiddenPages
 from .Permissions import AUTHORITY, permissions
+from .ProcessRunner import ProcessRunner
 
 import re, uuid, hashlib
 import pyramid.httpexceptions as exc
