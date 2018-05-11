@@ -1,0 +1,3 @@
+UPDATE labels
+SET isTrainedOn = 1
+WHERE username = ? AND qid = ? AND isTrainedOn = 0

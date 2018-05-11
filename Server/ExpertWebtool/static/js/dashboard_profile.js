@@ -1,4 +1,29 @@
+var switches = []
+
 $(document).ready(function(){
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    elems.forEach(function(html) {
+
+        html.onchange = function(self){
+            $.each(switches, function(i, swit){
+                if(swit.element.id == self.target.id){
+                    $.ajax({
+                        "url": "/publish_models",
+                        "type": "POST",
+                        "contentType": "application/x-www-form-urlencoded",
+                        "data": {"qid": self.target.id.split("-")[1], "toggle":swit.element.checked},
+                        "error": function(data, status){
+                            // report error to the user#
+                            alert("error");
+                        }
+                    });
+
+                }
+            });
+        }
+        var switchery = new Switchery(html);
+        switches.push(switchery);
+    });
 
 })
 

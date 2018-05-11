@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block css %}{% endblock %}
-{% block js %}{% endblock %}
+{% block js %}
+<script src="/js/settings_personal.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -10,6 +12,19 @@
             <div class="panel-heading">Personal settings</div>
             <div class="panel-body">
                 <p>Here are some personal settings.</p>
+
+                <div class="form-group">
+                    <label>Expert model technique</label>
+                    <select id="ModelSelect" class="form-control">
+                        {% for title, desc in models.items() %}
+                            <option value="{{title}}" {% if selectedModel == title %}selected{% endif %}>{{desc}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-lg-offset-10">
+                    <button onclick="saveChanges();" type="button" class="btn btn-primary btn-sm btn-block">Save changes</button>
+                </div>
             </div>
         </div>
     </div>

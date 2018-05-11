@@ -1,0 +1,2 @@
+SELECT username, title, firstname, lastname, permission
+FROM users

@@ -64,14 +64,14 @@ class ModelFile:
         """
 
     @abstractmethod
-    def get_kml(self, layer_id: int) -> str:
+    def get_geojson(self, layer_id: int) -> str:
         """
-        Returns a string in KML format containing the information from the netcdf file.
+        Returns a string in GeoJSON format containing the information from the netcdf file.
         Args:
             layer_id: The layer number of which to return
 
         Returns:
-            A string containing the kml file contents
+            A string containing the GeoJSON file contents
         """
 
     @abstractmethod
@@ -120,6 +120,13 @@ class ModelOutputs(metaclass=ABCMeta):
     pass
 
 
+class ModelOutputsGeneric(namedtuple("ModelOutputsClassify", ["accuracy", "precision", "L1_loss"]), ModelOutputs):
+    """
+    Model Outputs for classification
+    """
+    pass
+
+
 class ModelOutputsClassify(namedtuple("ModelOutputsClassify", ["accuracy", "precision"]), ModelOutputs):
     """
     Model Outputs for classification
@@ -138,11 +145,14 @@ class ModelInfo(namedtuple("ModelInfo", ["model_type", "model_outputs_from_last_
     """
     Model Information class.
     """
-    # TODO(Ben) Requires modification pending discussion with front end devs.
     pass
 
 
 class VegetationMachineLearningAPI(metaclass=ABCMeta):
+    """
+    An abstract class for the main API for interacting with the rest of this system
+    """
+
     @abstractmethod
     def create_model(self, *, model_type: ModelType, config: dict = None) -> str:
         """

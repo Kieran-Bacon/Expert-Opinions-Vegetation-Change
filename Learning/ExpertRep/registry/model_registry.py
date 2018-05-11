@@ -13,14 +13,30 @@ class NotASubclassException(Exception):
     pass
 
 
+def available_models():
+    """
+    Returns a list of the available models by their string keys.
+
+    >>> @Registry.register_model("test")
+    ... class TestModel(MachineLearningModel): pass
+    >>> available_models()
+    {'test': 'TestModel'}
+    """
+    return {title: model.desc() for title, model in _MODELS.items()}
+
+
 class Registry:
     """
     This registry allows for registering machine learning models for use with the API. To use it, decorate with
 
-        @Registry.register_model(ModelName)
-        class XYZ(MachineLearningModel):
-        ...
-        ...
+    >>> @Registry.register_model("test")
+    ... class TestModel(MachineLearningModel): pass
+    >>> "test" in Registry()
+    True
+    >>> Registry()["test"] is TestModel
+    True
+    >>> "not_a_model_" in Registry()
+    False
 
     """
 
@@ -53,8 +69,6 @@ class Registry:
                 raise NotASubclassException(
                     "The class {} is not a subclass of MachineLearningModel".format(veg_ml_model.__class__))
             model_name = name or veg_ml_model.__class__
-            if model_name in _MODELS:
-                raise LookupError("Model %s already registered." % model_name)
             _MODELS[model_name] = veg_ml_model
             return veg_ml_model
 

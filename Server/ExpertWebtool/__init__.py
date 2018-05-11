@@ -1,14 +1,26 @@
+import os
+
+
+
 from os.path import abspath
 
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
 
+import ExpertRep
+
+ROOT = os.path.dirname(os.path.realpath(__file__))
+TEMPSTORAGE = os.path.join(ROOT, "temp") + "/"
+DATASTORAGE = os.path.join(ROOT, "data") + "/"
+EXPERTSTORAGE = os.path.join(ROOT, "data", "ExpertRep") + "/"
+CMOSTORAGE = os.path.join(ROOT,"data","CMO") + "/"
+TEMPLATES = os.path.join(ROOT,"templates") + "/"
+
+#Set default machine learning technique
+DEFAULT_TECH = "GBT_regress_PCA"
+
+from . import Processes as ProcessManager
 from .DatabaseHandler import DatabaseHandler
-
-
-TEMPSTORAGE = abspath("./ExpertWebtool/temp") + "/"
-CMOSTORAGE = abspath("./ExpertWebtool/data/CMO") + "/"
-TEMPLATES = abspath("./ExpertWebtool/templates") + "/"
 
 def main(global_config, **settings):
 
@@ -28,13 +40,20 @@ def main(global_config, **settings):
     # Route requests
     config.add_route('index', '/')
     config.add_route('dashboardMain', '/dashboard.html')
+    config.add_route('publishModels', '/publish_models')
     config.add_route('userProfile', '/user_profile.html')
 
     config.add_route('login', '/login.html')
     config.add_route('loggingIn','/login')
     config.add_route('logout', '/logout')
+    config.add_route('lock', '/lock')
+    config.add_route('unlock', '/unlock')
     config.add_route('createQuestion', '/createQuestion')
     config.add_route('deleteQuestion', '/deleteQuestion')
+
+    config.add_route('beginPasswordReset', '/password_reset')
+    config.add_route('passwordReset', '/password_reset/{username}/{privatekey}')
+    config.add_route('assignmentPasswordReset', '/password_reset/assign')
 
     config.add_route('training', '/training.html')
     config.add_route('collectCMO','/training/collectCMO')
@@ -47,22 +66,30 @@ def main(global_config, **settings):
     config.add_route('modelFileUploader', '/model_upload')
 
     config.add_route('evaluation', '/evaluation.html')
+    config.add_route('evalQuestExpert', '/evaluate_questionExperts')
+    config.add_route('evalModels', '/evaluation')
+    config.add_route('uploadEvalModel', "/evaluate_model")
 
     config.add_route('personalSettings', '/settings/personal.html')
+    config.add_route('updatePersonal', '/settings/update_personal')
     config.add_route('createUser', '/create_user/{accountLink}')
     config.add_route('manageUsers', '/settings/manage_users.html')
     config.add_route('inviteUser', '/settings/invite_user')
 
     # Link views
-    config.scan(".General")    # General server functions
+    config.scan(".Authentication")  # Handles authentication functionality
     config.scan(".Dashboard")  # Handles landing pages
     config.scan(".Training")   # Handles the training interactions
     config.scan(".Question")   # Handlers for question manipulation
     config.scan(".Evaluation") # Handles the prediction aspects of the tool
     config.scan(".Settings")   # Contains webtool settings functions
+    config.scan(".Upload")
 
     # Load database information
-    DatabaseHandler.load()
+    DatabaseHandler.load(rebuild=False)
+
+    # Begin supporting processes
+    ProcessManager.run()
 
     # Return the WSGI application object
     return config.make_wsgi_app()

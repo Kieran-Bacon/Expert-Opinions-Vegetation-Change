@@ -1,0 +1,11 @@
+CREATE TABLE users (username TEXT PRIMARY KEY,
+                    email Text,
+                    salt TEXT,
+                    password TEXT,
+                    permission INTEGER,
+                    title TEXT,
+                    firstname TEXT,
+                    lastname TEXT,
+                    organisation TEXT,
+                    avatar TEXT,
+                    modelSpec TEXT)

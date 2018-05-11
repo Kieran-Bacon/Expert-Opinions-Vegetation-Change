@@ -1,12 +1,22 @@
 """
 Tools required to perform leave one out cross validation to achieve accurate approximations of evaluation metrics.
 """
+import logging
 import numpy as np
+
+_LOG = logging.getLogger(__name__)
 
 
 def mean_model_outputs(list_of_model_outs: list):
     """
     Calculates the means of a list of model outputs and returns it in the same format it was received.
+    >>> from ExpertRep.abstract.ClimateEvalAPI import ModelOutputsGeneric
+    >>> mean_model_outputs([])
+    Traceback (most recent call last):
+        ...
+    ArithmeticError: Mean of empty array is undefined
+    >>> mean_model_outputs([ModelOutputsGeneric(accuracy=1, precision=0.1, L1_loss=0.5)])
+    ModelOutputsGeneric(accuracy=1.0, precision=0.10000000000000001, L1_loss=0.5)
 
     Args:
         list_of_model_outs:
@@ -46,5 +56,6 @@ def leave_one_out(data: list, target: list, fit_fn: callable, score_fn: callable
         target_fold = target[:i] + target[i + 1:]
         fit_fn(data=data_fold, targets=target_fold, *args, **kwargs)
         model_outputs.append(score_fn(test_data=[data[i]], test_targets=[target[i]]))
+        _LOG.info("Cross Val fold num {} score: {}".format(i, model_outputs[-1]))
     fit_fn(data=data, targets=target, test_data=[], test_target=[], *args, **kwargs)
     return mean_model_outputs(model_outputs)

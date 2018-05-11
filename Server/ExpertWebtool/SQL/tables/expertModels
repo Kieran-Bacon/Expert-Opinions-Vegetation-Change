@@ -1,0 +1,8 @@
+CREATE TABLE expertModels (identifier TEXT PRIMARY KEY,
+                           username TEXT,
+                           qid INTEGER,
+                           published INTEGER,
+                           precision REAL,
+                           accuracy REAL,
+                           R2 REAL,
+                           L1 REAL)

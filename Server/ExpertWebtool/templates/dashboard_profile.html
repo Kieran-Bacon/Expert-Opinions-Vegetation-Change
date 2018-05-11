@@ -1,6 +1,9 @@
 {% extends "base.html" %}
-{% block css %}{% endblock %}
+{% block css %}
+<link href="css/switchery.min.css" rel="stylesheet">
+{% endblock %}
 {% block js %}
+<script src="/js/switchery.min.js"></script>
 <script src="/js/dashboard_profile.js"></script>
 {% endblock %}
 
@@ -12,6 +15,33 @@
             <div class="panel-heading">Profile dashboard</div>
             <div class="panel-body">
                 <p>Personal information goes here</p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Precision</th>
+                            <th>Accuracy</th>
+                            <th>R2</th>
+                            <th>L1 Loss</th>
+                            <th>Publish</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for model in models %}
+                            <tr>
+                                <td>{{questions[model["qid"]]}}</td>
+                                <td>{{model["precision"]}}</td>
+                                <td>{{model["accuracy"]}}</td>
+                                <td>{{model["R2"]}}</td>
+                                <td>{{model["L1"]}}</td>
+                                <td><input id="question-{{model['qid']}}" type="checkbox" class="js-switch js-check-change" {% if model["published"] == 1 %} checked {% endif %}/></td>
+                            </tr>
+        
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -28,6 +58,12 @@
                         submitting them for training. If you are dillegent enough to annotate well over 40
                         models for a particular question we will break down them down into batches of 40 for you.
                     </p>
+
+                    <p>
+
+
+                    </p>
+
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -42,15 +78,14 @@
                                 <tbody>
 
                                     {% for key, value in batches.items() %}
-
                                         <tr id="batchRow{{key}}" class="success">
                                             <td width="20px">{{key}}</td>
                                             <td>{{questions[key]}}</td>
-                                            <td>{{value|length}}</td>
+                                            <td>{{value}}</td>
                                             <td>
                                                 <div class="progress progress-striped active">
-                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{value|length}}" aria-valuemin="0" aria-valuemax="40" style="width: {{value|length}}%">
-                                                        <span class="sr-only">{{value|length}}% Complete (success)</span>
+                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="40" style="width: {{value}}%">
+                                                        <span class="sr-only">{{value}}% Complete (success)</span>
                                                     </div>
                                                 </div>
                                             </td>
@@ -63,7 +98,6 @@
                                                 </button>
                                             </td>
                                         </tr>
-
                                     {% endfor %}
                                 </tbody>
                             </table>

@@ -1,0 +1,2 @@
+SELECT username, title, firstname, lastname, organisation, avatar
+FROM users

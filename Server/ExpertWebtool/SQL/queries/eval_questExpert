@@ -1,0 +1,4 @@
+SELECT u.username, u.title, u.firstname, u.lastname, u.organisation, u.avatar, m.precision, m.accuracy, m.R2, m.L1
+FROM users u, expertModels m
+WHERE (u.username = m.username) AND ((m.published = 1 and m.qid = ?) OR (m.qid = ? AND u.username = ?))
+

@@ -15,6 +15,7 @@ class TestModelFiles(unittest.TestCase):
 
     def test_initialise_save_and_load(self):
         f1 = ClimateModelOutput(TEST_NC)
+        print(f1.numpy_arrays.shape)
         f1.save(TEST_FILE)
         f2 = ClimateModelOutput.load(TEST_FILE)
         self.assertEqual(f1, f2)
@@ -72,5 +73,5 @@ class TestModelFiles(unittest.TestCase):
         # But this should not affect equality
         self.assertEqual(hash_f1, hash(f2))
 
-    def test_kml(self):  # pylint: disable=no-self-use
-        ClimateModelOutput(TEST_NC).get_kml(0)
+    def test_geojson(self):  # pylint: disable=no-self-use
+        ClimateModelOutput(TEST_NC).get_geojson(0)

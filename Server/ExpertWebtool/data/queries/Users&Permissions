@@ -1,3 +1,0 @@
-SELECT u.username, u.firstname, u.lastname, p.uploading, p.question, p.invitation
-FROM users u, permissions p
-WHERE u.permission = p.pid

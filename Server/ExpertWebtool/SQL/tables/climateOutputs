@@ -1,0 +1,2 @@
+CREATE TABLE climateOutputs (cmoid INTEGER PRIMARY KEY,
+                             username TEXT)

@@ -47,6 +47,22 @@ def _obtain_lock_and_do(func: callable):
 class LockedFile:
     """
     A class that performs simple locked file operations with binary reading and writing.
+
+    >>> a = LockedFile("test_file.txt")
+    >>> a.write("Test")
+    4
+    >>> a.read()
+    'Test'
+    >>> a.read_and_write(lambda a: a.lower())
+    4
+    >>> a.read()
+    'test'
+
+    >>> b = LockedFile("test_file.txt", is_binary=True)
+    >>> b.write(bytes("Test", "utf-8"))
+    4
+    >>> b.read()
+    b'Test'
     """
 
     def __init__(self, filename, is_binary=False):

@@ -1,17 +1,78 @@
 {% extends "base.html" %}
-{% block css %}{% endblock %}
-{% block js %}{% endblock %}
+{% block css %}
+<link href="css/dropzone.css" rel="stylesheet"></link>
+<link href="css/switchery.min.css" rel="stylesheet">
+{% endblock %}
+{% block js %}
+<script src="js/dropzone.js"></script>
+<script src="/js/switchery.min.js"></script>
+<script type="text/javascript" src="/js/evaluation_main.js"></script>
+{% endblock %}
+
+
+
 
 {% block content %}
 <div class="row">
     <div class="col-lg-12">
-        <br>
         <div class="panel panel-default">
-            <div class="panel-heading">Evaluation screen</div>
+            <!-- /.panel-heading -->
             <div class="panel-body">
-                <p>This is the evaluation screen</p>
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills">
+                    <li class="active" style="width:24%";><a class="setup_tabs" href="#question-pills" data-toggle="tab" aria-expanded="false">Select questions</a>
+                    </li>
+                    <li class="" style="width:24%";><a class="setup_tabs" href="#expert-pills" data-toggle="tab" aria-expanded="false">Select experts</a>
+                    </li>
+                    <li class="" style="width:24%";><a class="setup_tabs" href="#models-pills" data-toggle="tab" aria-expanded="false">Upload models</a>
+                    </li>
+                    <li class="" style="width:24%";><a id="evalTab" href="#evaluation-pills" data-toggle="tab" aria-expanded="true">Evaluation</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="question-pills">
+                        <h4>Question Tab</h4>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        {% for q in questions %}
+                                        <tr>
+                                            <td style="width: 50px;">{{q["qid"]}}</td>
+                                            <td>{{q["text"]}}</td>
+                                            <td style="width: 50px;"><input id="question-{{q['qid']}}-switch" type="checkbox" class="js-switch js-check-change"/></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="expert-pills">
+                        <h4>Select the experts that will evaluate the climate model output</h4>
+                        <div class="col-lg-12">
+                            <div id="ExpertContainter">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="models-pills">
+                        <h4>Models Tab</h4>
+
+                        <form action="/evaluate_model" class="dropzone" 
+                        id="modelDropzone" style="height: 300px; width: 100%;">
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="evaluation-pills">
+                        <div id="EvaluationTables" class="table-responsive"></div>
+                    </div>
+                </div>
             </div>
+            <!-- /.panel-body -->
         </div>
+        <!-- /.panel -->
     </div>
 </div>
 {% endblock %}

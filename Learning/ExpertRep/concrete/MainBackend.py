@@ -11,23 +11,33 @@ from ExpertRep.abstract.ModelAPI import MachineLearningModel
 from ExpertRep.registry.model_registry import Registry
 import ExpertRep.machine_learning_models  # pylint disable=unused-import
 
+
+
 # This previous line is required for the registry.
 
 _MODEL_FILE_NAME = "Model_num_{}.vegml"
-_VEG_ML_DIR = "./ExpertWebtool/data/ExpertRep"  # TODO (Ben) Not good, but works for now.
+
+try:
+    _veg_ml_dir = os.environ["EXPERTLOCATION"]
+except:
+
+    logging.warning("Expert location has not been set, defaulting to home directory."
+    "Set EXPERTLOCATION environment variable.")
+    _veg_ml_dir = "~/.ExpertClimateSystem/"
+
+os.makedirs(_veg_ml_dir, exist_ok=True)
+
 _MODEL_REGISTRY = "model_registry.nlsv"
 
 _LOG = logging.getLogger(__name__)
 
 
 class Backend(VegetationMachineLearningAPI):
-    """
-    A simple backend implementation for training and evaluating Machine Learning models.
-    """
+    """ A simple backend implementation for training and evaluating Machine Learning models. """
     MODEL_TYPE_TO_CLASS = Registry()
 
     def __init__(self):
-        self.registry_file = LockedFile(os.path.join(_VEG_ML_DIR, _MODEL_REGISTRY), is_binary=False)
+        self.registry_file = LockedFile(os.path.join(_veg_ml_dir, _MODEL_REGISTRY), is_binary=False)
         try:
             self.models_that_exist = self.registry_file.read().split()
         except FileNotFoundError:
@@ -48,13 +58,13 @@ class Backend(VegetationMachineLearningAPI):
     def _save_model(self, *, model_id: str):
         if model_id not in self.open_models:
             return  # why would we save a model that isn't open and therefore hasn't been modified
-        file_name = os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id))
+        file_name = os.path.join(_veg_ml_dir, _MODEL_FILE_NAME.format(model_id))
         locked_file = LockedFile(filename=file_name, is_binary=True)
         serialised_model = self.open_models[model_id].serialize()
         locked_file.write(serialised_model)
 
     def _load_model(self, *, model_id: str):
-        file_name = os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id))
+        file_name = os.path.join(_veg_ml_dir, _MODEL_FILE_NAME.format(model_id))
         locked_file = LockedFile(filename=file_name, is_binary=True)
         serialised_model = locked_file.read()
         self.open_models[model_id] = MachineLearningModel.deserialize(serialised_model)
@@ -102,6 +112,7 @@ class Backend(VegetationMachineLearningAPI):
         self._check_and_load_if_not_loaded(model_id=model_id)
 
         def remove_from_registry(model_ids: str):
+            """ Removes an item from the local models """
             mid = model_ids.split("\n")
             mid.remove(model_id)
             return "\n".join(mid)
@@ -109,7 +120,7 @@ class Backend(VegetationMachineLearningAPI):
         self.models_that_exist.remove(model_id)
 
         self.registry_file.read_and_write(remove_from_registry)
-        os.remove(os.path.join(_VEG_ML_DIR, _MODEL_FILE_NAME.format(model_id)))
+        os.remove(os.path.join(_veg_ml_dir, _MODEL_FILE_NAME.format(model_id)))
 
     def partial_fit(self, *, model_id: str, data: list, targets: list) -> ModelOutputs:
         """
@@ -170,7 +181,7 @@ class Backend(VegetationMachineLearningAPI):
         if not self._check_and_load_if_not_loaded(model_id=model_id):
             raise ModelDoesNotExistException("The model with id: {} does not exist!!".format(model_id))
 
-        raise NotImplemented("This functionality is currently not implemented")
+        return self.open_models[model_id].model_info()
 
     def close_model(self, *, model_id: str) -> None:
         """
@@ -186,6 +197,7 @@ class Backend(VegetationMachineLearningAPI):
 
     def fit_unsupervised(self, *, model_id: str, data: list) -> None:
         """
+        # TODO(BEN)
         Raises:
             ModelDoesNotExistException
         """

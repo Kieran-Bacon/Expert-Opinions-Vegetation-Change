@@ -15,7 +15,7 @@ from .DatabaseHandler import DatabaseHandler as db
 def createQuestion(request):
     """ Add a parsed question text into the database if it is from a authorised
 	user """
-    Helper.permissions(request)
+    Helper.permissions(request, authority=3)
 
     try:
         questionText = request.params["text"]
@@ -32,10 +32,10 @@ def createQuestion(request):
 
     # For every user create a new expert model to represent this question.
     # TODO: Move this functionality to be operated on after returning qid.
-    usernames = db.execute_literal("SELECT username FROM users", [])
-    for row in usernames:
-        identifier = ExpertModelAPI().create_model(model_type="KNN_regress")
-        db.execute_literal("INSERT INTO expertModels VALUES(?, ?, ?)", [identifier, row["username"], qid])
+
+    for user in db.execute("collectUserModelSpec",[]):
+        identifier = ExpertModelAPI().create_model(model_type=user["modelSpec"])
+        db.execute("eModel_insertModel", [identifier, user["username"], qid])
 
     return {"qid": qid}
 
