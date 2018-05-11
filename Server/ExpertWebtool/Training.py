@@ -105,7 +105,7 @@ def submitBatch(request):
         scores.append(score)
 
     # Train the expert model
-    ProcessRunner().add_process(expert["identifier"], username, qid, CMOs, scores)
+    ProcessRunner().add_process(expert["identifier"], username, CMOs, scores)
 
     return {}
 

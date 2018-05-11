@@ -58,8 +58,7 @@ def updatePersonal(request):
             for datapoint in trainingData:
                 CMOs.append(ClimateModelOutput.load(os.path.join(CMOSTORAGE, str(datapoint["cmoid"]))))
                 scores.append(datapoint["score"])
-            ProcessRunner().add_process(user["username"], model["qid"], CMOs,
-                                        scores)
+            ProcessRunner().add_process(identifier, user["username"], CMOs, scores)
             # Delete old model
             ExpertModelAPI().delete_model(model_id=model["identifier"])
 

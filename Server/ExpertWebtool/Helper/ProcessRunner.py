@@ -16,7 +16,7 @@ from . import recordModelMetrics, CMOStore
 _LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
-def fit_model_and_write_db(model_id, username, qid, CMOs, scores):
+def fit_model_and_write_db(model_id, username, CMOs, scores):
     try:
         recordModelMetrics(identifier=model_id)  # Clear DB entries of records for this model
         _LOGGER.info("Metrics cleared for modelid={}, username={}".format(model_id, username))
@@ -31,7 +31,7 @@ def fit_model_and_write_db(model_id, username, qid, CMOs, scores):
         print(str(e)) # TODO
 
 
-class SingletonDecorator:  # TODO(BEN) upon merge, move this to somewhere better
+class SingletonDecorator:
     def __init__(self, cls):
         self.cls = cls
         self.instance = None
@@ -43,7 +43,7 @@ class SingletonDecorator:  # TODO(BEN) upon merge, move this to somewhere better
 
 
 @SingletonDecorator
-class ProcessRunner:  # TODO(BEN) upon merge, move this to somewhere better
+class ProcessRunner:
     _PROCESS_LOG = logging.getLogger("ProcessRunner")
     __instance = None
 
