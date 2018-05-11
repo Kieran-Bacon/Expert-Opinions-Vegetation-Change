@@ -43,11 +43,11 @@ function initialiseSwitches() {
 				layerCode = switchID[0],
 				layerIndex = switchID[1];
 
-			console.log("Switch toggled: ", layerCode);
+			////console.log("Switch toggled: ", layerCode);
 
 			// If checked is true then switch is now on i.e. has been turned on
 			activeTabID = ACTIVE.getActiveTab();
-			LAYER_STORAGE.getLayerAndUpdate(activeTabID, layerIndex, element.checked);
+			LAYER_STORAGE.getLayerAndUpdateMap(activeTabID, layerIndex, element.checked);
 			TAB_DATA.updateLayerCodes(activeTabID, layerCode, element.checked);
 		}
 	});
@@ -60,7 +60,7 @@ function initialiseSwitches() {
  * @param {Array} layerCodes Which layer switches should be on.
  */
 function updateSwitches(layerCodes) {
-	console.log("Updating switches: " + layerCodes)
+	////console.log("Updating switches: " + layerCodes)
 
 	// For each switch, check it is in layerCodes
 	SWITCHES.forEach(function (html) {
@@ -123,21 +123,22 @@ var LAYER_STORAGE = {};
 
 /**
  * Fetch a layer from storage and call map update functions. If the
- * layer is not in storage, it is loaded from the server.
+ * layer is not in storage, it is loaded from the server. Once a layer
+ * is loaded, the map is updated.
  * 
  * @param {String} tabID      The ID of the active tab.
  * @param {String} layerIndex The index of the layer to get.
  * @param {Boolean} toAdd     A flag whether to add/remove the layer.
  */
-LAYER_STORAGE.getLayerAndUpdate = function (tabID, layerIndex, toAdd) {
-	console.log("Getting layer '" + layerIndex + "' for: " + tabID);
+LAYER_STORAGE.getLayerAndUpdateMap = function (tabID, layerIndex, toAdd) {
+	////console.log("Getting layer '" + layerIndex + "' for: " + tabID);
 
 	// If layer is not in storage, load it
 	if (!(layerIndex in LAYER_STORAGE)) {
 		// Model layer data location
 		url = "http://" + window.location.hostname + ":" + window.location.port;
 		url += "/collect_model_kml/" + $("#mid").val() + "/" + layerIndex;
-		console.log("Fetching model layer from: " + url);
+		////console.log("Fetching model layer from: " + url);
 
 		LAYER_STORAGE[layerIndex] = {};
 		$.getJSON(url).done(function(data) {
@@ -151,11 +152,72 @@ LAYER_STORAGE.getLayerAndUpdate = function (tabID, layerIndex, toAdd) {
 				LAYER_STORAGE[layerIndex][featureKey] = feature.properties.weight;
 			});
 			// Add this to callback so that it is done only after layer is stored
-			TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd)
+			TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd);
+			generateVectorSourceAndUpdate(tabID);
 		});
 	} else {
-		TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd)
+		TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd);
+		generateVectorSourceAndUpdate(tabID);
 	}
+}
+
+/**
+ * Fetch a layer from storage and call map update functions. If the
+ * layer is not in storage, it is loaded from the server. Once a layer
+ * is loaded, only tab data is updated.
+ * 
+ * @param {String} tabID      The ID of the active tab.
+ * @param {String} layerIndex The index of the layer to get.
+ * @param {Boolean} toAdd     A flag whether to add/remove the layer.
+ */
+LAYER_STORAGE.getLayer = function (tabID, layerIndex, toAdd) {
+	////console.log("Getting layer '" + layerIndex + "' for: " + tabID);
+
+	// If layer is not in storage, load it
+	if (!(layerIndex in LAYER_STORAGE)) {
+		// Model layer data location
+		url = "http://" + window.location.hostname + ":" + window.location.port;
+		url += "/collect_model_kml/" + $("#mid").val() + "/" + layerIndex;
+		////console.log("Fetching model layer from: " + url);
+
+		LAYER_STORAGE[layerIndex] = {};
+		$.getJSON(url).done(function(data) {
+			// Expecting a GeoJSON feature collection
+			data.features.forEach(function(feature){
+				var lat = feature.geometry.coordinates[0],
+					lon = feature.geometry.coordinates[1],
+					featureKey = lat.toString() + "#" + lon.toString();
+
+				// Store each point weight using the lat/lon as a key
+				LAYER_STORAGE[layerIndex][featureKey] = feature.properties.weight;
+			});
+			// Add this to callback so that it is done only after layer is stored
+			TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd);
+			generateSourceVector(tabID);
+			var activeTabID = ACTIVE.getActiveTab();
+			if (activeTabID == tabID) {
+				$('#'+tabID).tab('show');
+			}
+		});
+	} else {
+		TAB_DATA.updateMapData(tabID, LAYER_STORAGE[layerIndex], toAdd);
+		generateSourceVector(tabID);
+		var activeTabID = ACTIVE.getActiveTab();
+		if (activeTabID == tabID) {
+			$('#'+tabID).tab('show');
+		}
+	}
+}
+
+/**
+ * Clear layer storage (but keep functions).
+ */
+LAYER_STORAGE.clearStorage = function () {
+	Object.keys(LAYER_STORAGE).forEach(function (key) {
+		if (key != "clearStorage" && key != "getLayerAndUpdateMap" && key != "getLayer") {
+			delete LAYER_STORAGE[key];
+		}
+	});
 }
 
 // ---------------------------------------------------------------------
@@ -169,8 +231,8 @@ var VECTOR_SOURCE_STORAGE = {};
  * @param {String} tabID  The id of the active tab.
  * @param {Boolean} write Whether to generate or load a cached layer.
  */
-function generateVectorSource(tabID, write=true) {
-	console.log("Generating vector source for: " + tabID);
+function generateVectorSourceAndUpdate(tabID, write=true) {
+	//console.log("Generating vector source for: " + tabID);
 
 	var map = $('#map').data('map');
 
@@ -205,10 +267,52 @@ function generateVectorSource(tabID, write=true) {
 		map.getLayers().getArray()[1].setSource(vectorSource);
 		VECTOR_SOURCE_STORAGE[tabID] = vectorSource;
 	} else {
-		console.log("Using cached source vector.")
+		//console.log("Using cached source vector.")
 		map.getLayers().getArray()[1].setSource(VECTOR_SOURCE_STORAGE[tabID]);
 	}
-	console.log("Map updated.")
+	//console.log("Map updated.")
+}
+
+function generateSourceVector(tabID) {
+	//console.log("Generating vector source for: " + tabID);
+
+	var vectorSource = new ol.source.Vector({});
+
+	vectorSource.on("addfeature", function (event) {
+		event.feature.set('weight', event.feature.P.weight)
+	});
+
+	Object.keys(TAB_DATA.mapData[tabID]).forEach(function (key) {
+		var keySplit = key.split("#"),
+			lat = keySplit[0],
+			lon = keySplit[1];
+
+		var	pointGeometry = new ol.geom.Point([lat,lon]);
+
+		var pointFeature = new ol.Feature({
+			geometry: pointGeometry,
+			weight: TAB_DATA.mapData[tabID][key]
+		});
+
+		vectorSource.addFeature(pointFeature);
+	});
+
+	var modelLayer = new ol.layer.Heatmap({
+		source: vectorSource,
+		blur: 10,
+		radius: 6
+	});
+
+	VECTOR_SOURCE_STORAGE[tabID] = vectorSource;
+}
+
+VECTOR_SOURCE_STORAGE.clearStorage = function () {
+	Object.keys(VECTOR_SOURCE_STORAGE).forEach(function (key) {
+		if (key != "clearStorage") {
+			//console.log(key)
+			delete VECTOR_SOURCE_STORAGE[key];
+		}
+	});
 }
 
 // ---------------------------------------------------------------------
@@ -249,14 +353,14 @@ TAB_DATA.removeTabData = function (tabID) {
  * @param {Object} event The event fired, expects on shown.
  */
 function tabShownListener(event) {
-	console.log("Tab show: " + event.target.id);
+	//console.log("Tab show: " + event.target.id);
 
 	var tabID = event.target.id;
 	// Update active tab list
 	ACTIVE.setActiveTab(tabID);
 	// Get layer codes for active tab
 	updateSwitches(TAB_DATA.layerCodes[tabID]);
-	generateVectorSource(tabID, write=false);
+	generateVectorSourceAndUpdate(tabID, write=false);
 }
 
 /**
@@ -265,7 +369,7 @@ function tabShownListener(event) {
  * @param {Object} event The event fired, expects on shown.
  */
 function removeTabListener(event) {
-	console.log("Removing tab: " + ACTIVE.getActiveTab());
+	//console.log("Removing tab: " + ACTIVE.getActiveTab());
 
 	TAB_DATA.removeTabData(ACTIVE.getActiveTab());
 	ACTIVE.removeActiveTab();
@@ -281,7 +385,7 @@ function removeTabListener(event) {
 TAB_DATA.newTab = function () {
 	var tabID = this.newTabID();
 
-	console.log("Creating new tab: " + tabID)
+	//console.log("Creating new tab: " + tabID)
 
 	this.n_tabs += 1;
 	// Create tab data storage
@@ -309,7 +413,7 @@ TAB_DATA.newTab = function () {
  * @param {Boolean} add      A flag to determine whether to add/remove.
  */
 TAB_DATA.updateLayerCodes = function (tabID, layerCode, add) {
-	console.log("Updating tab layer codes for : " + tabID);
+	//console.log("Updating tab layer codes for : " + tabID);
 
 	// Update tab layer code data
 	if (add) {
@@ -336,7 +440,11 @@ TAB_DATA.updateLayerCodes = function (tabID, layerCode, add) {
  * @param {Boolean} add  A flag whether to add/remove the layer.
  */
 TAB_DATA.updateMapData = function (tabID, layer, add) {
-	console.log("Updating map data for: " + tabID);
+	//console.log("Updating map data for: " + tabID);
+
+	if (TAB_DATA.mapData[tabID] == undefined) {
+		TAB_DATA.mapData[tabID] = {};
+	}
 
 	Object.keys(layer).forEach(function (key) {
 		if (add) {
@@ -353,7 +461,6 @@ TAB_DATA.updateMapData = function (tabID, layer, add) {
 			}
 		}
 	});
-	generateVectorSource(tabID);
 }
 
 // ---------------------------------------------------------------------
@@ -369,7 +476,7 @@ var PROJECTION = 'EPSG:4326', // World Geodetic System
  * Initialise an OpenLayers map and assign it to the map DOM element.
  */
 function initialiseMap() {
-	console.log("Initialising map...")
+	//console.log("Initialising map...")
 	var myView = new ol.View({
 		center: [LON, LAT],
 		zoom: ZOOM,
@@ -462,8 +569,7 @@ function collectModel(){
 
 			$("#mid").val(data.mid);
 
-			// Load new climate model
-			console.log("Load new model now")
+			refresh();
 		},
 		"error": function(data, status){
 			new PNotify({
@@ -498,6 +604,29 @@ function scoreModel(){
                 styling: 'fontawesome'
             });
 		}
+	});
+}
+
+function refresh() {
+	//console.log("Refreshing model");
+	// Clear vector source and model layer caches
+	VECTOR_SOURCE_STORAGE.clearStorage();
+	LAYER_STORAGE.clearStorage();
+	TAB_DATA.mapData = {};
+
+	ACTIVE.tabs.forEach(function (tabID) {
+		elements = Array.prototype.slice.call(document.querySelectorAll('.js-check-change'));
+		elements.forEach(function(element) {
+			var switchID = element.id.split("-"),
+				layerCode = switchID[0],
+				layerIndex = switchID[1];
+			var index = TAB_DATA.layerCodes[tabID].indexOf(layerCode);
+			// Remove tab ID if it already exists in stack
+			if (index > -1) {
+				//console.log("Updating for code: " + layerCode)
+				LAYER_STORAGE.getLayer(tabID, layerIndex, true);
+			}
+		});
 	});
 }
 
