@@ -9,6 +9,7 @@ import pickle
 from sklearn.decomposition import PCA as SK_PCA
 
 from ExpertRep.tools.unsupervised_helper import UnsupervisedBase
+from ExpertRep.abstract import ModelNotTrainedException
 
 
 class PCA(UnsupervisedBase):
@@ -19,11 +20,13 @@ class PCA(UnsupervisedBase):
     def __init__(self):
         super().__init__()
         self.pca = SK_PCA(n_components=0.95)
+        self.fitted = False
 
     def fit(self, data: list) -> None:
         """
         See UnsupervisedBase for params
         """
+        self.fitted = True
         data_array = [np.reshape(d.get_numpy_arrays(), [-1]) for d in data]
         self.pca.fit(data_array)
 
@@ -31,6 +34,8 @@ class PCA(UnsupervisedBase):
         """
         See UnsupervisedBase for params
         """
+        if not self.fitted:
+            raise ModelNotTrainedException("Model not fitted, call fit before predict")
         data_array = [np.reshape(d.get_numpy_arrays(), [-1]) for d in data]
         projected_data = copy.deepcopy(data)
         for i, dat in enumerate(np.split(self.pca.transform(data_array), len(data))):
