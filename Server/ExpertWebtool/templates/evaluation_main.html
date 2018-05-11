@@ -20,9 +20,9 @@
             <div class="panel-body">
                 <!-- Nav tabs -->
                 <ul class="nav nav-pills">
-                    <li class="active" style="width:24%";><a class="setup_tabs" href="#expert-pills" data-toggle="tab" aria-expanded="false">Select experts</a>
+                    <li class="active" style="width:24%";><a class="setup_tabs" href="#question-pills" data-toggle="tab" aria-expanded="false">Select questions</a>
                     </li>
-                    <li class="" style="width:24%";><a class="setup_tabs" href="#question-pills" data-toggle="tab" aria-expanded="false">Select questions</a>
+                    <li class="" style="width:24%";><a class="setup_tabs" href="#expert-pills" data-toggle="tab" aria-expanded="false">Select experts</a>
                     </li>
                     <li class="" style="width:24%";><a class="setup_tabs" href="#models-pills" data-toggle="tab" aria-expanded="false">Upload models</a>
                     </li>
@@ -32,42 +32,7 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div class="tab-pane fade active in" id="expert-pills">
-                        <h4>Select the experts that will evaluate the climate model output</h4>
-                        <div class="col-lg-6" >
-                            {% for expert in lexperts %}
-                                <div class="row" style="margin-bottom: 5px; background-color:cyan;">
-                                    <div class="col-lg-1">
-                                        <img style="width: 50px; height: auto;"src="{{expert['avatar']}}">
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">{{expert["title"]}} {{expert["firstname"]}} {{expert["lastname"]}}, {{expert["organisation"]}}</p></div>
-                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">Model accuracy 87%</p></div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <input id="user-{{expert['username']}}-switch" type="checkbox" class="js-switch js-check-change"/>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="col-lg-6">
-                            {% for expert in rexperts %}
-                                <div class="row" style="margin-bottom: 5px; background-color:cyan;">
-                                    <div class="col-lg-1">
-                                        <img style="width: 50px; height: auto;"src="{{expert['avatar']}}">
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">{{expert["title"]}} {{expert["firstname"]}} {{expert["lastname"]}}, {{expert["organisation"]}}</p></div>
-                                        <div class="col-lg-12"><p style="margin-bottom: 0px;">Model accuracy 87%</p></div>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <input id="user-{{expert['username']}}-switch" type="checkbox" class="js-switch js-check-change"/>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="question-pills">
+                    <div class="tab-pane fade active in" id="question-pills">
                         <h4>Question Tab</h4>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -84,6 +49,13 @@
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="expert-pills">
+                        <h4>Select the experts that will evaluate the climate model output</h4>
+                        <div class="col-lg-12">
+                            <div id="ExpertContainter">
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="models-pills">

@@ -8,18 +8,121 @@ var modelsUploaded = false;
 var expertList = [];
 var questionList = [];
 
+function ischecked(id){
+    var check = false;
+    $.each(switches, function(i,v){
+        console.log(id, v.element.id);
+        console.log(id == v.element.id);
+        if(v.element.id == id){
+            console.log(v.element.checked);
+            console.log("Returning", v.element.checked);
+            check = v.element.checked
+        }
+    });
 
+    return check;
+};
+
+function displayExperts(qid){
+// Collect the experts and display them to the page
+
+
+    $.ajax({
+        "url": "/evaluate_questionExperts",
+        "type": "POST",
+        "contentType": "application/x-www-form-urlencoded",
+        "data": {"qid": qid},
+        "success": function(data, status){
+            console.log(data);
+
+            var expert = document.createElement("div");
+            expert.id = qid + "-container";
+
+            cont = "";
+            dataswitches = []
+            $.each(data.experts, function(i,v){
+                console.log("starting the loop",i,v);
+                console.log(i);
+                console.log(v);
+
+                cont +='<div class="row" style="margin-bottom: 5px; background-color:cyan;">\
+                            <div class="col-lg-1">\
+                                <img style="width: 50px; height: auto;"src="'+v.avatar+'">\
+                            </div>\
+                            <div class="col-lg-9">\
+                                <div class="col-lg-12"><p style="margin-bottom: 0px;">'+v.title+' '+v.firstname+' '+v.lastname+' , '+v.organisation+'</p></div>\
+                                <div class="col-lg-12"><p style="margin-bottom: 0px;">\
+                                    <i class="fa fa-expand" style="margin-right: 20px;"> '+v.precision+' </i>\
+                                    <i class="fa fa-bullseye" style="margin-right: 20px;"> '+v.accuracy+' </i>\
+                                    <i class="fa fa-tasks" style="margin-right: 20px;"> '+v.R2+' </i>\
+                                    <i class="fa fa-bar-chart-o"> '+v.L1+' </i>\
+                                </p></div>\
+                            </div>\
+                            <div class="col-lg-2">\
+                                <input id="user-'+v.username+'-switch-'+qid+'" type="checkbox" class="js-switch js-check-change"/>\
+                            </div>\
+                        </div>'
+
+                dataswitches.push("#user-"+v.username+"-switch-"+qid);
+            });
+
+            expert.innerHTML = cont
+            $("#ExpertContainter").append(expert);
+
+            $.each(dataswitches, function(i,s){
+                var elem = document.querySelector(s);
+                var newSwitch = new Switchery(elem);
+                switches.push(newSwitch);
+            });
+            
+        }
+    });
+
+};
+
+function removeExperts(qid){
+// Remove the experts that for that question
+    $("#" + qid + "-container").remove();
+
+    var newSwitches = [];
+    $.each(switches, function(i,s){
+
+        var id = s.element.id.split("-")
+
+        if(id.length != 4 | id[3] != qid){
+            newSwitches.push(s);
+        }
+
+    })
+
+    switches = newSwitches;
+};
 
 $(document).ready(function() {
 
 	// 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-	elems.forEach(function(html) {
-		var switchery = new Switchery(html);
-		switches.push(switchery);
-	});
+    elems.forEach(function(html) {
 
-	
+        html.onchange = function(self){
+            console.log(self)
+            if(self.target.id.split("-")[0] == "question"){
+                
+                console.log(ischecked(self.target.id));
+
+                if(ischecked(self.target.id)){
+                    console.log("Display");
+                    // Make a ajax call and add expert information 
+                    displayExperts(self.target.id.split("-")[1])
+                } else {
+                    console.log("Remove");
+                    removeExperts(self.target.id.split("-")[1])
+                }
+            }
+        }
+        var switchery = new Switchery(html);
+        switches.push(switchery);
+    });
 
 	// Create the dropzone - set up function on successful upload
 	var myDropzone = new Dropzone("#modelDropzone");
@@ -73,7 +176,7 @@ function evaluateModels(){
 		"url": "/evaluation",
 		"type": "POST",
 		"contentType": "application/x-www-form-urlencoded",
-		"data": {"experts": expertList, "questions": questionList},
+		"data": {"experts": expertList},
 		"success": function(data, status){
 
 			console.log(data);
@@ -151,11 +254,14 @@ function validation(){
 	var experts = 0;
 	var questions = 0;
 	expertList = [];
-	questionList = [];
+    questionList = [];
+    
+    console.log(switches);
 
 	$.each(switches, function(i,v){
 		if(v.element.id.split("-")[0] == "user" && v.element.checked){
-			expertList.push(v.element.id.split("-")[1]);
+            var id = v.element.id.split("-");
+			expertList.push({"qid": id[3], "user":id[1]});
 			experts++;
 		}
 		if(v.element.id.split("-")[0] == "question" && v.element.checked){

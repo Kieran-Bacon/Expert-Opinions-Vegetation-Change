@@ -1,2 +1,2 @@
 INSERT INTO expertModels
-VALUES (?, ?, ?, null, null, null, null)
+VALUES (?, ?, ?, 0, null, null, null, null)

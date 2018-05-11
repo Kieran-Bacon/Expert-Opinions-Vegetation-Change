@@ -13,13 +13,28 @@ from ExpertRep import ExpertModelAPI, ClimateModelOutput
 @view_config(route_name="evaluation", renderer="templates/evaluation_main.html")
 def evaluation(request):
     Helper.permissions(request)
-
-    expertInfo = db.execute("User_expertInfo",[])
+ 
     questions = db.execute("collectQuestions",[])
+ 
+    return Helper.pageVariables(request, {"title":"Evaluation", "questions":questions})
 
-    split = int((len(expertInfo)/2)+0.5)
+@view_config(route_name="evalQuestExpert", renderer="json")
+def evalQuestExpert(request):
+    Helper.permissions(request)
 
-    return Helper.pageVariables(request, {"title":"Evaluation", "lexperts": expertInfo[:split], "rexperts":expertInfo[split:], "questions":questions})
+    try:
+        qid = request.params["qid"]
+    except:
+        raise exc.HTTPBadRequest()
+
+    # Collect all the experts for this question who are published
+    username = request.session.get("username", "")
+    expertInfo = db.execute("eval_questExpert",[qid, qid, username])
+
+    expertInfo = [dict(row) for row in expertInfo]
+
+    # Return expert information
+    return {"experts": expertInfo}
 
 @view_config(route_name="evalModels", renderer="json")
 def evalModels(request):
@@ -28,8 +43,7 @@ def evalModels(request):
     # Collect information to evaluate
     try:
         experts = request.params.getall("experts[]")
-        questions = request.params.getall("questions[]")
-    except Exception as e:
+    except:
         raise exc.HTTPBadRequest()
 
     # Collect Expert information
@@ -91,7 +105,7 @@ def uploadEvalModel(request):
             os.mkdir(directory)
 
         # Save the model in the tempory space.
-        model.save(os.path.join(directory, request.POST["file"].filename[:20]))
+        model.save(os.path.join(directory, request.POST["file"].filename))
     except Exception as e:
         raise exc.HTTPBadRequest(str(e))
 

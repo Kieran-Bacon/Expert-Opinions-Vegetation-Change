@@ -65,6 +65,7 @@ def main(global_config, **settings):
     config.add_route('modelFileUploader', '/model_upload')
 
     config.add_route('evaluation', '/evaluation.html')
+    config.add_route('evalQuestExpert', '/evaluate_questionExperts')
     config.add_route('evalModels', '/evaluation')
     config.add_route('uploadEvalModel', "/evaluate_model")
 
@@ -87,7 +88,7 @@ def main(global_config, **settings):
     DatabaseHandler.load()
 
     # Begin supporting processes
-    ProcessManager.run()
+    #ProcessManager.run()
 
     # Return the WSGI application object
     return config.make_wsgi_app()

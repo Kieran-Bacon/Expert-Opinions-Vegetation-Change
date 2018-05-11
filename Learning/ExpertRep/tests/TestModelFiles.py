@@ -73,5 +73,5 @@ class TestModelFiles(unittest.TestCase):
         # But this should not affect equality
         self.assertEqual(hash_f1, hash(f2))
 
-    def test_kml(self):  # pylint: disable=no-self-use
-        ClimateModelOutput(TEST_NC).get_kml(0)
+    def test_geojson(self):  # pylint: disable=no-self-use
+        ClimateModelOutput(TEST_NC).get_geojson(0)

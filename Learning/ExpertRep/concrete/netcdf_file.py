@@ -49,8 +49,7 @@ class NetCDFFile(ModelFile):
             # The warning produced by undefined behaviour on self.numpy_arrays > 1e-5
             # for NAN values is dealt with by the previous clause.
             warnings.filterwarnings("ignore", category=RuntimeWarning)
-
-        vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
+            vals = np.where(np.logical_and(np.logical_not(np.isnan(self.numpy_arrays)), self.numpy_arrays > 1e-5))
         for layer, i, j in zip(*vals):
             self.sparse[layer][(self.lat[i], self.lon[j])] = self.numpy_arrays[layer, i, j]
         return list(map(dict_to_geojson, self.sparse))[layer_id]
