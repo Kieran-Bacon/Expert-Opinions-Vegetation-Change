@@ -11,24 +11,24 @@ from ExpertRep import ClimateModelOutput
 from ExpertWebtool import CMOSTORAGE
 from ExpertWebtool.DatabaseHandler import DatabaseHandler as db
 
+from . import recordModelMetrics, CMOStore
+
 _LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 def fit_model_and_write_db(model_id, username, qid, CMOs, scores):
     try:
-        Helper.recordModelMetrics(identifier=model_id)  # Clear DB entries of records for this model
+        recordModelMetrics(identifier=model_id)  # Clear DB entries of records for this model
         _LOGGER.info("Metrics cleared for modelid={}, username={}".format(model_id, username))
-        ExpertModelAPI().fit_unsupervised(model_id=model_id, data=Helper.CMOStore.models())
+        ExpertModelAPI().fit_unsupervised(model_id=model_id, data=CMOStore.models())
         _LOGGER.info("Model fit unsupervised completed for modelid={}, username={}".format(model_id, username))
         metrics = ExpertModelAPI().partial_fit(model_id=model_id, data=CMOs, targets=scores)
         _LOGGER.info("Model fit supervised completed for modelid={}, username={}".format(model_id, username))
-        Helper.recordModelMetrics(identifier=model_id, metrics=metrics)
+        recordModelMetrics(identifier=model_id, metrics=metrics)
         _LOGGER.info("Metrics written to DB for modelid={}, username={}".format(model_id, username))
         
     except Exception as e:
-        print(str(e))
-        # An error has occured within the ML backend
-        raise exc.HTTPBadRequest("Error on learning batch")
+        print(str(e)) # TODO
 
 
 class SingletonDecorator:  # TODO(BEN) upon merge, move this to somewhere better

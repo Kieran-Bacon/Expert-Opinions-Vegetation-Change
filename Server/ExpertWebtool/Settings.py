@@ -98,8 +98,7 @@ def inviteUser(request):
     tempUsername = link[-10:]
 
     db.execute("User_addTemp", [tempUsername, email, None, None, permission, title, firstname, lastname, organisation, DEFAULT_TECH])
-    Helper.email("Invitation to Expert Climate model webtool", email, "invite.email",
-                 [title, firstname, lastname, link])
+    Helper.email("Invitation to Expert Climate model webtool", email, "invite.email", [title, firstname, lastname, link])
 
 
 @view_config(route_name='createUser', request_method='GET', renderer="templates/settings_createUser.html")

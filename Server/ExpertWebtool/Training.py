@@ -13,14 +13,13 @@ from ExpertRep import ClimateModelOutput
 
 from . import CMOSTORAGE
 from . import Helper
-from .Helper import *
 from .DatabaseHandler import DatabaseHandler as db
 
 from .Helper import ProcessRunner
 
 @view_config(route_name="training", renderer="templates/training_main.html")
 def training(request):
-    permissions(request, authority=1)
+    Helper.permissions(request, authority=1)
 
     # Collect all question ids
     allQuestions = db.execute("collectQuestions", [])
@@ -42,12 +41,12 @@ def collectModelKML(request):
 
 @view_config(route_name="collectCMO", renderer="json")
 def collectCMO(request):
-    permissions(request)
+    Helper.permissions(request)
 
     # Collect the question id from the request
     try:
         qid = int(request.params["qid"])
-    except KeyError as e:
+    except:
         raise exc.HTTPBadRequest("Question ID not passed")
 
     # Collect the collection of unlabelled models for that user and question
@@ -65,14 +64,14 @@ def collectCMO(request):
 
 @view_config(route_name="scoreCMO")
 def scoreCMO(request):
-    permissions(request)
+    Helper.permissions(request)
 
     # Collect information
     try:
         mid = int(request.params["mid"])
         qid = int(request.params["qid"])
         score = int(request.params["score"])
-    except KeyError as e:
+    except:
         raise exc.HTTPBadRequest("Necessary content is missing")
 
     # TODO: decide upon score range and values
@@ -85,11 +84,11 @@ def scoreCMO(request):
 
 @view_config(route_name="submitBatch", renderer="json")
 def submitBatch(request):
-    permissions(request)
+    Helper.permissions(request)
 
     try:
         qid = int(request.params["qid"])
-    except KeyError as e:
+    except:
         raise exc.HTTPBadRequest("Question ID not passed")
 
     username = request.session["username"]
@@ -113,11 +112,11 @@ def submitBatch(request):
 
 @view_config(route_name="removeBatch", renderer="json")
 def removeBatch(request):
-    permissions(request)
+    Helper.permissions(request)
 
     try:
         qid = int(request.params["qid"])
-    except KeyError as e:
+    except:
         raise exc.HTTPBadRequest("Question ID not passed")
 
     db.execute("deleteBatch", [request.session["username"], qid])

@@ -2,7 +2,7 @@ from .Email import email
 from .Storage import CMOStore, tempStorage, emptyDirectory
 from .HiddenPages import HiddenPages
 from .Permissions import AUTHORITY, permissions
-from .ProcessRunner import ProcessRunner
+
 
 import re, uuid, hashlib
 import pyramid.httpexceptions as exc
@@ -51,3 +51,5 @@ def recordModelMetrics(identifier: str, metrics = None) -> None:
 		L1 = None
 
 	db.execute("eModel_recordMetrics", [precision, accuracy, R2, L1, identifier]) # Record the model metrics
+
+from .ProcessRunner import ProcessRunner

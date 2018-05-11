@@ -1,6 +1,9 @@
 {% extends "base.html" %}
-{% block css %}{% endblock %}
+{% block css %}
+<link href="css/switchery.min.css" rel="stylesheet">
+{% endblock %}
 {% block js %}
+<script src="/js/switchery.min.js"></script>
 <script src="/js/dashboard_profile.js"></script>
 {% endblock %}
 
@@ -20,7 +23,8 @@
                             <th>Precision</th>
                             <th>Accuracy</th>
                             <th>R2</th>
-			    <th>L1 Loss</th>
+                            <th>L1 Loss</th>
+                            <th>Publish</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,7 +35,8 @@
                                 <td>{{model["precision"]}}</td>
                                 <td>{{model["accuracy"]}}</td>
                                 <td>{{model["R2"]}}</td>
-				<td>{{model["L1"]}}</td>
+                                <td>{{model["L1"]}}</td>
+                                <td><input id="question-{{model['qid']}}" type="checkbox" class="js-switch js-check-change"/></td>
                             </tr>
         
                         {% endfor %}

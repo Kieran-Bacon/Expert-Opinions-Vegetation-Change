@@ -40,6 +40,7 @@ def main(global_config, **settings):
     # Route requests
     config.add_route('index', '/')
     config.add_route('dashboardMain', '/dashboard.html')
+    config.add_route('publishModels', '/publish_models')
     config.add_route('userProfile', '/user_profile.html')
 
     config.add_route('login', '/login.html')
@@ -85,7 +86,7 @@ def main(global_config, **settings):
     config.scan(".Upload")
 
     # Load database information
-    DatabaseHandler.load()
+    DatabaseHandler.load(rebuild=False)
 
     # Begin supporting processes
     #ProcessManager.run()

@@ -32,3 +32,14 @@ def userProfile(request):
         {"title":"Profile","questions":questions, "models":expertModels, "batches":batches}\
     )
     
+@view_config(route_name="publishModels", renderer="json")
+def publishModels(request):
+    Helper.permissions(request)
+
+    try:
+        toggle = request.params["toggle"]
+        qid = request.params["qid"]
+    except:
+        raise exc.HTTPBadRequest()
+
+    db.execute("eModel_publish",[toggle, request.session["username"], qid])
