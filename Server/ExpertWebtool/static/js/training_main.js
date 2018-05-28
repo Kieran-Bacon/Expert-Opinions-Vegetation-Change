@@ -196,6 +196,7 @@ LAYER_STORAGE.getLayer = function (tabID, layerIndex, toAdd) {
 			generateSourceVector(tabID);
 			var activeTabID = ACTIVE.getActiveTab();
 			if (activeTabID == tabID) {
+				$('#dummytab').tab('show');
 				$('#'+tabID).tab('show');
 			}
 		});
