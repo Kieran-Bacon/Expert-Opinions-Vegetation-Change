@@ -10,5 +10,6 @@
 */~/*
 **/data/*
 **/log/**
-credentials.json
+**/credentials.json
 **/~/*
+**/settings.yaml
